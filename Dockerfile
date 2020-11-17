@@ -4,7 +4,7 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json .
-RUN npm install --no-audit --no-package-lock --silent
+RUN npm install --no-audit --no-package-lock
 
 # Build application
 COPY src ./src/
