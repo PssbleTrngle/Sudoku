@@ -12,6 +12,7 @@ COPY public ./public/
 COPY tsconfig.json ./
 RUN npm run build
 
+# Serve enviroment
 FROM nginx:stable-alpine
 
 COPY --from=build /app/build /usr/share/nginx/html
