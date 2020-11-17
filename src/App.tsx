@@ -1,26 +1,42 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import './assets/style/app.scss';
+import Sudoku from './components/Sudoku';
+import { read } from './logic/reader';
+import { Sudoku as ISudoku } from './logic/Sudoku';
+import { config } from 'bluebird'
+config({ cancellation: true })
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+    const selections = ['1']
+    const [selected, setSelected] = useState(selections[0])
+    const [sudoku, setSudoku] = useState<ISudoku>()
+
+    const load = () => {
+        read(selected)
+            .then(s => setSudoku(s))
+            .catch(e => console.error(e.message))
+    }
+
+    return <>
+
+        <select onChange={e => setSelected(e.target.value)}>
+            {selections.map(s =>
+                <option key={s} value={s}>{s}</option>
+            )}
+        </select>
+
+        <button onClick={load}>Load</button>
+
+        {sudoku
+            ? <Sudoku {...{ sudoku }} onChange={s => setSudoku(o => {
+                const set = typeof s === 'function' ? s : () => s
+                if (o) return set(o)
+                return undefined;
+            })} />
+            : <p>No sudoku loaded</p>
+        }
+    </>
 }
 
 export default App;

@@ -1,0 +1,185 @@
+@import "mixins.scss";
+
+$cell-color: #ddd;
+@mixin cell($size) {
+    position: relative;
+    display: grid;
+    align-items: center;
+
+    $font-size: $size / 2;
+    width: $size;
+    height: $size;
+    font-size: $font-size;
+
+    text-align: center;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: $cell-color;
+
+    .possibles {
+        position: absolute;
+        padding: $size / 20;
+        align-items: flex-start;
+        align-self: flex-start;
+        width: calc(100% - #{$size / 10});
+        pointer-events: none;
+
+        display: grid;
+        grid-template:
+            "c1 c2 c3 c4 c5" 1fr
+            "c6 . . . ." 1fr
+            "c7 . . . ." 1fr
+            "c8 . . . ." 1fr
+            "c9 . . . ." 1fr;
+
+        & > span {
+            position: relative;
+            font-weight: bold;
+
+            @for $i from 1 to 10 {
+                &:nth-child(10n + #{$i}) {
+                    grid-area: c#{$i};
+                }
+            }
+
+            &.crossed {
+                color: red;
+                /*
+                &::after {
+                    font-style: italic;
+                    position: absolute;
+                    left: 50%;
+                    transform: translate(-50%, 0);
+                    content: '/';
+                }
+                */
+            }
+
+            font-size: $size / 6;
+        }
+    }
+}
+
+section#sudoku {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    gap: 50px;
+    grid-template:
+        "sudoku sudoku ."
+        "sudoku sudoku focused"
+        "sudoku sudoku hints"
+        "sudoku sudoku .";
+
+    .hints {
+        grid-area: hints;
+    }
+
+    .focused {
+        grid-area: focused;
+        position: relative;
+
+        .cell {
+            @include cell(100px);
+            .value {
+                border: none;
+                outline: none;
+                text-align: center;
+                font-size: 50px;
+                margin: 0 auto;
+                width: 100%;
+                background: none;
+            }
+        }
+
+        .possibles-buttons {
+            display: grid;
+            justify-content: center;
+            grid-template-columns: repeat(3, auto);
+            gap: 5px;
+
+            overflow: hidden;
+            border-radius: 5px;
+            width: fit-content;
+            margin: 10px auto;
+
+            button {
+                width: fit-content;
+                padding: 5px 8px;
+                border: none;
+                outline: none;
+                transition: background 0.1 linear;
+                background: $cell-color;
+                cursor: pointer;
+
+                &:hover {
+                    background: lighten($cell-color, 5%);
+                }
+
+                &.selected {
+                    background: rgb(132, 179, 233);
+                }
+            }
+        }
+    }
+
+    .sudoku {
+        grid-area: sudoku;
+
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(9, auto);
+        width: fit-content;
+        height: fit-content;
+
+        gap: 5px;
+
+        &::after,
+        &::before {
+            @include pseudo();
+            pointer-events: none;
+        }
+
+        $border: #999;
+
+        &::before {
+            border-left: 2px solid $border;
+            border-right: 2px solid $border;
+            width: 34.3%;
+        }
+
+        &::after {
+            border-top: 2px solid $border;
+            border-bottom: 2px solid $border;
+            height: 34.3%;
+        }
+
+        .cell {
+            @include cell(8vh);
+            cursor: pointer;
+            user-select: none;
+
+            transition: background 0.1s linear;
+
+            &:hover {
+                background: lighten($cell-color, 5%);
+            }
+
+            &.selected {
+                background: rgb(170, 183, 236);
+            }
+
+            &.highlighted {
+                box-shadow: 0 0 0 2px rgb(71, 157, 255);
+            }
+
+            &:nth-of-type(3n):not(:nth-of-type(9n)) {
+                margin-right: 10px;
+            }
+
+            &:nth-of-type(27n):not(:nth-of-type(81n)) {
+                margin-bottom: 10px;
+            }
+        }
+    }
+}
