@@ -18,6 +18,8 @@ export default function generate() {
     // Fill with number 1-9
     NUMS.forEach(value => {
 
+        builder.mark()
+
         // For each ninth of the sudoku
         NUMS.map(i => i - 1).forEach(i => {
 
