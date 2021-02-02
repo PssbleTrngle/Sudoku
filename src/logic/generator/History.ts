@@ -55,7 +55,7 @@ export default class History<T extends Record<string, any>> {
                         throw new Error()
                     }
                     notify(this.current)
-                    await Bluebird.delay(500)
+                    await Bluebird.delay(300)
                 } catch (e) {
                     rej(e)
                     if (i <= 1) throw new Error('Execution impossible')
