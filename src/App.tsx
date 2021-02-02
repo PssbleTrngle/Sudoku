@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './assets/style/app.scss';
 import Sudoku from './components/Sudoku';
 import generator from './logic/generator';
-import { Observer } from './logic/generator/History';
+import Observer from './logic/generator/Observer';
 import { read } from './logic/reader';
 import { Sudoku as ISudoku } from './logic/Sudoku';
 
