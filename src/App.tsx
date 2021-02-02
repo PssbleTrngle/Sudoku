@@ -25,6 +25,7 @@ function App() {
         observer?.cancel('Component reloading')
     }, [])
 
+    const cancel = () => observer?.cancel('Manully Cancelled')
     const generate = () => setObserver(old => {
         old?.cancel('New generation')
         setGenerating(true)
@@ -44,7 +45,7 @@ function App() {
 
         <button disabled={generating} onClick={load}>Load</button>
 
-        <button disabled={generating} onClick={generate}>Generate</button>
+        <button onClick={generating ? cancel : generate}>{generating ? 'Cancel' : 'Generate'}</button>
 
         {sudoku
             ? <Sudoku {...{ sudoku }} onChange={s => setSudoku(o => {
