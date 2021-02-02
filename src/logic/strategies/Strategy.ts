@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import { Sudoku, Cell, Hint } from "../Sudoku";
 
 export default abstract class Strategy {
