@@ -3,9 +3,10 @@ import React, { Dispatch, memo, SetStateAction, useEffect, useRef, useState } fr
 import '../assets/style/sudoku.scss'
 import { usePromise } from '../Hooks'
 import Strategies from '../logic/Strategies'
-import { Cell as ICell, Hint, Sudoku as ISudoku } from '../logic/Sudoku'
+import { Cell as ICell, Hint, modifySudoku, Sudoku as ISudoku } from '../logic/Sudoku'
+import { arrayOf } from '../util'
 
-const NUMS = new Array(9).fill(null).map((_, i) => i + 1)
+const NUMS = arrayOf(9)
 
 type SudokuProps = {
     sudoku: ISudoku;
@@ -17,15 +18,6 @@ const Sudoku = ({ onChange, sudoku }: SudokuProps) => {
     const [fx, fy] = f ?? []
 
     const [hint, setHint] = useState<Hint>()
-
-    function change(x: number, y: number, cell: Partial<ICell>) {
-        onChange(s => ({
-            ...s, cells: cells.map((row, r) => row.map((ce, c) => {
-                if (x === r && y === c) return { ...ce, ...cell }
-                else return ce
-            }))
-        }))
-    }
 
     return <section id='sudoku'>
         <div className='sudoku'>
@@ -41,7 +33,7 @@ const Sudoku = ({ onChange, sudoku }: SudokuProps) => {
         </div>
 
         {fx !== undefined && fy !== undefined &&
-            <Focused x={fx} y={fy} {...cells[fx][fy]} onChange={c => change(fx, fy, c)} />
+            <Focused x={fx} y={fy} {...cells[fx][fy]} onChange={c => onChange(modifySudoku(fx, fy, c))} />
         }
 
         <Hints {...{ sudoku }} onChange={setHint} />
