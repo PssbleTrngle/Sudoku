@@ -55,6 +55,7 @@ export default class History<T extends Record<string, any>> {
                         throw new Error()
                     }
                     notify(this.current)
+                    await Bluebird.delay(500)
                 } catch (e) {
                     rej(e)
                     if (i <= 1) throw new Error('Execution impossible')
@@ -104,6 +105,12 @@ export class Observer<T> {
         this.finishSubs.clear()
         this.errorSubs.clear()
         this.valueSubs.clear()
+    }
+
+    cancel(reason?: string) {
+        if (reason) this.error(new Error(reason))
+        this.finish()
+        this.clear()
     }
 
     finish() {

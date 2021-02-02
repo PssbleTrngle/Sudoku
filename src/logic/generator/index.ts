@@ -1,4 +1,3 @@
-import Bluebird from "bluebird";
 import { arrayOf } from "../../util";
 import { canPut, modifySudoku, Sudoku } from "../Sudoku";
 import History from './History';
@@ -23,8 +22,6 @@ export default function generate() {
         NUMS.map(i => i - 1).forEach(i => {
 
             builder.step(async s => {
-
-                await Bluebird.delay(500)
 
                 const [ninthX, ninthY] = [i % 3, Math.floor(i / 3)].map(i => i * 3)
                 const randomziedFields = NUMS.map(i => i - 1)

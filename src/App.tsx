@@ -22,11 +22,11 @@ function App() {
     const [generating, setGenerating] = useState(false)
 
     useEffect(() => {
-        observer?.finish()
+        observer?.cancel('Component reloading')
     }, [])
 
     const generate = () => setObserver(old => {
-        old?.finish()
+        old?.cancel('New generation')
         setGenerating(true)
         return generator()
             .subscribe(s => setSudoku(() => s))
