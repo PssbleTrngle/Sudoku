@@ -1,0 +1,32 @@
+name: Generate PDF
+ 
+on:
+  push:
+    branches: [ main ]
+    paths: 
+      report/**
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Compile LaTeX document
+      uses: xu-cheng/latex-action@master
+      with:
+        root_file: report/main.tex
+
+    - run: mv report/main.pdf report.pdf
+        
+    - name: Commit and Push Changes
+      uses: EndBug/add-and-commit@v5
+      with:
+        message: Generated PDF
+        add: report.pdf
+        branch: main
+        author_name: GitHub Actions
+        author_email: 41898282+github-actions[bot]@users.noreply.github.com
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
