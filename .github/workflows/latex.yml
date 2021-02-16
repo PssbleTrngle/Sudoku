@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     paths: 
-      report/**
+      - report/**
   workflow_dispatch:
 
 jobs:
@@ -16,7 +16,8 @@ jobs:
     - name: Compile LaTeX document
       uses: xu-cheng/latex-action@master
       with:
-        root_file: report/main.tex
+        root_file: main.tex
+        working_directory: report
 
     - run: mv report/main.pdf report.pdf
         
