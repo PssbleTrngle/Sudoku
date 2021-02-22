@@ -49,37 +49,46 @@ export default class History<T extends Record<string, any>> {
         this.steps.push(step)
     }
 
-    execute(predicate: (current: T) => boolean = () => true) {
+    execute() {
         return Observer.of<T>(async (notify, rej) => {
             const historyAt = new Map<number, number>()
+            let jump = 0
+            let milestonesDone = 0
 
             for (let attempts = 0, i = 0; i < this.steps.length; i++, attempts++) {
+
+                const previousMilestones = [...this.milestones].reverse().filter(m => m < i)
 
                 historyAt.set(i, this.index)
 
                 if (attempts > 1000) throw new Error('Attempts exceeded')
+
                 if (attempts > 20) {
-                    const milestone = [...this.milestones].reverse().find(m => m < i)
+                    const milestone = previousMilestones[Math.min(previousMilestones.length - 1, jump)]
                     const history = milestone && historyAt.get(milestone)
 
                     if (history !== undefined) {
-                        console.log('Jumping to ', milestone, history)
                         this.rollbackTo(history)
-                        i = milestone as number
+                        i = milestone
                         attempts = 0
+                        jump++
                     } else {
                         console.warn('No history at', milestone)
                     }
                 }
 
                 try {
+                    const m = milestonesDone
+                    milestonesDone = previousMilestones.length
+
                     await this.push(this.steps[i])
-                    if (!predicate(this.current)) {
-                        this.rollback()
-                        throw new Error()
+
+                    if (m < milestonesDone) {
+                        jump = 0
+                        notify(this.current)
+                        await Bluebird.delay(30)
                     }
-                    notify(this.current)
-                    await Bluebird.delay(50)
+
                 } catch (e) {
                     rej(e)
                     if (i <= 1) throw new Error('Execution impossible')
@@ -87,6 +96,8 @@ export default class History<T extends Record<string, any>> {
                     i -= 2;
                 }
             }
+
+            notify(this.current)
         })
     }
 
