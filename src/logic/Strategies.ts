@@ -1,10 +1,8 @@
-import fs from "fs";
-import path from "path";
-import { Sudoku } from "./Sudoku";
 import Strategy from "./strategies/Strategy";
 import XWing from "./strategies/XWing";
+import { Sudoku } from "./Sudoku";
 
-interface Hint {
+export interface Hint {
     row: number,
     col: number,
     value: number,
