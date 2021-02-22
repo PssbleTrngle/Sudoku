@@ -1,3 +1,19 @@
 \section{Implementation}
 
 \subsection{Generation}
+
+Ein Ziel des Projektes war das schreiben eines Algorithmus, welcher in der Lage ist, lösbare Sudokus zu generieren.
+Diese sollten eine eindeutige Lösung haben und abhängig von bestimmten Inputvariablen erstellt werden.
+Zu diesen Inputvariablen zählen sowohl die Schwierigkeit, als auch bestimmte Lösungsstrategien, welche potentiell beim 
+darauffolgenden Lösen durch den Nutzer eine Anwendung finden sollen.
+\newline
+\newline
+Die Generation wurde durch drei Unterschritte realisiert. Zuerst wird versucht, ein leeres Sudoku vollständig zu füllen.
+Dann werden wieder Felder gelöscht, wobei nach jedem Feld ein Prüfalgorithmus testet, ob das Sudoku noch eine eindeutige Lösung hat.
+Wenn eine gewissen Anzahl von gelöschten Feldern, welche von der Schwierigkeit abhängt, erreicht wird, ist der Generationsvorgang abgeschlossen.
+
+\subsubsection{Erzeugen eines gefüllten Sudokus}
+
+\subsubsection{Leeren des Sudokus}
+
+\subsubsection{Lösungsalgorithmus}
