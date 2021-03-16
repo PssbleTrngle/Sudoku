@@ -38,7 +38,7 @@ function useObserver<K extends string>(setSudoku: Set<ISudoku>, generators: Reco
 
 function App() {
 
-    const selections = ['1']
+    const selections = ['1', 'X Wing', '2']
     const [selected, setSelected] = useState(selections[0])
     const [sudoku, setSudoku] = useState<ISudoku>(createEmpty())
 
