@@ -1,39 +1,57 @@
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import './assets/style/app.scss';
 import Sudoku from './components/Sudoku';
-import generator from './logic/generator';
+import generator, { createEmpty } from './logic/generator';
 import Observer from './logic/generator/Observer';
 import { read } from './logic/reader';
+import solver from './logic/solver';
 import { Sudoku as ISudoku } from './logic/Sudoku';
 
-function App() {
-
-    const selections = ['1']
-    const [selected, setSelected] = useState(selections[0])
-    const [sudoku, setSudoku] = useState<ISudoku>()
-
-    const load = () => {
-        read(selected)
-            .then(s => setSudoku(s))
-            .catch(e => console.error(e.message))
-    }
+type Set<T> = Dispatch<SetStateAction<T>>
+function useObserver<K extends string>(setSudoku: Set<ISudoku>, generators: Record<K, () => Observer<ISudoku>>) {
 
     const [observer, setObserver] = useState<Observer<ISudoku>>()
-    const [generating, setGenerating] = useState(false)
+
+    const generate = useMemo(() => (
+        Object.entries(generators)
+            .map(e => e as [string, () => Observer<ISudoku>])
+            .reduce((o, [k, call]) => ({
+                ...o, [k]:
+                    () => setObserver(old => {
+                        old?.cancel('New generation')
+                        return call()
+                            .subscribe(s => setSudoku(() => s))
+                            .catch(e => e.message && console.error(e.message))
+                            .then(() => setObserver(undefined))
+                    })
+            }), {} as Record<K, () => void>)
+    ), [generators, setSudoku])
 
     useEffect(() => {
         observer?.cancel('Component reloading')
     }, [])
 
     const cancel = () => observer?.cancel('Manully Cancelled')
-    const generate = () => setObserver(old => {
-        old?.cancel('New generation')
-        setGenerating(true)
-        return generator()
-            .subscribe(s => setSudoku(() => s))
-            .catch(e => e.message && console.error(e.message))
-            .then(() => setGenerating(false))
+
+    return { generating: !!observer, cancel, ...generate }
+}
+
+function App() {
+
+    const selections = ['1']
+    const [selected, setSelected] = useState(selections[0])
+    const [sudoku, setSudoku] = useState<ISudoku>(createEmpty())
+
+    const { generating, cancel, ...generators } = useObserver(setSudoku, {
+        generate: generator,
+        solve: () => solver(sudoku)
     })
+
+    const load = () => {
+        read(selected)
+            .then(s => setSudoku(s))
+            .catch(e => console.error(e.message))
+    }
 
     return <>
 
@@ -45,13 +63,14 @@ function App() {
 
         <button disabled={generating} onClick={load}>Load</button>
 
-        <button onClick={generating ? cancel : generate}>{generating ? 'Cancel' : 'Generate'}</button>
+        {Object.entries(generators).map(([k, call]) =>
+            <button key={k} onClick={generating ? cancel : call}>{generating ? 'Cancel' : k}</button>
+        )}
 
         {sudoku
             ? <Sudoku {...{ sudoku }} onChange={s => setSudoku(o => {
                 const set = typeof s === 'function' ? s : () => s
-                if (o) return set(o)
-                return undefined;
+                return set(o)
             })} />
             : <p>No sudoku loaded</p>
         }

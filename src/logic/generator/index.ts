@@ -1,10 +1,11 @@
 import { arrayOf } from "../../util";
-import { canPut, modifySudoku, Sudoku } from "../Sudoku";
+import { recursiveSolve } from "../solver";
+import { canPut, modifySudoku, Sudoku, withPoints } from "../Sudoku";
 import History from './History';
 
 const NUMS = arrayOf(9)
 
-function createEmpty(): Sudoku {
+export function createEmpty(): Sudoku {
     const cells = NUMS.map(() => NUMS.map(() => ({
         possibles: []
     })))
@@ -13,7 +14,7 @@ function createEmpty(): Sudoku {
 
 export default function generate() {
 
-    const builder = new History(createEmpty())
+    const builder = new History<Sudoku>()
 
     // Fill with number 1-9
     NUMS.forEach(value => {
@@ -40,5 +41,27 @@ export default function generate() {
         })
     })
 
-    return builder.execute()
+    const carver = new History<Sudoku>()
+
+    carver.mark()
+    arrayOf(81 - 34).forEach(i => {
+
+        if(i % 8 === 0) carver.mark()
+
+        carver.step(async s => {
+
+            const [cell] = withPoints(s.cells).filter(c => !!c.value).sort(() => Math.random() - 0.5)
+
+            if (cell) {
+                const modified = modifySudoku(cell.point.x, cell.point.y, { value: undefined })(s)
+                await recursiveSolve(modified)
+                return modified
+            }
+            else throw new Error()
+
+        })
+
+    })
+
+    return History.chain(createEmpty(), builder, carver)
 }

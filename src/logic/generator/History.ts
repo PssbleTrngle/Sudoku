@@ -1,7 +1,7 @@
 import Bluebird from "bluebird";
 import Observer from "./Observer";
 
-type Step<T> = (current: T) => (T | Promise<T>)
+type Step<T> = (current: T, attempt: number) => (T | Promise<T>)
 
 export default class History<T extends Record<string, any>> {
 
@@ -16,12 +16,13 @@ export default class History<T extends Record<string, any>> {
         return this.history.length - 1
     }
 
-    constructor(initial: T) {
-        this.history = [initial]
+    constructor(initial?: T) {
+        if (initial) this.history = [initial]
+        else this.history = []
     }
 
-    async push(next: Step<T>) {
-        this.history = [...this.history, await next(this.current)]
+    async push(next: Step<T>, attempt = 1) {
+        this.history = [...this.history, await next(this.current, attempt)]
         return this.index - 1
     }
 
@@ -49,7 +50,10 @@ export default class History<T extends Record<string, any>> {
         this.steps.push(step)
     }
 
-    execute() {
+    execute(initial?: T) {
+        if (initial) this.history = [initial]
+        else if (this.history.length === 0) throw new Error('No initial value provided')
+
         return Observer.of<T>(async (notify, rej) => {
             const historyAt = new Map<number, number>()
             let jump = 0
@@ -81,7 +85,7 @@ export default class History<T extends Record<string, any>> {
                     const m = milestonesDone
                     milestonesDone = previousMilestones.length
 
-                    await this.push(this.steps[i])
+                    await this.push(this.steps[i], attempts)
 
                     if (m < milestonesDone) {
                         jump = 0
@@ -99,6 +103,30 @@ export default class History<T extends Record<string, any>> {
 
             notify(this.current)
         })
+    }
+
+    static chain<T>(initial: T, first: History<T>, ...rest: History<T>[]) {
+        const observer = new Observer<T>()
+
+        function startWith(initial: T, first: History<T>, ...rest: History<T>[]) {
+
+            console.log('Next')
+
+            const o = first.execute(initial)
+            o.subscribe(v => observer.notify(v))
+            o.catch(e => observer.error(e))
+
+            const [next, ...newRest] = rest
+            o.then(() => {
+                if (next) startWith(first.current, next, ...newRest)
+                else observer.finish()
+            })
+
+        }
+
+        startWith(initial, first, ...rest)
+
+        return observer
     }
 
 }

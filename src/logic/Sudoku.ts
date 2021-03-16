@@ -51,7 +51,7 @@ export function canPut(x: number, y: number, value: number, s: Sudoku) {
     const row = inRow(y, s)
     const group = inNinth(x, y, s)
 
-    if ([col, row, ].flat().some(c => c.value === value)) return false;
+    if ([col, row, group].flat().some(c => c.value === value)) return false;
 
     return true;
 
