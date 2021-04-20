@@ -49,13 +49,15 @@ section#sudoku {
     justify-content: center;
     gap: 50px;
     grid-template:
-        "sudoku sudoku ."
-        "sudoku sudoku focused"
-        "sudoku sudoku hints"
-        "sudoku sudoku .";
+        "sudoku ."
+        "sudoku focused"
+        "sudoku hints"
+        "sudoku ."
+        / auto 300px;
 
     .hints {
         grid-area: hints;
+        margin: 0 auto;
     }
 
     .focused {
@@ -103,6 +105,10 @@ section#sudoku {
 
                 &.selected {
                     background: rgb(132, 179, 233);
+                }
+
+                &:disabled {
+                   cursor: default;
                 }
             }
         }

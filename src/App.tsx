@@ -55,25 +55,28 @@ function App() {
 
     return <>
 
-        <select disabled={generating} onChange={e => setSelected(e.target.value)}>
-            {selections.map(s =>
-                <option key={s} value={s}>{s}</option>
+        <div className='toolbar'>
+
+            <label htmlFor='load'>Select Sudoku:</label>
+
+            <select id='load' disabled={generating} onChange={e => setSelected(e.target.value)}>
+                {selections.map(s =>
+                    <option key={s} value={s}>{s}</option>
+                )}
+            </select>
+
+            <button disabled={generating} onClick={load}>Load</button>
+
+            {Object.entries(generators).map(([k, call]) =>
+                <button key={k} onClick={generating ? cancel : call}>{generating ? 'Cancel' : k}</button>
             )}
-        </select>
 
-        <button disabled={generating} onClick={load}>Load</button>
+        </div>
 
-        {Object.entries(generators).map(([k, call]) =>
-            <button key={k} onClick={generating ? cancel : call}>{generating ? 'Cancel' : k}</button>
-        )}
-
-        {sudoku
-            ? <Sudoku {...{ sudoku }} onChange={s => setSudoku(o => {
-                const set = typeof s === 'function' ? s : () => s
-                return set(o)
-            })} />
-            : <p>No sudoku loaded</p>
-        }
+        <Sudoku sudoku={sudoku} onChange={s => setSudoku(o => {
+            const set = typeof s === 'function' ? s : () => s
+            return set(o)
+        })} />
     </>
 }
 
