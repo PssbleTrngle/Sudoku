@@ -155,7 +155,7 @@ const Cell = memo(({ onSelect, cell, hint, highlighted, filled, selected, blocke
 
     return <span onClick={onSelect} className={classes('cell', { selected, highlighted, blocked, filled, hint: hintValue })}>
         <span className='value'>{value}</span>
-        <Possibles {...cell} hint={hint} />
+        <Possibles possibles={value ? [] : cell.possibles} hint={hint} />
     </span>
 })
 

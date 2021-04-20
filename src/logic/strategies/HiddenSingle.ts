@@ -30,11 +30,8 @@ export default class HiddenSingle extends Strategy {
                ...cell,
                value,
                type: 'value',
-               highlights: blockers.map(c => ({ col: c.point.y, row: c.point.x })),
                blocked: empty.filter(e => e.col !== cell.col || e.row !== cell.row),
-               highlightCols: blockers.filter(c => c.source === 'col').map(c => c.point.x),
-               highlightRows: blockers.filter(c => c.source === 'row').map(c => c.point.y),
-               highlightNinths: blockers.filter(c => c.source === 'ninth').map(c => ninthAt(c.point.x, c.point.y)),
+               ...this.blockingHighlights(blockers),
             }
 
             return hint

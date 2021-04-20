@@ -74,6 +74,7 @@ section#sudoku {
                 text-align: center;
                 font-size: 50px;
                 margin: 0 auto;
+                padding: 0;
                 width: 100%;
                 background: none;
             }
@@ -91,6 +92,7 @@ section#sudoku {
             margin: 10px auto;
 
             button {
+                margin: 0;
                 width: fit-content;
                 padding: 5px 8px;
                 border: none;
@@ -108,7 +110,7 @@ section#sudoku {
                 }
 
                 &:disabled {
-                   cursor: default;
+                    cursor: not-allowed;
                 }
             }
         }
@@ -129,6 +131,7 @@ section#sudoku {
         &::before {
             @include pseudo();
             pointer-events: none;
+            //box-shadow: 0 0 0 6px white, 0 0 0 6px white inset;
         }
 
         $border: rgb(211, 211, 211);
