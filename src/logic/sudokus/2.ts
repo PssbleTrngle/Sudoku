@@ -1,6 +1,6 @@
 import { define } from ".";
 
-define('2', [
+define('Nackter Single', [
     [0, 5, 0, 0, 6, 3, 0, 9, 0],
     [1, 0, 0, 0, 2, 5, 0, 0, 0],
     [0, 0, 2, 0, 1, 8, 0, 4, 0],

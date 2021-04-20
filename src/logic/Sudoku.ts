@@ -48,7 +48,7 @@ export const inCol = (x: number, s: Sudoku) => withPoints(s.cells).filter(c => c
 export const inNinth = (x: number, y: number, s: Sudoku) => withPoints(s.cells)
     .filter(c => ninthAt(c.point.x, c.point.y) === ninthAt(x, y))
 
-function possibleBlockers(x: number, y: number, s: Sudoku) {
+export function possibleBlockers(x: number, y: number, s: Sudoku) {
     const col = inCol(x, s).map(c => ({ ...c, source: 'col' }))
     const row = inRow(y, s).map(c => ({ ...c, source: 'row' }))
     const group = inNinth(x, y, s).map(c => ({ ...c, source: 'ninth' }))

@@ -3,6 +3,10 @@ select,
 button,
 label {
    padding: 0.5rem;
+
+    & + & {
+      margin-left: 0.5rem;
+   }
 }
 
 input[type="submit"],
