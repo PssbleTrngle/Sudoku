@@ -20,11 +20,13 @@ const Sudoku = ({ onChange, sudoku }: SudokuProps) => {
     const [hint, setHint] = useState<Hint>()
 
     return <section id='sudoku'>
+
         <div className='sudoku'>
             {cells.map((r, x) => r.map((cell, y) =>
                 <Cell {...{ cell }}
                     selected={fx === x && fy === y}
-                    highlighted={!!hint?.highlights?.find(c => c.row === x && c.col === y)}
+                    highlighted={hint?.highlights?.some(c => c.row === x && c.col === y)}
+                    filled={hint?.highlightCols?.some(c => y === c) || hint?.highlightRows?.some(r => x === r)}
                     key={`${x}/${y}`}
                     onSelect={() => setFocused([x, y])}
                     hint={hint && hint.row === x && hint.col === y ? hint : undefined}
@@ -138,17 +140,18 @@ type CellProps = {
     onSelect?: () => void;
     selected?: boolean;
     highlighted?: boolean;
+    filled?: boolean;
     hint?: {
         value: number;
         type: Hint['type'];
     },
 }
-const Cell = memo(({ onSelect, cell, hint, highlighted, selected }: CellProps) => {
+const Cell = memo(({ onSelect, cell, hint, highlighted, filled, selected }: CellProps) => {
 
     const hintValue = useMemo(() => hint?.type === 'value' ? hint.value : undefined, [hint])
     const value = useMemo(() => cell.value ?? hintValue, [cell, hintValue])
 
-    return <span onClick={onSelect} className={classes('cell', { selected, highlighted, hint: hintValue })}>
+    return <span onClick={onSelect} className={classes('cell', { selected, highlighted, filled, hint: hintValue })}>
         <span className='value'>{value}</span>
         <Possibles {...cell} hint={hint} />
     </span>

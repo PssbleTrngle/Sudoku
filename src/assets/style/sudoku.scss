@@ -145,9 +145,18 @@ section#sudoku {
             user-select: none;
 
             transition: background 0.1s linear;
+            $highlight: rgb(71, 157, 255);
 
             &:hover {
                 background: lighten($cell-color, 5%);
+            }
+
+            &.filled {
+                background:  lighten($highlight, 25%);
+
+                &:hover {
+                    background: lighten($highlight, 30%);
+                }
             }
 
             &.selected {

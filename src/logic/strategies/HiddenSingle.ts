@@ -36,6 +36,8 @@ export default class HiddenSingle extends Strategy {
                   type: 'value',
                   ...possibilities[0],
                   highlights: blockers.map(c => ({ col: c.point.y, row: c.point.x })),
+                  highlightCols: blockers.filter(c => c.source === 'row').map(c => c.point.y),
+                  highlightRows: blockers.filter(c => c.source === 'col').map(c => c.point.x),
                }
 
                return hint
