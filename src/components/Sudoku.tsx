@@ -1,5 +1,5 @@
 import classes from 'classnames'
-import React, { Dispatch, FC, memo, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
+import React, { Dispatch, FC, memo, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import '../assets/style/sudoku.scss'
 import { usePromise } from '../Hooks'
 import Strategies from '../logic/Strategies'
@@ -32,8 +32,9 @@ const Sudoku = ({ onChange, sudoku }: SudokuProps) => {
             ))}
         </div>
 
-        {fx !== undefined && fy !== undefined &&
-            <Focused x={fx} y={fy} {...cells[fx][fy]} onChange={c => onChange(modifySudoku(fx, fy, c))} />
+        {(fx !== undefined && fy !== undefined)
+            ? <Focused x={fx} y={fy} {...cells[fx][fy]} onChange={c => onChange(modifySudoku(fx, fy, c))} />
+            : <p className='focused'>Select a Cell</p>
         }
 
         <Hints {...{ sudoku }} onChange={setHint} />
@@ -143,9 +144,11 @@ type CellProps = {
     },
 }
 const Cell = memo(({ onSelect, cell, hint, highlighted, selected }: CellProps) => {
-    const value = (cell.value ?? (hint?.type === 'value' && hint.value)) || undefined
 
-    return <span onClick={onSelect} className={classes('cell', { selected, highlighted })}>
+    const hintValue = useMemo(() => hint?.type === 'value' ? hint.value : undefined, [hint])
+    const value = useMemo(() => cell.value ?? hintValue, [cell, hintValue])
+
+    return <span onClick={onSelect} className={classes('cell', { selected, highlighted, hint: hintValue })}>
         <span className='value'>{value}</span>
         <Possibles {...cell} hint={hint} />
     </span>

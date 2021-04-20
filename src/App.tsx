@@ -3,9 +3,9 @@ import './assets/style/app.scss';
 import Sudoku from './components/Sudoku';
 import generator, { createEmpty } from './logic/generator';
 import Observer from './logic/generator/Observer';
-import { read } from './logic/reader';
 import solver from './logic/solver';
 import { Sudoku as ISudoku } from './logic/Sudoku';
+import { getSudoku, names } from './logic/sudokus';
 
 type Set<T> = Dispatch<SetStateAction<T>>
 function useObserver<K extends string>(setSudoku: Set<ISudoku>, generators: Record<K, () => Observer<ISudoku>>) {
@@ -38,7 +38,7 @@ function useObserver<K extends string>(setSudoku: Set<ISudoku>, generators: Reco
 
 function App() {
 
-    const selections = ['1', 'X Wing', '2']
+    const selections = names()
     const [selected, setSelected] = useState(selections[0])
     const [sudoku, setSudoku] = useState<ISudoku>(createEmpty())
 
@@ -48,7 +48,7 @@ function App() {
     })
 
     const load = () => {
-        read(selected)
+        getSudoku(selected)
             .then(s => setSudoku(s))
             .catch(e => console.error(e.message))
     }

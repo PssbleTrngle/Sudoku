@@ -44,15 +44,25 @@ export const inCol = (x: number, s: Sudoku) => withPoints(s.cells).filter(c => c
 export const inNinth = (x: number, y: number, s: Sudoku) => withPoints(s.cells)
     .filter(c => ninthAt(c.point.x, c.point.y) === ninthAt(x, y))
 
-export function canPut(x: number, y: number, value: number, s: Sudoku) {
-    if (!!s.cells[x][y].value) return false;
-
+function possibleBlockers(x: number, y: number, s: Sudoku) {
     const col = inCol(x, s)
     const row = inRow(y, s)
     const group = inNinth(x, y, s)
 
-    if ([col, row, group].flat().some(c => c.value === value)) return false;
+    return [col, row, group].flat()
+}
+
+export function canPut(x: number, y: number, value: number, s: Sudoku) {
+    if (!!s.cells[x][y].value) return false;
+
+    if (possibleBlockers(x, y, s).some(c => c.value === value)) return false;
 
     return true;
+
+}
+
+export function blockedBy(x: number, y: number, value: number, s: Sudoku) {
+    if (!!s.cells[x][y].value) return [];
+    return possibleBlockers(x, y, s).filter(c => c.value === value)
 
 }

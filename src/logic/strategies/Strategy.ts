@@ -1,4 +1,4 @@
-import { Sudoku, Cell, Hint } from "../Sudoku";
+import { Cell, Hint, Sudoku } from "../Sudoku";
 
 export default abstract class Strategy {
 
@@ -11,8 +11,8 @@ export default abstract class Strategy {
             .reduce((a, b) => [...a, ...b], [])
     }
     
-    find(matcher: (cell: Cell) => boolean) {
-        return this.cells().filter(c => matcher(c.cell))
+    find(matcher: (cell: Cell, col: number, row: number) => boolean) {
+        return this.cells().filter(c => matcher(c.cell, c.col, c.row))
     }
 
     abstract getHints(): Hint[]
