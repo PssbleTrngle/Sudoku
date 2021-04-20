@@ -3,7 +3,7 @@ import React, { Dispatch, FC, memo, SetStateAction, useCallback, useEffect, useM
 import '../assets/style/sudoku.scss'
 import { usePromise } from '../Hooks'
 import Strategies from '../logic/Strategies'
-import { Cell as ICell, Hint, modifySudoku, Sudoku as ISudoku } from '../logic/Sudoku'
+import { Cell as ICell, Hint, modifySudoku, ninthAt, Sudoku as ISudoku } from '../logic/Sudoku'
 import { arrayOf } from '../util'
 
 const NUMS = arrayOf(9)
@@ -26,7 +26,8 @@ const Sudoku = ({ onChange, sudoku }: SudokuProps) => {
                 <Cell {...{ cell }}
                     selected={fx === x && fy === y}
                     highlighted={hint?.highlights?.some(c => c.row === x && c.col === y)}
-                    filled={hint?.highlightCols?.some(c => y === c) || hint?.highlightRows?.some(r => x === r)}
+                    blocked={hint?.blocked?.some(c => c.row === x && c.col === y)}
+                    filled={hint?.highlightCols?.some(c => x === c) || hint?.highlightRows?.some(r => y === r) || hint?.highlightNinths?.some(n => ninthAt(x, y) === n)}
                     key={`${x}/${y}`}
                     onSelect={() => setFocused([x, y])}
                     hint={hint && hint.row === x && hint.col === y ? hint : undefined}
@@ -140,18 +141,19 @@ type CellProps = {
     onSelect?: () => void;
     selected?: boolean;
     highlighted?: boolean;
+    blocked?: boolean;
     filled?: boolean;
     hint?: {
         value: number;
         type: Hint['type'];
     },
 }
-const Cell = memo(({ onSelect, cell, hint, highlighted, filled, selected }: CellProps) => {
+const Cell = memo(({ onSelect, cell, hint, highlighted, filled, selected, blocked }: CellProps) => {
 
     const hintValue = useMemo(() => hint?.type === 'value' ? hint.value : undefined, [hint])
     const value = useMemo(() => cell.value ?? hintValue, [cell, hintValue])
 
-    return <span onClick={onSelect} className={classes('cell', { selected, highlighted, filled, hint: hintValue })}>
+    return <span onClick={onSelect} className={classes('cell', { selected, highlighted, blocked, filled, hint: hintValue })}>
         <span className='value'>{value}</span>
         <Possibles {...cell} hint={hint} />
     </span>

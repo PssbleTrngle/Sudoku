@@ -159,6 +159,10 @@ section#sudoku {
                 }
             }
 
+            &.blocked {
+                background-image: repeating-linear-gradient(-45deg, #0001, #0001 19%, transparent 20%, transparent 39%) !important;
+            }
+
             &.selected {
                 background: rgb(170, 183, 236);
             }

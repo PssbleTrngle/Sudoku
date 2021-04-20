@@ -18,8 +18,10 @@ export interface Hint extends Point {
     value: number;
     type: 'value' | 'exclude',
     highlights?: Point[]
+    blocked?: Point[]
     highlightRows?: number[]
     highlightCols?: number[]
+    highlightNinths?: number[]
 }
 
 export function modifySudoku(x: number, y: number, cell: Partial<Cell>): (s: Sudoku) => Sudoku {
@@ -49,7 +51,7 @@ export const inNinth = (x: number, y: number, s: Sudoku) => withPoints(s.cells)
 function possibleBlockers(x: number, y: number, s: Sudoku) {
     const col = inCol(x, s).map(c => ({ ...c, source: 'col' }))
     const row = inRow(y, s).map(c => ({ ...c, source: 'row' }))
-    const group = inNinth(x, y, s).map(c => ({ ...c, source: 'group' }))
+    const group = inNinth(x, y, s).map(c => ({ ...c, source: 'ninth' }))
 
     return [col, row, group].flat()
 }

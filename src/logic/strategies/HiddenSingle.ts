@@ -1,6 +1,6 @@
 import { arrayOf, exists } from "../../util";
 import { blockedBy, canPut, Hint, ninthAt } from "../Sudoku";
-import Strategy from "./Strategy";
+import Strategy, { CellPoint } from "./Strategy";
 
 export default class HiddenSingle extends Strategy {
 
@@ -8,44 +8,52 @@ export default class HiddenSingle extends Strategy {
       return 'Versteckter Single'
    }
 
-   getHints() {
+   forCells(cells: CellPoint[]) {
+      const empty = cells.filter(c => !c.cell.value)
 
-      const ninths = arrayOf(9).map(i => i - 1)
+      const filled = cells
+         .map(c => c.cell.value)
+         .filter(exists)
 
-      return ninths.map(ninth => {
+      const missing = arrayOf(9).filter(i => !filled.includes(i))
 
-         const cells = this.find((_, c, r) => ninthAt(c, r) === ninth)
-         const empty = cells.filter(c => !c.cell.value)
+      return missing.map(value => {
 
-         const filled = cells
-            .map(c => c.cell.value)
-            .filter(exists)
+         const possibilities = empty.filter(cell => canPut(cell.row, cell.col, value, this.sudoku))
 
-         const missing = arrayOf(9).filter(i => !filled.includes(i))
+         if (possibilities.length === 1) {
+            const [cell] = possibilities
 
-         return missing.map(value => {
+            const blockers = empty.map(cell => blockedBy(cell.row, cell.col, value, this.sudoku)).flat()
 
-            const possibilities = empty.filter(cell => canPut(cell.row, cell.col, value, this.sudoku))
-
-            if (possibilities.length === 1) {
-
-               const blockers = empty.map(cell => blockedBy(cell.row, cell.col, value, this.sudoku)).flat()
-
-               const hint: Hint = {
-                  value,
-                  type: 'value',
-                  ...possibilities[0],
-                  highlights: blockers.map(c => ({ col: c.point.y, row: c.point.x })),
-                  highlightCols: blockers.filter(c => c.source === 'row').map(c => c.point.y),
-                  highlightRows: blockers.filter(c => c.source === 'col').map(c => c.point.x),
-               }
-
-               return hint
+            const hint: Hint = {
+               ...cell,
+               value,
+               type: 'value',
+               highlights: blockers.map(c => ({ col: c.point.y, row: c.point.x })),
+               blocked: empty.filter(e => e.col !== cell.col || e.row !== cell.row),
+               highlightCols: blockers.filter(c => c.source === 'col').map(c => c.point.x),
+               highlightRows: blockers.filter(c => c.source === 'row').map(c => c.point.y),
+               highlightNinths: blockers.filter(c => c.source === 'ninth').map(c => ninthAt(c.point.x, c.point.y)),
             }
 
-            else return null
+            return hint
+         }
 
-         })
+         else return null
+
+      })
+   }
+
+   getHints() {
+
+      return arrayOf(9).map(i => i - 1).map(i => {
+
+         const inNinth = this.find((_, c, r) => ninthAt(c, r) === i)
+         const inCol = this.find((_, c, _r) => c === i)
+         const inRow = this.find((_, _c, r) => r === i)
+
+         return [inNinth, inCol, inRow].map((c, i) => this.forCells(c).map(h => h && ({ ...h, i }))).flat()
 
       }).flat().filter(exists)
 
