@@ -1,5 +1,5 @@
 import classes from 'classnames'
-import React, { Dispatch, memo, SetStateAction, useEffect, useRef, useState } from 'react'
+import React, { Dispatch, FC, memo, SetStateAction, useCallback, useEffect, useRef, useState } from 'react'
 import '../assets/style/sudoku.scss'
 import { usePromise } from '../Hooks'
 import Strategies from '../logic/Strategies'
@@ -79,17 +79,20 @@ type FocusedProps = ICell & {
 }
 const Focused = memo(({ value, possibles, onChange, x, y }: FocusedProps) => {
 
-    function setValue(value: number) {
+    const setValue = useCallback((value: number) => {
         const v = Math.min(9, Math.max(1, value))
-        onChange({ value: isNaN(v) ? undefined : v })
-    }
+        onChange({
+            value: isNaN(v) ? undefined : v,
+            possibles: isNaN(v) ? possibles : [],
+        })
+    }, [onChange, possibles])
 
-    function toggle(p: number) {
+    const toggle = useCallback((p: number) => {
         if (possibles.includes(p))
             onChange({ possibles: possibles.filter(i => i !== p) })
         else
             onChange({ possibles: [...possibles, p].sort() })
-    }
+    }, [onChange, possibles])
 
     const ref = useRef<HTMLInputElement>(null)
     useEffect(() => {
@@ -99,11 +102,6 @@ const Focused = memo(({ value, possibles, onChange, x, y }: FocusedProps) => {
     return <div className='focused'>
 
         <div className='cell'>
-            <div className='possibles'>
-                {possibles.map(i =>
-                    <span key={i}>{i}</span>
-                )}
-            </div>
 
             <input {...{ ref }}
                 className='value'
@@ -122,6 +120,7 @@ const Focused = memo(({ value, possibles, onChange, x, y }: FocusedProps) => {
         <div className='possibles-buttons'>
             {NUMS.map(i =>
                 <button
+                    disabled={!!value}
                     onClick={() => toggle(i)}
                     className={classes({ selected: possibles.includes(i) })}
                     key={i}>
@@ -144,18 +143,25 @@ type CellProps = {
     },
 }
 const Cell = memo(({ onSelect, cell, hint, highlighted, selected }: CellProps) => {
-    const { possibles } = cell
     const value = (cell.value ?? (hint?.type === 'value' && hint.value)) || undefined
 
     return <span onClick={onSelect} className={classes('cell', { selected, highlighted })}>
         <span className='value'>{value}</span>
-
-        <div className='possibles'>
-            {possibles.map(i =>
-                <span className={classes({ crossed: hint?.type === 'exclude' && hint.value === i })} key={i}>{i}</span>
-            )}
-        </div>
+        <Possibles {...cell} hint={hint} />
     </span>
 })
+
+const Possibles: FC<{
+    possibles: number[]
+    hint?: CellProps['hint']
+}> = ({ possibles, hint }) => (
+    <div className='possibles'>
+        {arrayOf(9).map(i =>
+            <span className={classes({ crossed: hint?.type === 'exclude' && hint.value === i })} key={i}>
+                {possibles.includes(i) ? i : ''}
+            </span>
+        )}
+    </div>
+)
 
 export default Sudoku

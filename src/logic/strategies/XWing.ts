@@ -1,4 +1,3 @@
-import { access } from "fs";
 import { exists } from "../../util";
 import { Hint } from "../Sudoku";
 import Strategy from "./Strategy";

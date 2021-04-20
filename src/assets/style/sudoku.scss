@@ -19,40 +19,22 @@ $cell-color: #ddd;
     .possibles {
         position: absolute;
         padding: $size / 20;
-        align-items: flex-start;
+        align-items: center;
         align-self: flex-start;
         width: calc(100% - #{$size / 10});
+        height: calc(100% - #{$size / 10});
         pointer-events: none;
 
         display: grid;
-        grid-template:
-            "c1 c2 c3 c4 c5" 1fr
-            "c6 . . . ." 1fr
-            "c7 . . . ." 1fr
-            "c8 . . . ." 1fr
-            "c9 . . . ." 1fr;
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: 1fr;
 
         & > span {
             position: relative;
-            font-weight: bold;
-
-            @for $i from 1 to 10 {
-                &:nth-child(10n + #{$i}) {
-                    grid-area: c#{$i};
-                }
-            }
+            //font-style: italic;
 
             &.crossed {
                 color: red;
-                /*
-                &::after {
-                    font-style: italic;
-                    position: absolute;
-                    left: 50%;
-                    transform: translate(-50%, 0);
-                    content: '/';
-                }
-                */
             }
 
             font-size: $size / 6;
@@ -82,6 +64,7 @@ section#sudoku {
         .cell {
             @include cell(100px);
             .value {
+                font-family: "Indie Flower", cursive, sans-serif;
                 border: none;
                 outline: none;
                 text-align: center;
@@ -140,18 +123,18 @@ section#sudoku {
             pointer-events: none;
         }
 
-        $border: #999;
+        $border: rgb(211, 211, 211);
 
         &::before {
             border-left: 2px solid $border;
             border-right: 2px solid $border;
-            width: 34.3%;
+            width: 33.6%;
         }
 
         &::after {
             border-top: 2px solid $border;
             border-bottom: 2px solid $border;
-            height: 34.3%;
+            height: 33.6%;
         }
 
         .cell {
