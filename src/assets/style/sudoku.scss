@@ -84,7 +84,6 @@ section#sudoku {
             display: grid;
             justify-content: center;
             grid-template-columns: repeat(3, auto);
-            gap: 5px;
 
             overflow: hidden;
             border-radius: 5px;
@@ -106,7 +105,7 @@ section#sudoku {
                 }
 
                 &.selected {
-                    background: rgb(132, 179, 233);
+                    background: lighten(rgb(132, 179, 233), 10%);
                 }
 
                 &:disabled {
