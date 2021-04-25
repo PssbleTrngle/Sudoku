@@ -3,19 +3,48 @@ import React, { Dispatch, FC, memo, SetStateAction, useCallback, useEffect, useM
 import '../assets/style/sudoku.scss'
 import { usePromise } from '../Hooks'
 import Strategies from '../logic/Strategies'
-import { Cell as ICell, Hint, modifySudoku, ninthAt, Sudoku as ISudoku } from '../logic/Sudoku'
-import { arrayOf } from '../util'
+import { Cell as ICell, Hint, modifySudoku, ninthAt, possiblesValues, Sudoku as ISudoku, withPoints } from '../logic/Sudoku'
+import { arrayEqual, arrayOf, exists } from '../util'
 
 const NUMS = arrayOf(9)
 
 type SudokuProps = {
-    sudoku: ISudoku;
+    sudoku: ISudoku
+    fillCanditates?: boolean
     onChange: Dispatch<SetStateAction<ISudoku>>
 }
-const Sudoku = ({ onChange, sudoku }: SudokuProps) => {
+const Sudoku = ({ onChange, sudoku, fillCanditates }: SudokuProps) => {
     const { cells } = sudoku;
     const [f, setFocused] = useState<[number, number]>()
     const [fx, fy] = f ?? []
+
+    useEffect(() => {
+        if (fillCanditates) {
+            onChange(() => {
+
+                const changed = withPoints(sudoku.cells).map(c => {
+
+                    const possibles = possiblesValues(c.point.x, c.point.y, sudoku)
+                    if (arrayEqual(possibles, c.possibles)) return null
+                    return { ...c, possibles }
+
+                }).filter(exists)
+
+                if (changed.length === 0) return sudoku
+
+                return {
+                    cells: sudoku.cells.map((row, y) =>
+                        row.map((cell, x) => ({
+                            ...cell, possibles:
+                                changed.find(c => c.point.x === y && c.point.y === x)?.possibles
+                                ?? cell.possibles
+                        }))
+                    )
+                }
+
+            })
+        }
+    }, [fillCanditates, sudoku, onChange])
 
     const [hint, setHint] = useState<Hint>()
 

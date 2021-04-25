@@ -47,3 +47,4 @@ require('./2');
 require('./Versteckter Single');
 require('./Versteckter Single 2');
 require('./X Wing');
+require('./NakedPair');

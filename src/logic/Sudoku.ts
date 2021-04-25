@@ -1,3 +1,4 @@
+import { arrayOf } from "../util"
 
 
 export interface Cell {
@@ -54,12 +55,18 @@ export interface Blocker {
     value?: number
 }
 
-export function possibleBlockers(x: number, y: number, s: Sudoku): Blocker[] {
-    const col = inCol(x, s).map(c => ({ ...c, source: 'col' }))
-    const row = inRow(y, s).map(c => ({ ...c, source: 'row' }))
-    const group = inNinth(x, y, s).map(c => ({ ...c, source: 'ninth' }))
+export function possibleBlockers(row: number, col: number, s: Sudoku): Blocker[] {
+    const c = inCol(row, s).map(c => ({ ...c, source: 'col' }))
+    const r = inRow(col, s).map(c => ({ ...c, source: 'row' }))
+    const group = inNinth(row, col, s).map(c => ({ ...c, source: 'ninth' }))
 
-    return [col, row, group].flat() as Blocker[]
+    return [c, r, group].flat() as Blocker[]
+}
+
+export function possiblesValues(row: number, col: number, sudoku: Sudoku) {
+    const takenValues = possibleBlockers(row, col, sudoku).filter(c => !!c.value)
+    const possibleValues = arrayOf(9).filter(i => !takenValues.some(c => c.value === i))
+    return possibleValues
 }
 
 export function canPut(x: number, y: number, value: number, s: Sudoku) {

@@ -1,4 +1,5 @@
 import HiddenSingle from "./strategies/HiddenSingle";
+import NakedPair from "./strategies/NakedPair";
 import NakedSingle from "./strategies/NakedSingle";
 import Strategy from "./strategies/Strategy";
 import WrongPossibles from "./strategies/WrongPossibles";
@@ -11,7 +12,7 @@ export interface Hint {
     value: number,
 }
 
-const strategies: (new (sudoku: Sudoku) => Strategy)[] = [WrongPossibles, XWing, HiddenSingle, NakedSingle];
+const strategies: (new (sudoku: Sudoku) => Strategy)[] = [WrongPossibles, XWing, HiddenSingle, NakedSingle, NakedPair];
 
 async function getHints(sudoku: Sudoku) {
     return strategies
