@@ -54,6 +54,10 @@ function App() {
             .catch(e => console.error(e.message))
     }
 
+    useEffect(() => {
+        if(fillCanditates) setFillCandidates(false)
+    }, [fillCanditates])
+
     return <>
 
         <div className='toolbar'>
@@ -72,15 +76,20 @@ function App() {
                 <button key={k} onClick={generating ? cancel : call}>{generating ? 'Cancel' : k}</button>
             )}
 
+            {/*}
             <label htmlFor='fill-candidates'>Fill Candidates</label>
             <input type='checkbox' id='fill-candidates' checked={fillCanditates} onChange={e => setFillCandidates(e.target.checked)} />
+            */}
+
+
+            <button onClick={() => setFillCandidates(true)}>Fill Candidates</button>
 
         </div>
 
         <Sudoku fillCanditates={fillCanditates} sudoku={sudoku} onChange={s => setSudoku(o => {
-            const set = typeof s === 'function' ? s : () => s
-            return set(o)
-        })} />
+                const set = typeof s === 'function' ? s : () => s
+                return set(o)
+            })} />
     </>
 }
 
