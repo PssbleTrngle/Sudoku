@@ -1,5 +1,5 @@
 import { arrayEqual, exists } from "../../util";
-import { Hint, possibleBlockers, possiblesValues } from "../Sudoku";
+import { Hint, possibleBlockers, uniqByPoint } from "../Sudoku";
 import Strategy from "./Strategy";
 
 export default class NakedPair extends Strategy {
@@ -13,21 +13,20 @@ export default class NakedPair extends Strategy {
       return this.find(c => !c.value).map(cell => {
          const { row, col } = cell
 
-         const possible = possiblesValues(row, col, this.sudoku)
-         if (possible.length !== 2) return null
+         const { possibles } = cell.cell
+         if (possibles.length !== 2) return null
 
          const blockers = possibleBlockers(row, col, this.sudoku)
+            .filter(uniqByPoint)
+            .filter(c => c.point.x !== row || c.point.y !== col)
 
-         const partners = blockers.filter(c => {
-            const p = possiblesValues(c.point.x, c.point.y, this.sudoku)
-            return arrayEqual(p, possible)
-         })
+         const partners = blockers.filter(c => arrayEqual(c.possibles, possibles))
 
          if (partners.length !== 1) return null
 
          return blockers.map(b =>
-            possiblesValues(b.point.x, b.point.y, this.sudoku)
-               .filter(i => possible.includes(i))
+            b.possibles
+               .filter(i => possibles.includes(i))
                .map<Hint>(value => ({
                   type: 'exclude',
                   col: b.point.y,

@@ -49,10 +49,12 @@ export const inCol = (x: number, s: Sudoku) => withPoints(s.cells).filter(c => c
 export const inNinth = (x: number, y: number, s: Sudoku) => withPoints(s.cells)
     .filter(c => ninthAt(c.point.x, c.point.y) === ninthAt(x, y))
 
-export interface Blocker {
+interface CellWithPoint extends Cell {
     point: { x: number, y: number }
+}
+
+export interface Blocker extends CellWithPoint {
     source: 'col' | 'row' | 'ninth'
-    value?: number
 }
 
 export function possibleBlockers(row: number, col: number, s: Sudoku): Blocker[] {
@@ -61,6 +63,10 @@ export function possibleBlockers(row: number, col: number, s: Sudoku): Blocker[]
     const group = inNinth(row, col, s).map(c => ({ ...c, source: 'ninth' }))
 
     return [c, r, group].flat() as Blocker[]
+}
+
+export function uniqByPoint(c1: CellWithPoint, i1: number, a: CellWithPoint[]) {
+    return !a.some((c2, i2) => i2 < i1 && c1.point.x === c2.point.x && c1.point.y === c2.point.y)
 }
 
 export function possiblesValues(row: number, col: number, sudoku: Sudoku) {

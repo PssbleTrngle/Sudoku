@@ -24,6 +24,7 @@ const Sudoku = ({ onChange, sudoku, fillCanditates }: SudokuProps) => {
 
                 const changed = withPoints(sudoku.cells).map(c => {
 
+                    if(c.value) return null
                     const possibles = possiblesValues(c.point.x, c.point.y, sudoku)
                     if (arrayEqual(possibles, c.possibles)) return null
                     return { ...c, possibles }
