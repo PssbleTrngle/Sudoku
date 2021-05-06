@@ -13,7 +13,7 @@ export default class WrongPossibles extends Strategy {
       return this.find(c => c.possibles.length > 0).map(({ cell, row, col }) =>
          cell.possibles.map(value => {
 
-            const blockers = blockedBy(row, col, value, this.sudoku);
+            const blockers = blockedBy({ row, col }, value, this.sudoku);
             if (blockers.length === 0) return null
             else {
 

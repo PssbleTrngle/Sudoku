@@ -32,7 +32,7 @@ const Sudoku = ({ onChange, sudoku, fillCanditates }: SudokuProps) => {
                 const changed = withPoints(sudoku.cells).map(c => {
 
                     if (c.value) return null
-                    const possibles = possiblesValues(c.point.x, c.point.y, sudoku)
+                    const possibles = possiblesValues(c.point, sudoku)
                     if (arrayEqual(possibles, c.possibles)) return null
                     return { ...c, possibles }
 
@@ -44,7 +44,7 @@ const Sudoku = ({ onChange, sudoku, fillCanditates }: SudokuProps) => {
                     cells: sudoku.cells.map((row, y) =>
                         row.map((cell, x) => ({
                             ...cell, possibles:
-                                changed.find(c => c.point.x === y && c.point.y === x)?.possibles
+                                changed.find(c => c.point.col === y && c.point.row === x)?.possibles
                                 ?? cell.possibles
                         }))
                     )
@@ -76,15 +76,15 @@ const Sudoku = ({ onChange, sudoku, fillCanditates }: SudokuProps) => {
     return <section id='sudoku'>
 
         <div className='sudoku'>
-            {cells.map((r, y) => r.map((cell, x) =>
+            {cells.map((r, row) => r.map((cell, col) =>
                 <Cell {...{ cell }}
-                    selected={fx === x && fy === y}
-                    highlighted={hint?.highlights?.some(c => c.row === y && c.col === x)}
-                    blocked={hint?.blocked?.some(c => c.row === y && c.col === x)}
-                    filled={hint?.highlightRows?.some(c => y === c) || hint?.highlightCols?.some(r => x === r) || hint?.highlightNinths?.some(n => ninthAt(y, x) === n)}
-                    key={`${x}/${y}`}
-                    onSelect={() => setFocused([x, y])}
-                    hint={hint && hint.row === y && hint.col === x ? hint : undefined}
+                    selected={fx === col && fy === row}
+                    highlighted={hint?.highlights?.some(c => c.row === row && c.col === col)}
+                    blocked={hint?.blocked?.some(c => c.row === row && c.col === col)}
+                    filled={hint?.highlightRows?.some(r => row === r) || hint?.highlightCols?.some(c => col === c) || hint?.highlightNinths?.some(n => ninthAt({ row, col }) === n)}
+                    key={`${col}/${row}`}
+                    onSelect={() => setFocused([col, row])}
+                    hint={hint && hint.row === row && hint.col === col ? hint : undefined}
                 />
             ))}
         </div>

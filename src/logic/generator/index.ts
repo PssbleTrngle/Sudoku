@@ -32,7 +32,7 @@ export default function generate() {
                     .map(xy => xy as [number, number])
                     .sort(() => Math.random() - 0.5)
 
-                const possible = randomziedFields.find(([x, y]) => canPut(x, y, value, builder.current))
+                const possible = randomziedFields.find(([col, row]) => canPut({ col, row }, value, builder.current))
                 if (possible) return modifySudoku(...possible, { value })(s)
                 else throw new Error()
 
@@ -46,14 +46,14 @@ export default function generate() {
     carver.mark()
     arrayOf(81 - 34).forEach(i => {
 
-        if(i % 8 === 0) carver.mark()
+        if (i % 8 === 0) carver.mark()
 
         carver.step(async s => {
 
             const [cell] = withPoints(s.cells).filter(c => !!c.value).sort(() => Math.random() - 0.5)
 
             if (cell) {
-                const modified = modifySudoku(cell.point.x, cell.point.y, { value: undefined })(s)
+                const modified = modifySudoku(cell.point.col, cell.point.row, { value: undefined })(s)
                 await recursiveSolve(modified)
                 return modified
             }

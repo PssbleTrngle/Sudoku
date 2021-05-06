@@ -16,34 +16,28 @@ export default class NakedPair extends Strategy {
          const { possibles } = cell.cell
          if (possibles.length !== 2) return null
 
-         const blockers = possibleBlockers(row, col, this.sudoku)
+         const blockers = possibleBlockers(this.sudoku, cell)
             .filter(uniqByPoint)
-            .filter(c => c.point.x !== row || c.point.y !== col)
+            .filter(c => c.point.col !== col || c.point.row !== row)
 
          const partners = blockers.filter(c => arrayEqual(c.possibles, possibles))
 
          if (partners.length !== 1) return null
          const [partner] = partners
-         const partnerBlockers = possibleBlockers(partner.point.x, partner.point.y, this.sudoku)
+         const partnerBlockers = possibleBlockers(this.sudoku, partner.point)
 
          return blockers
             .filter(c => !arrayEqual(c.possibles, possibles))
-            .filter(c => partnerBlockers.some(b => b.point.x === c.point.x && b.point.y === c.point.y))
+            .filter(c => partnerBlockers.some(b => b.point.col === c.point.col && b.point.row === c.point.row))
             .map(b =>
                b.possibles
                   .filter(i => possibles.includes(i))
                   .map<Hint>(value => ({
                      type: 'exclude',
-                     col: b.point.y,
-                     row: b.point.x,
                      value,
+                     ...b.point,
                      ...this.blockingHighlights([b]),
-                     highlights: [
-                        cell, {
-                           row: partner.point.x,
-                           col: partner.point.y,
-                        }
-                     ]
+                     highlights: [cell, partner.point]
                   }))
             )
 

@@ -19,12 +19,12 @@ export default class HiddenSingle extends Strategy {
 
       return missing.map(value => {
 
-         const possibilities = empty.filter(cell => canPut(cell.row, cell.col, value, this.sudoku))
+         const possibilities = empty.filter(cell => canPut(cell, value, this.sudoku))
 
          if (possibilities.length === 1) {
             const [cell] = possibilities
 
-            const blockers = empty.map(cell => blockedBy(cell.row, cell.col, value, this.sudoku)).flat()
+            const blockers = empty.map(cell => blockedBy(cell, value, this.sudoku)).flat()
 
             const hint: Hint = {
                ...cell,
@@ -46,7 +46,7 @@ export default class HiddenSingle extends Strategy {
 
       return arrayOf(9).map(i => i - 1).map(i => {
 
-         const inNinth = this.find((_, c, r) => ninthAt(c, r) === i)
+         const inNinth = this.find((_, col, row) => ninthAt({ col, row }) === i)
          const inCol = this.find((_, c, _r) => c === i)
          const inRow = this.find((_, _c, r) => r === i)
 
