@@ -86,10 +86,7 @@ function App() {
 
         </div>
 
-        <Sudoku fillCanditates={fillCanditates} sudoku={sudoku} onChange={s => setSudoku(o => {
-                const set = typeof s === 'function' ? s : () => s
-                return set(o)
-            })} />
+        <Sudoku fillCanditates={fillCanditates} sudoku={sudoku} onChange={setSudoku} />
     </>
 }
 

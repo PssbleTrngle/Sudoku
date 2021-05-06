@@ -18,14 +18,14 @@ export default class NakedSingle extends Strategy {
          if (possibleValues.length === 1) {
             console.log(possibleValues[0])
             const [value] = possibleValues
-            const sources = takenValues.map(v => v.source)
+            const sources = takenValues.map(v => v.source).flat()
 
             const hint: Hint = {
                ...cell, value,
                type: 'value',
                highlights: takenValues.map(c => ({ col: c.point.y, row: c.point.x })),
-               highlightCols: sources.includes('row') ? [cell.row] : undefined,
-               highlightRows: sources.includes('col') ? [cell.col] : undefined,
+               highlightRows: sources.includes('row') ? [cell.row] : undefined,
+               highlightCols: sources.includes('col') ? [cell.col] : undefined,
                highlightNinths: sources.includes('ninth') ? [ninthAt(cell.row, cell.col)] : undefined,
             }
 

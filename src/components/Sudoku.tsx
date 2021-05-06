@@ -1,5 +1,5 @@
 import classes from 'classnames'
-import React, { Dispatch, FC, memo, SetStateAction, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { Dispatch, FC, memo, Reducer, SetStateAction, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import '../assets/style/sudoku.scss'
 import { usePromise } from '../Hooks'
 import Strategies from '../logic/Strategies'
@@ -13,9 +13,16 @@ type SudokuProps = {
     fillCanditates?: boolean
     onChange: Dispatch<SetStateAction<ISudoku>>
 }
+
+type P = [number, number] | undefined
+const keepInBounds: Reducer<P, P> = (_, value) => {
+    return value?.map(i => Math.max(0, Math.min(8, i))) as P
+}
+
 const Sudoku = ({ onChange, sudoku, fillCanditates }: SudokuProps) => {
     const { cells } = sudoku;
-    const [f, setFocused] = useState<[number, number]>()
+    const [f, setFocused] = useReducer(keepInBounds, [0, 0])
+
     const [fx, fy] = f ?? []
 
     useEffect(() => {
@@ -24,7 +31,7 @@ const Sudoku = ({ onChange, sudoku, fillCanditates }: SudokuProps) => {
 
                 const changed = withPoints(sudoku.cells).map(c => {
 
-                    if(c.value) return null
+                    if (c.value) return null
                     const possibles = possiblesValues(c.point.x, c.point.y, sudoku)
                     if (arrayEqual(possibles, c.possibles)) return null
                     return { ...c, possibles }
@@ -49,24 +56,41 @@ const Sudoku = ({ onChange, sudoku, fillCanditates }: SudokuProps) => {
 
     const [hint, setHint] = useState<Hint>()
 
+    const onKey = useCallback((e: KeyboardEvent) => {
+        if (f) {
+            const [x, y] = f
+            switch (e.key) {
+                case 'ArrowLeft': return setFocused([e.shiftKey ? 0 : x - 1, y])
+                case 'ArrowRight': return setFocused([e.shiftKey ? 8 : x + 1, y])
+                case 'ArrowUp': return setFocused([x, e.shiftKey ? 0 : y - 1])
+                case 'ArrowDown': return setFocused([x, e.shiftKey ? 8 : y + 1])
+            }
+        }
+    }, [f])
+
+    useEffect(() => {
+        window.addEventListener('keydown', onKey)
+        return () => window.removeEventListener('keydown', onKey)
+    }, [onKey])
+
     return <section id='sudoku'>
 
         <div className='sudoku'>
-            {cells.map((r, x) => r.map((cell, y) =>
+            {cells.map((r, y) => r.map((cell, x) =>
                 <Cell {...{ cell }}
                     selected={fx === x && fy === y}
-                    highlighted={hint?.highlights?.some(c => c.row === x && c.col === y)}
-                    blocked={hint?.blocked?.some(c => c.row === x && c.col === y)}
-                    filled={hint?.highlightCols?.some(c => x === c) || hint?.highlightRows?.some(r => y === r) || hint?.highlightNinths?.some(n => ninthAt(x, y) === n)}
+                    highlighted={hint?.highlights?.some(c => c.row === y && c.col === x)}
+                    blocked={hint?.blocked?.some(c => c.row === y && c.col === x)}
+                    filled={hint?.highlightRows?.some(c => y === c) || hint?.highlightCols?.some(r => x === r) || hint?.highlightNinths?.some(n => ninthAt(y, x) === n)}
                     key={`${x}/${y}`}
                     onSelect={() => setFocused([x, y])}
-                    hint={hint && hint.row === x && hint.col === y ? hint : undefined}
+                    hint={hint && hint.row === y && hint.col === x ? hint : undefined}
                 />
             ))}
         </div>
 
         {(fx !== undefined && fy !== undefined)
-            ? <Focused x={fx} y={fy} {...cells[fx][fy]} onChange={c => onChange(modifySudoku(fx, fy, c))} />
+            ? <Focused x={fx} y={fy} {...cells[fy][fx]} onChange={c => onChange(modifySudoku(fy, fx, c))} />
             : <p className='focused'>Select a Cell</p>
         }
 

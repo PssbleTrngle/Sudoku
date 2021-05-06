@@ -20,24 +20,24 @@ export interface Hint extends Point {
     type: 'value' | 'exclude',
     highlights?: Point[]
     blocked?: Point[]
-    highlightRows?: number[]
     highlightCols?: number[]
+    highlightRows?: number[]
     highlightNinths?: number[]
 }
 
-export function modifySudoku(x: number, y: number, cell: Partial<Cell>): (s: Sudoku) => Sudoku {
+export function modifySudoku(y: number, x: number, cell: Partial<Cell>): (s: Sudoku) => Sudoku {
     return s => ({
         ...s, cells: s.cells.map((row, r) => row.map((ce, c) => {
-            if (x === r && y === c) return { ...ce, ...cell }
+            if (y === r && x === c) return { ...ce, ...cell }
             else return ce
         }))
     })
 }
 
-export function ninthAt(x: number, y: number) {
-    const ninthX = Math.floor(x / 3)
+export function ninthAt(y: number, x: number) {
     const ninthY = Math.floor(y / 3)
-    return ninthX + (ninthY * 3)
+    const ninthX = Math.floor(x / 3)
+    return ninthY + (ninthX * 3)
 }
 
 export function withPoints(cells: Cell[][]) {
@@ -54,15 +54,22 @@ interface CellWithPoint extends Cell {
 }
 
 export interface Blocker extends CellWithPoint {
-    source: 'col' | 'row' | 'ninth'
+    source: Array<'col' | 'row' | 'ninth'>
 }
 
 export function possibleBlockers(row: number, col: number, s: Sudoku): Blocker[] {
-    const c = inCol(row, s).map(c => ({ ...c, source: 'col' }))
-    const r = inRow(col, s).map(c => ({ ...c, source: 'row' }))
-    const group = inNinth(row, col, s).map(c => ({ ...c, source: 'ninth' }))
+    const c = inCol(row, s)
+    const r = inRow(col, s)
+    const group = inNinth(row, col, s)
 
-    return [c, r, group].flat() as Blocker[]
+    const all = [c, r, group].flat() as Blocker[]
+    return all.filter(uniqByPoint).map(b => {
+        const source: Blocker['source'] = []
+        if (c.includes(b)) source.push('col')
+        if (r.includes(b)) source.push('row')
+        if (group.includes(b)) source.push('ninth')
+        return { ...b, source }
+    })
 }
 
 export function uniqByPoint(c1: CellWithPoint, i1: number, a: CellWithPoint[]) {
