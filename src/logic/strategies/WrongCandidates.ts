@@ -2,16 +2,16 @@ import { exists } from "../../util";
 import { blockedBy, Hint } from "../Sudoku";
 import Strategy from "./Strategy";
 
-export default class WrongPossibles extends Strategy {
+export default class WrongCandidates extends Strategy {
 
    getName() {
-      return 'Incorrect Possibles'
+      return 'Falscher Kandidat'
    }
 
    getHints() {
 
-      return this.find(c => c.possibles.length > 0).map(({ cell, row, col }) =>
-         cell.possibles.map(value => {
+      return this.find(c => c.candidates.length > 0).map(({ cell, row, col }) =>
+         cell.candidates.map(value => {
 
             const blockers = blockedBy({ row, col }, value, this.sudoku);
             if (blockers.length === 0) return null

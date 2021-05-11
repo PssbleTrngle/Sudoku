@@ -3,7 +3,7 @@ import { arrayOf } from "../util"
 
 export interface Cell {
     value?: number;
-    possibles: number[];
+    candidates: number[];
 }
 
 export type Sudoku = {
@@ -80,7 +80,7 @@ export function uniqByPoint(c1: CellWithPoint, i1: number, a: CellWithPoint[]) {
     return !a.some((c2, i2) => i2 < i1 && c1.point.col === c2.point.col && c1.point.row === c2.point.row)
 }
 
-export function possiblesValues(point: Point, sudoku: Sudoku) {
+export function possibleValues(point: Point, sudoku: Sudoku) {
     const takenValues = possibleBlockers(sudoku, point).filter(c => !!c.value)
     const possibleValues = arrayOf(9).filter(i => !takenValues.some(c => c.value === i))
     return possibleValues

@@ -25,12 +25,12 @@ function parse(json: SudokuLike): Sudoku {
 
       if (typeof n === 'number') return {
          value: (n === 0 ? undefined : n) ?? undefined,
-         possibles: [],
+         candidates: [],
       }
 
       else if (Array.isArray(n)) return {
          value: undefined,
-         possibles: n,
+         candidates: n,
       }
 
       else if (typeof n === 'object') return n as Cell

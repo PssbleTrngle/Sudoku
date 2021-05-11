@@ -2,10 +2,10 @@ import { arrayEqual, exists } from "../../util";
 import { Hint, possibleBlockers } from "../Sudoku";
 import Strategy from "./Strategy";
 
-export default class NakedPair extends Strategy {
+export default class NakedTriple extends Strategy {
 
    getName() {
-      return 'Nacktes Paar'
+      return 'Nackter Dreier'
    }
 
    getHints() {

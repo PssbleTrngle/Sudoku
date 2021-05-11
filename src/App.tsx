@@ -41,7 +41,7 @@ function App() {
     const selections = names()
     const [selected, setSelected] = useState(selections[0])
     const [sudoku, setSudoku] = useState<ISudoku>(createEmpty())
-    const [fillCanditates, setFillCandidates] = useState(false)
+    const [fillcandidates, setFillCandidates] = useState(false)
 
     const { generating, cancel, ...generators } = useObserver(setSudoku, {
         generate: generator,
@@ -55,8 +55,8 @@ function App() {
     }
 
     useEffect(() => {
-        if(fillCanditates) setFillCandidates(false)
-    }, [fillCanditates])
+        if(fillcandidates) setFillCandidates(false)
+    }, [fillcandidates])
 
     return <>
 
@@ -78,7 +78,7 @@ function App() {
 
             {/*}
             <label htmlFor='fill-candidates'>Fill Candidates</label>
-            <input type='checkbox' id='fill-candidates' checked={fillCanditates} onChange={e => setFillCandidates(e.target.checked)} />
+            <input type='checkbox' id='fill-candidates' checked={fillcandidates} onChange={e => setFillCandidates(e.target.checked)} />
             */}
 
 
@@ -86,7 +86,7 @@ function App() {
 
         </div>
 
-        <Sudoku fillCanditates={fillCanditates} sudoku={sudoku} onChange={setSudoku} />
+        <Sudoku fillcandidates={fillcandidates} sudoku={sudoku} onChange={setSudoku} />
     </>
 }
 

@@ -53,8 +53,8 @@ export async function recursiveSolve(sudoku: Sudoku, onlyFirst = false): Promise
 
    if (empty) {
       const { col: x, row: y } = empty.point
-      const possibles = NUMS.filter(i => canPut(empty.point, i, sudoku))
-      const modfied = possibles.map(value => modifySudoku(x, y, { value })(sudoku))
+      const candidates = NUMS.filter(i => canPut(empty.point, i, sudoku))
+      const modfied = candidates.map(value => modifySudoku(x, y, { value })(sudoku))
 
       if (onlyFirst) {
 

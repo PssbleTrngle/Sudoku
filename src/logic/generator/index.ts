@@ -7,7 +7,7 @@ const NUMS = arrayOf(9)
 
 export function createEmpty(): Sudoku {
     const cells = NUMS.map(() => NUMS.map(() => ({
-        possibles: []
+        candidates: []
     })))
     return { cells }
 }

@@ -3,14 +3,14 @@ import React, { Dispatch, FC, memo, Reducer, SetStateAction, useCallback, useEff
 import '../assets/style/sudoku.scss'
 import { usePromise } from '../Hooks'
 import Strategies from '../logic/Strategies'
-import { Cell as ICell, Hint, modifySudoku, ninthAt, possiblesValues, Sudoku as ISudoku, withPoints } from '../logic/Sudoku'
+import { Cell as ICell, Hint, modifySudoku, ninthAt, possibleValues, Sudoku as ISudoku, withPoints } from '../logic/Sudoku'
 import { arrayEqual, arrayOf, exists } from '../util'
 
 const NUMS = arrayOf(9)
 
 type SudokuProps = {
     sudoku: ISudoku
-    fillCanditates?: boolean
+    fillcandidates?: boolean
     onChange: Dispatch<SetStateAction<ISudoku>>
 }
 
@@ -19,22 +19,22 @@ const keepInBounds: Reducer<P, P> = (_, value) => {
     return value?.map(i => Math.max(0, Math.min(8, i))) as P
 }
 
-const Sudoku = ({ onChange, sudoku, fillCanditates }: SudokuProps) => {
+const Sudoku = ({ onChange, sudoku, fillcandidates }: SudokuProps) => {
     const { cells } = sudoku;
     const [f, setFocused] = useReducer(keepInBounds, [0, 0])
 
     const [fx, fy] = f ?? []
 
     useEffect(() => {
-        if (fillCanditates) {
+        if (fillcandidates) {
             onChange(() => {
 
                 const changed = withPoints(sudoku.cells).map(c => {
 
                     if (c.value) return null
-                    const possibles = possiblesValues(c.point, sudoku)
-                    if (arrayEqual(possibles, c.possibles)) return null
-                    return { ...c, possibles }
+                    const candidates = possibleValues(c.point, sudoku)
+                    if (arrayEqual(candidates, c.candidates)) return null
+                    return { ...c, candidates }
 
                 }).filter(exists)
 
@@ -43,16 +43,16 @@ const Sudoku = ({ onChange, sudoku, fillCanditates }: SudokuProps) => {
                 return {
                     cells: sudoku.cells.map((row, y) =>
                         row.map((cell, x) => ({
-                            ...cell, possibles:
-                                changed.find(c => c.point.col === x && c.point.row === y)?.possibles
-                                ?? cell.possibles
+                            ...cell, candidates:
+                                changed.find(c => c.point.col === x && c.point.row === y)?.candidates
+                                ?? cell.candidates
                         }))
                     )
                 }
 
             })
         }
-    }, [fillCanditates, sudoku, onChange])
+    }, [fillcandidates, sudoku, onChange])
 
     const [hint, setHint] = useState<Hint>()
 
@@ -135,22 +135,22 @@ type FocusedProps = ICell & {
     x: number;
     y: number;
 }
-const Focused = memo(({ value, possibles, onChange, x, y }: FocusedProps) => {
+const Focused = memo(({ value, candidates, onChange, x, y }: FocusedProps) => {
 
     const setValue = useCallback((value: number) => {
         const v = Math.min(9, Math.max(1, value))
         onChange({
             value: isNaN(v) ? undefined : v,
-            possibles: isNaN(v) ? possibles : [],
+            candidates: isNaN(v) ? candidates : [],
         })
-    }, [onChange, possibles])
+    }, [onChange, candidates])
 
     const toggle = useCallback((p: number) => {
-        if (possibles.includes(p))
-            onChange({ possibles: possibles.filter(i => i !== p) })
+        if (candidates.includes(p))
+            onChange({ candidates: candidates.filter(i => i !== p) })
         else
-            onChange({ possibles: [...possibles, p].sort() })
-    }, [onChange, possibles])
+            onChange({ candidates: [...candidates, p].sort() })
+    }, [onChange, candidates])
 
     const ref = useRef<HTMLInputElement>(null)
     useEffect(() => {
@@ -175,12 +175,12 @@ const Focused = memo(({ value, possibles, onChange, x, y }: FocusedProps) => {
             />
         </div>
 
-        <div className='possibles-buttons'>
+        <div className='candidates-buttons'>
             {NUMS.map(i =>
                 <button
                     disabled={!!value}
                     onClick={() => toggle(i)}
-                    className={classes({ selected: possibles.includes(i) })}
+                    className={classes({ selected: candidates.includes(i) })}
                     key={i}>
                     {i}
                 </button>
@@ -209,18 +209,18 @@ const Cell = memo(({ onSelect, cell, hint, highlighted, filled, selected, blocke
 
     return <span onClick={onSelect} className={classes('cell', { selected, highlighted, blocked, filled, hint: hintValue })}>
         <span className='value'>{value}</span>
-        <Possibles possibles={value ? [] : cell.possibles} hint={hint} />
+        <Candidates candidates={value ? [] : cell.candidates} hint={hint} />
     </span>
 })
 
-const Possibles: FC<{
-    possibles: number[]
+const Candidates: FC<{
+    candidates: number[]
     hint?: CellProps['hint']
-}> = ({ possibles, hint }) => (
-    <div className='possibles'>
+}> = ({ candidates, hint }) => (
+    <div className='candidates'>
         {arrayOf(9).map(i =>
             <span className={classes({ crossed: hint?.type === 'exclude' && hint.value === i })} key={i}>
-                {possibles.includes(i) ? i : ''}
+                {candidates.includes(i) ? i : ''}
             </span>
         )}
     </div>

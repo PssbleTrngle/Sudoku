@@ -16,7 +16,7 @@ $cell-color: #ddd;
     border-radius: 5px;
     background-color: $cell-color;
 
-    .possibles {
+    .candidates {
         position: absolute;
         padding: $size / 20;
         align-items: center;
@@ -80,7 +80,7 @@ section#sudoku {
             }
         }
 
-        .possibles-buttons {
+        .candidates-buttons {
             display: grid;
             justify-content: center;
             grid-template-columns: repeat(3, auto);

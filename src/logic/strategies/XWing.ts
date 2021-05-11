@@ -10,12 +10,12 @@ export default class XWing extends Strategy {
 
     getHints() {
 
-        const possibles = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-            .filter(i => this.find(c => c.possibles.includes(i)))
+        const candidates = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+            .filter(i => this.find(c => c.candidates.includes(i)))
 
-        const removeables = possibles.map(p => {
+        const removeables = candidates.map(p => {
 
-            const cells = this.find(c => c.possibles.includes(p))
+            const cells = this.find(c => c.candidates.includes(p))
             return cells.map(origin => {
 
                 const inRow = cells.filter(c => c.row === origin.row && c.col !== origin.col)
