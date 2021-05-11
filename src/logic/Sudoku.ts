@@ -61,17 +61,19 @@ export function possibleBlockers(s: Sudoku, ...points: Point[]): Blocker[] {
     const ninth = ninthAt(points[0])
 
     const c = points.every(p => p.col === col) ? inCol(col, s) : []
-    const r = points.every(p => p.col === col) ? inRow(row, s) : []
+    const r = points.every(p => p.row === row) ? inRow(row, s) : []
     const n = points.every(p => ninthAt(p) === ninth) ? inNinth(points[0], s) : []
 
     const all = [c, r, n].flat() as Blocker[]
-    return all.filter(uniqByPoint).map(b => {
-        const source: Blocker['source'] = []
-        if (c.includes(b)) source.push('col')
-        if (r.includes(b)) source.push('row')
-        if (n.includes(b)) source.push('ninth')
-        return { ...b, source }
-    })
+    return all.filter(uniqByPoint)
+        .filter(c => points.every(p => c.point.col !== p.col || c.point.row !== p.row))
+        .map(b => {
+            const source: Blocker['source'] = []
+            if (c.includes(b)) source.push('col')
+            if (r.includes(b)) source.push('row')
+            if (n.includes(b)) source.push('ninth')
+            return { ...b, source }
+        })
 }
 
 export function uniqByPoint(c1: CellWithPoint, i1: number, a: CellWithPoint[]) {

@@ -44,7 +44,7 @@ const Sudoku = ({ onChange, sudoku, fillCanditates }: SudokuProps) => {
                     cells: sudoku.cells.map((row, y) =>
                         row.map((cell, x) => ({
                             ...cell, possibles:
-                                changed.find(c => c.point.col === y && c.point.row === x)?.possibles
+                                changed.find(c => c.point.col === x && c.point.row === y)?.possibles
                                 ?? cell.possibles
                         }))
                     )
