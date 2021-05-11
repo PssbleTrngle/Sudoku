@@ -48,7 +48,7 @@ export const inRow = (row: number, s: Sudoku) => withPoints(s.cells).filter(c =>
 export const inCol = (col: number, s: Sudoku) => withPoints(s.cells).filter(c => c.point.col === col) ?? []
 export const inNinth = (point: Point, s: Sudoku) => withPoints(s.cells).filter(c => ninthAt(c.point) === ninthAt(point))
 
-interface CellWithPoint extends Cell {
+export interface CellWithPoint extends Cell {
     point: Point
 }
 

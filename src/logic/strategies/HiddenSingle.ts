@@ -1,6 +1,6 @@
 import { arrayOf, exists } from "../../util";
-import { blockedBy, canPut, Hint, ninthAt } from "../Sudoku";
-import Strategy, { CellPoint } from "./Strategy";
+import { blockedBy, canPut, CellWithPoint, Hint, ninthAt } from "../Sudoku";
+import Strategy from "./Strategy";
 
 export default class HiddenSingle extends Strategy {
 
@@ -8,29 +8,30 @@ export default class HiddenSingle extends Strategy {
       return 'Versteckter Single'
    }
 
-   forCells(cells: CellPoint[]) {
-      const empty = cells.filter(c => !c.cell.value)
+   forCells(cells: CellWithPoint[]) {
+      const empty = cells.filter(c => !c.value)
 
       const filled = cells
-         .map(c => c.cell.value)
+         .map(c => c.value)
          .filter(exists)
 
       const missing = arrayOf(9).filter(i => !filled.includes(i))
 
       return missing.map(value => {
 
-         const possibilities = empty.filter(cell => canPut(cell, value, this.sudoku))
+         const possibilities = empty.filter(cell => canPut(cell.point, value, this.sudoku))
 
          if (possibilities.length === 1) {
             const [cell] = possibilities
 
-            const blockers = empty.map(cell => blockedBy(cell, value, this.sudoku)).flat()
+            const blockers = empty.map(cell => blockedBy(cell.point, value, this.sudoku)).flat()
 
             const hint: Hint = {
                ...cell,
+               ...cell.point,
                value,
                type: 'value',
-               blocked: empty.filter(e => e.col !== cell.col || e.row !== cell.row),
+               blocked: empty.map(e => e.point).filter(e => e.col !== cell.point.col || e.row !== cell.point.row),
                ...this.blockingHighlights(blockers),
             }
 
@@ -46,9 +47,9 @@ export default class HiddenSingle extends Strategy {
 
       return arrayOf(9).map(i => i - 1).map(i => {
 
-         const inNinth = this.find((_, col, row) => ninthAt({ col, row }) === i)
-         const inCol = this.find((_, c, _r) => c === i)
-         const inRow = this.find((_, _c, r) => r === i)
+         const inNinth = this.find(({ point }) => ninthAt(point) === i)
+         const inCol = this.find(({ point }) => point.col === i)
+         const inRow = this.find(({ point }) => point.row === i)
 
          return [inNinth, inCol, inRow].map((c, i) => this.forCells(c).map(h => h && ({ ...h, i }))).flat()
 

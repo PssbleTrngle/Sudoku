@@ -10,15 +10,15 @@ export default class WrongCandidates extends Strategy {
 
    getHints() {
 
-      return this.find(c => c.candidates.length > 0).map(({ cell, row, col }) =>
+      return this.find(c => c.candidates.length > 0).map(({ point, ...cell }) =>
          cell.candidates.map(value => {
 
-            const blockers = blockedBy({ row, col }, value, this.sudoku);
+            const blockers = blockedBy(point, value, this.sudoku);
             if (blockers.length === 0) return null
             else {
 
                const hint: Hint = {
-                  row, col, value,
+                  ...point, value,
                   type: 'exclude',
                   ...this.blockingHighlights(blockers),
                }

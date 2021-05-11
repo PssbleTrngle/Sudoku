@@ -1,6 +1,4 @@
-import { Blocker, Cell, Hint, ninthAt, Sudoku } from "../Sudoku";
-
-export type CellPoint = { cell: Cell, row: number, col: number }
+import { Blocker, CellWithPoint, Hint, ninthAt, Sudoku } from "../Sudoku";
 
 export default abstract class Strategy {
 
@@ -8,13 +6,13 @@ export default abstract class Strategy {
 
     abstract getName(): string;
 
-    private cells(): CellPoint[] {
-        return this.sudoku.cells.map((r, row) => r.map((cell, col) => ({ col, row, cell })))
+    private cells(): CellWithPoint[] {
+        return this.sudoku.cells.map((r, row) => r.map((cell, col) => ({ ...cell, point: { col, row } })))
             .reduce((a, b) => [...a, ...b], [])
     }
 
-    find(matcher: (cell: Cell, col: number, row: number) => boolean) {
-        return this.cells().filter(c => matcher(c.cell, c.col, c.row))
+    find(matcher: (cell: CellWithPoint) => boolean) {
+        return this.cells().filter(c => matcher(c))
     }
 
     blockingHighlights(blockers: Blocker[]): Partial<Hint> {

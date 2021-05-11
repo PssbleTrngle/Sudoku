@@ -2,13 +2,13 @@ import { arrayEqual, exists } from "../../util";
 import { Hint, possibleBlockers } from "../Sudoku";
 import Strategy from "./Strategy";
 
-export default class NakedPair extends Strategy {
+export default abstract class Naked extends Strategy {
 
-   getName() {
-      return 'Nacktes Paar'
-   }
+   abstract partnerCount(): number
 
    getHints() {
+
+      const partnerCount = this.partnerCount()
 
       return this.find(c => !c.value && c.candidates.length === 2).map(cell => {
          const { candidates } = cell
@@ -16,11 +16,15 @@ export default class NakedPair extends Strategy {
 
          const blockers = possibleBlockers(this.sudoku, cell.point)
 
-         const partners = blockers.filter(c => arrayEqual(c.candidates, candidates))
+         const partners = [...blockers, cell]
+            .filter(c => c.candidates.length === 2)
+            .filter((c1, i1, a) => !a.some((c2, i2) => i2 < i1 && arrayEqual(c1.candidates, c2.candidates)))
+            .filter((p1, i1, a) => p1.candidates.every(c => a.filter((p2, i2) => i1 !== i2 && p2.candidates.includes(c)).length === 1))
 
-         if (partners.length !== 1) return null
-         const [partner] = partners
-         const partnerBlockers = possibleBlockers(this.sudoku, partner.point, cell.point)
+         if (partners.length !== partnerCount) return null
+
+         const points = partners.map(p => p.point)
+         const partnerBlockers = possibleBlockers(this.sudoku, ...points)
 
          return partnerBlockers
             .filter(c => !arrayEqual(c.candidates, candidates))
@@ -32,7 +36,7 @@ export default class NakedPair extends Strategy {
                      value,
                      ...b.point,
                      ...this.blockingHighlights([b]),
-                     highlights: [cell.point, partner.point]
+                     highlights: points
                   }))
             )
 

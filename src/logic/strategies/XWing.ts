@@ -16,23 +16,23 @@ export default class XWing extends Strategy {
         const removeables = candidates.map(p => {
 
             const cells = this.find(c => c.candidates.includes(p))
-            return cells.map(origin => {
+            return cells.map(({ point: origin }) => {
 
-                const inRow = cells.filter(c => c.row === origin.row && c.col !== origin.col)
-                const inCol = cells.filter(c => c.row !== origin.row && c.col === origin.col)
+                const inRow = cells.filter(c => c.point.row === origin.row && c.point.col !== origin.col)
+                const inCol = cells.filter(c => c.point.row !== origin.row && c.point.col === origin.col)
 
                 const acrosses = inRow.map(row => inCol.map(col => {
-                    return cells.find(c => c.row === col.row && c.col === row.col)
+                    return cells.find(c => c.point.row === col.point.row && c.point.col === row.point.col)
                 })).flat().filter(exists);
 
                 const removeables = acrosses.map(a => cells.filter(c =>
-                    ((c.row === origin.row || c.row === a.row) && (c.col !== origin.col && c.col !== a.col)) ||
-                    ((c.col === origin.col || c.col === a.col) && (c.row !== origin.row && c.row !== a.row))
+                    ((c.point.row === origin.row || c.point.row === a.point.row) && (c.point.col !== origin.col && c.point.col !== a.point.col)) ||
+                    ((c.point.col === origin.col || c.point.col === a.point.col) && (c.point.row !== origin.row && c.point.row !== a.point.row))
                 ).map(c => ({
-                    ...c, highlights: [
-                        origin, a, 
-                        { col: origin.col, row: a.row },
-                        { col: a.col, row: origin.row },
+                    ...c, ...c.point, highlights: [
+                        origin, a.point,
+                        { col: origin.col, row: a.point.row },
+                        { col: a.point.col, row: origin.row },
                     ]
                 }))).flat()
 
