@@ -73,6 +73,20 @@ const Sudoku = ({ onChange, sudoku, fillcandidates }: SudokuProps) => {
         return () => window.removeEventListener('keydown', onKey)
     }, [onKey])
 
+    const applyHint = useCallback(() => {
+        if (hint) {
+            const consumers = hint.actions.map(action =>
+                modifySudoku(action.row, action.col, c => {
+                    if (action.type === 'exclude') return { candidates: c.candidates?.filter(i => action.value !== i) }
+                    if (action.type === 'value') return { value: action.value }
+                    return {}
+                })
+            )
+
+            onChange(sudoku => consumers.reduce((s, consumer) => consumer(s), sudoku))
+        }
+    }, [hint, onChange])
+
     return <section id='sudoku'>
 
         <div className='sudoku'>
@@ -92,25 +106,39 @@ const Sudoku = ({ onChange, sudoku, fillcandidates }: SudokuProps) => {
             : <p className='focused'>Select a Cell</p>
         }
 
-        <Hints {...{ sudoku }} onChange={setHint} />
+        <Hints {...{ sudoku }} onChange={setHint} hint={hint} onApply={applyHint} />
 
     </section>
 }
 
-type HintProps = { sudoku: ISudoku, onChange?: Dispatch<SetStateAction<Hint | undefined>> }
-const Hints = ({ onChange, sudoku }: HintProps) => {
+type HintProps = {
+    sudoku: ISudoku,
+    onChange?: Dispatch<SetStateAction<Hint | undefined>>,
+    hint?: Hint,
+    onApply: () => void,
+}
+const Hints = ({ onChange, sudoku, hint, onApply }: HintProps) => {
     const strats = usePromise(() => Strategies.getHints(sudoku), [sudoku]) ?? []
     const [selectedStrat, selectStrat] = useState(-1)
+    const [strategy, setStrategy] = useState<string>()
 
     useEffect(() => {
         if (onChange) onChange(undefined)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sudoku])
 
+    useEffect(() => {
+        if (strats.length <= selectedStrat) selectStrat(-1)
+    }, [strats, selectedStrat, selectStrat])
+
     const getHint = () => {
-        const [hint] = strats[selectedStrat]?.hints ?? strats.map(s => s.hints).reduce((a, b) => [...a, ...b], [])
-        if (hint && onChange) onChange(hint)
-        console.log(hint)
+        const strat = Math.max(0, selectedStrat)
+        const [hint] = strats[strat]?.hints ?? []
+        if (hint && onChange) {
+            onChange(hint)
+            setStrategy(strats[strat].strategy)
+            console.log(hint)
+        }
     }
 
     if (strats.length === 0) return <p className='hints'>No hints possible</p>
@@ -125,6 +153,12 @@ const Hints = ({ onChange, sudoku }: HintProps) => {
         </select>
 
         <button onClick={getHint}>Get a hint</button>
+
+        {hint && <div className='info'>
+            <h3>{strategy}</h3>
+            <button onClick={onApply}>Apply</button>
+        </div>}
+
     </div>
 }
 

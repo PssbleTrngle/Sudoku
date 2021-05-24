@@ -15,7 +15,13 @@ export interface Hint {
     value: number,
 }
 
-const strategies: (new (sudoku: Sudoku) => Strategy)[] = [WrongCandidates, XWing, HiddenSingle, NakedSingle, NakedPair, NakedTriple, HiddenPair, ForbiddenRectangle1];
+const strategies: (new (sudoku: Sudoku) => Strategy)[] = [
+    WrongCandidates,
+    ForbiddenRectangle1,
+    NakedPair, NakedTriple, HiddenPair,
+    HiddenSingle, NakedSingle,
+    XWing,
+];
 
 async function getHints(sudoku: Sudoku) {
     return strategies

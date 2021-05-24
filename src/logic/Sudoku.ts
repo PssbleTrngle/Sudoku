@@ -1,3 +1,4 @@
+import { SetStateAction } from "react"
 import { arrayOf } from "../util"
 
 
@@ -31,10 +32,10 @@ export type Action = Point & {
     type: 'value' | 'exclude'
 }
 
-export function modifySudoku(y: number, x: number, cell: Partial<Cell>): (s: Sudoku) => Sudoku {
+export function modifySudoku(y: number, x: number, cell: SetStateAction<Partial<Cell>>): (s: Sudoku) => Sudoku {
     return s => ({
         ...s, cells: s.cells.map((row, r) => row.map((ce, c) => {
-            if (y === r && x === c) return { ...ce, ...cell }
+            if (y === r && x === c) return { ...ce, ...(typeof cell === 'function' ? cell(ce) : cell) }
             else return ce
         }))
     })
