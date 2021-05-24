@@ -49,3 +49,5 @@ require('./Versteckter Single 2');
 require('./X Wing');
 require('./NakedPair');
 require('./NakedTriple');
+require('./HiddenPair');
+require('./rectangles');

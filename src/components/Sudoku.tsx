@@ -3,7 +3,7 @@ import React, { Dispatch, FC, memo, Reducer, SetStateAction, useCallback, useEff
 import '../assets/style/sudoku.scss'
 import { usePromise } from '../Hooks'
 import Strategies from '../logic/Strategies'
-import { Cell as ICell, Hint, modifySudoku, ninthAt, possibleValues, Sudoku as ISudoku, withPoints } from '../logic/Sudoku'
+import { Action, Cell as ICell, CellWithPoint, Hint, modifySudoku, ninthAt, possibleValues, Sudoku as ISudoku, withPoints } from '../logic/Sudoku'
 import { arrayEqual, arrayOf, exists } from '../util'
 
 const NUMS = arrayOf(9)
@@ -77,14 +77,12 @@ const Sudoku = ({ onChange, sudoku, fillcandidates }: SudokuProps) => {
 
         <div className='sudoku'>
             {cells.map((r, row) => r.map((cell, col) =>
-                <Cell {...{ cell }}
+                <Cell {...cell}
+                    point={{ row, col }}
                     selected={fx === col && fy === row}
-                    highlighted={hint?.highlights?.some(c => c.row === row && c.col === col)}
-                    blocked={hint?.blocked?.some(c => c.row === row && c.col === col)}
-                    filled={hint?.highlightRows?.some(r => row === r) || hint?.highlightCols?.some(c => col === c) || hint?.highlightNinths?.some(n => ninthAt({ row, col }) === n)}
                     key={`${col}/${row}`}
                     onSelect={() => setFocused([col, row])}
-                    hint={hint && hint.row === row && hint.col === col ? hint : undefined}
+                    hint={hint}
                 />
             ))}
         </div>
@@ -190,36 +188,41 @@ const Focused = memo(({ value, candidates, onChange, x, y }: FocusedProps) => {
     </div>
 });
 
-type CellProps = {
-    cell: ICell
+type CellProps = CellWithPoint & {
     onSelect?: () => void;
     selected?: boolean;
-    highlighted?: boolean;
-    blocked?: boolean;
-    filled?: boolean;
-    hint?: {
-        value: number;
-        type: Hint['type'];
-    },
+    hint?: Hint,
 }
-const Cell = memo(({ onSelect, cell, hint, highlighted, filled, selected, blocked }: CellProps) => {
+const Cell = memo(({ onSelect, hint, selected, point, candidates, ...cell }: CellProps) => {
+    const { row, col } = point
 
-    const hintValue = useMemo(() => hint?.type === 'value' ? hint.value : undefined, [hint])
-    const value = useMemo(() => cell.value ?? hintValue, [cell, hintValue])
+    const actions = useMemo(() => hint?.actions.filter(a => a?.col === col && a.row === row), [hint, col, row])
+    const hintValue = useMemo(() => actions?.find(a => a.type === 'value')?.value, [actions])
+    const value = useMemo(() => cell.value ?? hintValue, [cell.value, hintValue])
+
+    const highlighted = hint?.highlights?.some(c => c.row === row && c.col === col)
+    const blocked = hint?.blocked?.some(c => c.row === row && c.col === col)
+    const filled = hint?.highlightRows?.some(r => row === r) || hint?.highlightCols?.some(c => col === c) || hint?.highlightNinths?.some(n => ninthAt({ row, col }) === n)
+
+    const highlightedCandidates = hint?.highlights?.find(c => c.row === row && c.col === col)?.candidates
 
     return <span onClick={onSelect} className={classes('cell', { selected, highlighted, blocked, filled, hint: hintValue })}>
         <span className='value'>{value}</span>
-        <Candidates candidates={value ? [] : cell.candidates} hint={hint} />
+        <Candidates highlighted={highlightedCandidates} candidates={cell.value ? [] : candidates} actions={actions} />
     </span>
 })
 
 const Candidates: FC<{
     candidates: number[]
-    hint?: CellProps['hint']
-}> = ({ candidates, hint }) => (
+    actions?: Action[]
+    highlighted?: number[]
+}> = ({ candidates, actions, highlighted }) => (
     <div className='candidates'>
         {arrayOf(9).map(i =>
-            <span className={classes({ crossed: hint?.type === 'exclude' && hint.value === i })} key={i}>
+            <span className={classes({
+                crossed: actions?.some(a => a.type === 'exclude' && a.value === i),
+                highlighted: highlighted?.includes(i)
+            })} key={i}>
                 {candidates.includes(i) ? i : ''}
             </span>
         )}

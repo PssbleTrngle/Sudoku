@@ -1,3 +1,4 @@
+import { arrayOf } from "../../util";
 import { Blocker, CellWithPoint, Hint, ninthAt, Sudoku } from "../Sudoku";
 
 export default abstract class Strategy {
@@ -6,7 +7,7 @@ export default abstract class Strategy {
 
     abstract getName(): string;
 
-    private cells(): CellWithPoint[] {
+    protected cells(): CellWithPoint[] {
         return this.sudoku.cells.map((r, row) => r.map((cell, col) => ({ ...cell, point: { col, row } })))
             .reduce((a, b) => [...a, ...b], [])
     }
@@ -22,6 +23,18 @@ export default abstract class Strategy {
             highlightRows: blockers.filter(c => c.source.includes('row')).map(c => c.point.row),
             highlightNinths: blockers.filter(c => c.source.includes('ninth')).map(c => ninthAt(c.point)),
         }
+    }
+
+    forGroups(func: (cells: CellWithPoint[]) => Hint[]) {
+        return arrayOf(9).map(i => i - 1).map(i => {
+
+            const inNinth = this.find(({ point }) => ninthAt(point) === i)
+            const inCol = this.find(({ point }) => point.col === i)
+            const inRow = this.find(({ point }) => point.row === i)
+
+            return [inNinth, inCol, inRow].map(c => func(c)).flat()
+
+        }).flat()
     }
 
     abstract getHints(): Hint[]

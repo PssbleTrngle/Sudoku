@@ -20,8 +20,11 @@ export default class NakedSingle extends Strategy {
             const sources = takenValues.map(v => v.source).flat()
 
             const hint: Hint = {
-               ...cell, ...cell.point, value,
-               type: 'value',
+               actions: [{
+                  ...cell.point,
+                  type: 'value',
+                  value,
+               }],
                highlights: takenValues.map(c => c.point),
                highlightRows: sources.includes('row') ? [cell.point.row] : undefined,
                highlightCols: sources.includes('col') ? [cell.point.col] : undefined,

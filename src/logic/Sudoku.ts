@@ -15,14 +15,20 @@ interface Point {
     row: number
 }
 
-export interface Hint extends Point {
-    value: number;
-    type: 'value' | 'exclude',
-    highlights?: Point[]
+export interface Hint {
+    actions: Action[]
+    highlights?: Array<Point & {
+        candidates?: number[]
+    }>
     blocked?: Point[]
     highlightCols?: number[]
     highlightRows?: number[]
     highlightNinths?: number[]
+}
+
+export type Action = Point & {
+    value: number
+    type: 'value' | 'exclude'
 }
 
 export function modifySudoku(y: number, x: number, cell: Partial<Cell>): (s: Sudoku) => Sudoku {

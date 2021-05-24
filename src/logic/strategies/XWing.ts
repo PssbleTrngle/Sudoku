@@ -42,7 +42,11 @@ export default class XWing extends Strategy {
 
         }).flat()
 
-        return removeables.map<Hint>(c => ({ ...c, type: 'exclude' }));
+        return removeables.map<Hint>(c => ({
+            actions: [{
+                ...c, type: 'exclude'
+            }]
+        }));
 
     }
 

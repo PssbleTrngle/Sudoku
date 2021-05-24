@@ -18,8 +18,11 @@ export default class WrongCandidates extends Strategy {
             else {
 
                const hint: Hint = {
-                  ...point, value,
-                  type: 'exclude',
+                  actions: [{
+                     ...point,
+                     value,
+                     type: 'exclude',
+                  }],
                   ...this.blockingHighlights(blockers),
                }
 

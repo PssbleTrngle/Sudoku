@@ -28,9 +28,11 @@ export default class NakedPair extends Strategy {
                b.candidates
                   .filter(i => candidates.includes(i))
                   .map<Hint>(value => ({
-                     type: 'exclude',
-                     value,
-                     ...b.point,
+                     actions: [{
+                        type: 'exclude',
+                        value,
+                        ...b.point,
+                     }],
                      ...this.blockingHighlights([b]),
                      highlights: [cell.point, partner.point]
                   }))

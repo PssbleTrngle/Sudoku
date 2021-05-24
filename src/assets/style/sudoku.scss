@@ -31,8 +31,12 @@ $cell-color: #ddd;
 
         & > span {
             position: relative;
-            //font-style: italic;
+            color: black;
             font-weight: bold;
+
+            &.highlighted {
+                color: rgb(71, 157, 255);
+            }
 
             &.crossed {
                 color: red;
@@ -160,7 +164,7 @@ section#sudoku {
             }
 
             &.filled {
-                background:  lighten($highlight, 25%);
+                background: lighten($highlight, 25%);
 
                 &:hover {
                     background: lighten($highlight, 30%);
@@ -168,7 +172,13 @@ section#sudoku {
             }
 
             &.blocked {
-                background-image: repeating-linear-gradient(-45deg, #0001, #0001 19%, transparent 20%, transparent 39%) !important;
+                background-image: repeating-linear-gradient(
+                    -45deg,
+                    #0001,
+                    #0001 19%,
+                    transparent 20%,
+                    transparent 39%
+                ) !important;
             }
 
             &.selected {
