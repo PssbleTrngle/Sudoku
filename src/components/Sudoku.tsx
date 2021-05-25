@@ -2,7 +2,7 @@ import classes from 'classnames'
 import React, { Dispatch, FC, memo, Reducer, SetStateAction, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import '../assets/style/sudoku.scss'
 import { usePromise } from '../Hooks'
-import Strategies from '../logic/Strategies'
+import Strategies from '../logic/strategies'
 import { Action, Cell as ICell, CellWithPoint, Hint, modifySudoku, ninthAt, possibleValues, Sudoku as ISudoku, withPoints } from '../logic/Sudoku'
 import { arrayEqual, arrayOf, exists } from '../util'
 
