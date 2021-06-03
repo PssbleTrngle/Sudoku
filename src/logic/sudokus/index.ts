@@ -51,3 +51,4 @@ require('./NakedPair');
 require('./NakedTriple');
 require('./HiddenPair');
 require('./rectangles');
+require('./ThirdEye');

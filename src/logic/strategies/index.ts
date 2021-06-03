@@ -8,6 +8,7 @@ import ForbiddenRectangle1 from "./rectangles/Type1";
 import ForbiddenRectangle2 from "./rectangles/Type2";
 import ForbiddenRectangle4 from "./rectangles/Type4";
 import Strategy from "./Strategy";
+import ThirdEye from "./ThirdEye";
 import WrongCandidates from "./WrongCandidates";
 import XWing from "./XWing";
 
@@ -22,6 +23,7 @@ const strategies: (new (sudoku: Sudoku) => Strategy)[] = [
     HiddenSingle, NakedSingle,
     NakedPair, NakedTriple, HiddenPair,
     ForbiddenRectangle1, ForbiddenRectangle2, ForbiddenRectangle4,
+    ThirdEye,
     XWing,
 ];
 
