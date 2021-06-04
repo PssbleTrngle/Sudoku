@@ -119,7 +119,8 @@ type HintProps = {
 }
 
 const Hints = ({ onChange, sudoku, hint, onApply }: HintProps) => {
-    const strats = usePromise(() => Strategies.getHints(sudoku), [sudoku]) ?? []
+    const loadingStrats = usePromise(() => Strategies.getHints(sudoku), [sudoku])
+    const strats = useMemo(() => loadingStrats ?? [], [loadingStrats])
     const [selectedStrat, selectStrat] = useState(-1)
     const [strategy, setStrategy] = useState<string>()
 
