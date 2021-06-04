@@ -1,6 +1,7 @@
 import { Sudoku } from "../Sudoku";
 import HiddenPair from "./HiddenPair";
 import HiddenSingle from "./HiddenSingle";
+import LonelyCandidates from "./LonelyCandidates";
 import NakedPair from "./NakedPair";
 import NakedSingle from "./NakedSingle";
 import NakedTriple from "./NakedTriple";
@@ -19,7 +20,7 @@ export interface Hint {
 }
 
 const strategies: (new (sudoku: Sudoku) => Strategy)[] = [
-    WrongCandidates,
+    WrongCandidates, LonelyCandidates,
     HiddenSingle, NakedSingle,
     NakedPair, NakedTriple, HiddenPair,
     ForbiddenRectangle1, ForbiddenRectangle2, ForbiddenRectangle4,
