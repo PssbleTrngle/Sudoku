@@ -30,7 +30,7 @@ const strategies: (new (sudoku: Sudoku) => Strategy)[] = [
 async function getHints(sudoku: Sudoku) {
     return strategies
         .map(s => new s(sudoku))
-        .map(s => ({ hints: s.getHints(), strategy: s.getName() }))
+        .map(s => ({ hints: s.getHints().filter(h => h.actions.length > 0), strategy: s.getName() }))
         .filter(s => s.hints.length > 0)
 }
 

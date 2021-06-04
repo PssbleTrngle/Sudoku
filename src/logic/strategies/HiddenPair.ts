@@ -1,5 +1,5 @@
-import { arrayEqual, arrayOf, exists } from "../../util";
-import { Hint } from "../Sudoku";
+import { arrayOf, exists } from "../../util";
+import { Action, Hint } from "../Sudoku";
 import Strategy from "./Strategy";
 
 export default class HiddenPair extends Strategy {
@@ -15,15 +15,18 @@ export default class HiddenPair extends Strategy {
 
          return HiddenPair.pairs.map<Hint | null>(candidates => {
 
-            const matching = cells.filter(c => arrayEqual(candidates, c.candidates))
-            if (matching.length !== 2) return null
+            const any = cells.filter(cell => candidates.some(c => cell.candidates.includes(c)))
+            const matching = cells.filter(cell => candidates.every(c => cell.candidates.includes(c)))
+            if (matching.length !== 2 || any.length !== 2) return null
+
+            const otherCandidates = matching.map(c => c.candidates).flat().filter(c => !candidates.includes(c))
 
             return {
-               actions: matching.map(({ point }, i) => ({
-                  value: candidates[i],
+               actions: matching.map(({ point }) => otherCandidates.map(value => ({
+                  value,
                   ...point,
-                  type: 'value',
-               })),
+                  type: 'exclude',
+               }))).flat() as Action[],
                highlights: matching.map(m => ({ ...m.point, candidates })),
             }
 
