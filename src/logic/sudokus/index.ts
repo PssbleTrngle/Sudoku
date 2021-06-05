@@ -52,3 +52,5 @@ require('./NakedTriple');
 require('./HiddenPair');
 require('./rectangles');
 require('./ThirdEye');
+require('./RBC');
+require('./BRC');

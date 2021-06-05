@@ -35,7 +35,10 @@ export type Action = Point & {
 export function modifySudoku(y: number, x: number, cell: SetStateAction<Partial<Cell>>): (s: Sudoku) => Sudoku {
     return s => ({
         ...s, cells: s.cells.map((row, r) => row.map((ce, c) => {
-            if (y === r && x === c) return { ...ce, ...(typeof cell === 'function' ? cell(ce) : cell) }
+            if (y === r && x === c) {
+                const unchecked = { ...ce, ...(typeof cell === 'function' ? cell(ce) : cell) }
+                return { ...unchecked, candidates: unchecked.value ? [] : unchecked.candidates }
+            }
             else return ce
         }))
     })
