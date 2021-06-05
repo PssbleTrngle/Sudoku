@@ -1,4 +1,5 @@
 import { Sudoku } from "../Sudoku";
+import BRC from "./BRC";
 import HiddenPair from "./HiddenPair";
 import HiddenSingle from "./HiddenSingle";
 import LonelyCandidates from "./LonelyCandidates";
@@ -24,7 +25,7 @@ const strategies: (new (sudoku: Sudoku) => Strategy)[] = [
     WrongCandidates, LonelyCandidates,
     HiddenSingle, NakedSingle,
     NakedPair, NakedTriple, HiddenPair,
-    RBC,
+    RBC, BRC,
     ForbiddenRectangle1, ForbiddenRectangle2, ForbiddenRectangle4,
     ThirdEye,
     XWing,
