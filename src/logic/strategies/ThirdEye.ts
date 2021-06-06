@@ -10,23 +10,34 @@ export default class ThirdEye extends Strategy {
 
     getHints() {
 
+        // All cells without a value
         const empty = this.find(c => !c.value)
 
+        // All cells with more than one candidate
         const [withMore, ...rest] = empty.filter(c => c.candidates.length > 2)
 
+        // Return if there are multiple cells with more than one candidate
         if (!withMore || rest.length > 0) return []
 
+        // Find cells that could block this cell
         const blockers = possibleBlockers(this.sudoku, withMore.point)
 
+        // Search for the candidate that should be filled in
         const hit = withMore.candidates.map(c => {
 
+            // All other blockers that contain this candidate
             const otherPossibilities = blockers.filter(b => b.candidates.includes(c))
+
+            // Categorize and count by the source of influence (ninth, row or col)
             const matches = otherPossibilities.map(p => p.source).flat().reduce((o, source) => ({
                 ...o, [source]: (o[source] ?? 0) + 1
             }), {} as Record<string, number>)
 
+            // Find the type of group that contains more than one cell with this candidate
             const [source] = Object.entries(matches).find(([, amount]) => amount > 1) ?? []
             if (!source) return null
+
+            // Return that blockers from this source and the candidate
             return {
                 blockers: otherPossibilities.filter(p => p.source.includes(source as any)),
                 candidate: c,
@@ -34,9 +45,13 @@ export default class ThirdEye extends Strategy {
 
         }).filter(exists)
 
+        // If there are multiple groups that contain more than one cell with this candidate, return
         if (hit.length !== 1) return []
+
+        // All other candidates this cell contains
         const remove = withMore.candidates.filter(c => c !== hit[0].candidate)
 
+        // Return the other candidates as an `exclude` hint
         const hint: Hint = {
             highlights: [withMore.point, ...hit[0].blockers.map(b => ({
                 ...b.point,

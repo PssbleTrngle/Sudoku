@@ -9,6 +9,11 @@ export default class LonelyCandidates extends Strategy {
 
    getHints() {
 
+      /*
+       * Find all cells that only contain a single candidate
+       * If every is correctly filled in, this should be
+       * the only possible value for this cell
+       */
       return this.find(c => c.candidates.length === 1).map(({ point, ...cell }) =>
          cell.candidates.map<Hint>(value => ({
             actions: [{
