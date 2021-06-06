@@ -12,7 +12,7 @@ export default class NakedPair extends Strategy {
 
       return this.find(c => !c.value && c.candidates.length === 2).map(cell => {
          const { candidates } = cell
-         if (candidates.length !== 2) return null
+         //if (candidates.length !== 2) return null
 
          const blockers = possibleBlockers(this.sudoku, cell.point)
 
