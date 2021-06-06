@@ -21,6 +21,7 @@ export default class NakedPair extends Strategy {
          if (partners.length !== 1) return null
          const [partner] = partners
          const partnerBlockers = possibleBlockers(this.sudoku, partner.point, cell.point)
+            .filter(b => candidates.some(c => b.candidates.includes(c)))
 
          return {
             ...this.blockingHighlights(partnerBlockers),

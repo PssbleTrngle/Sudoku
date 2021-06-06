@@ -11,7 +11,7 @@ export type Sudoku = {
     cells: Cell[][]
 }
 
-interface Point {
+export interface Point {
     col: number;
     row: number
 }

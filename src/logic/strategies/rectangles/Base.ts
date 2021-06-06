@@ -30,13 +30,13 @@ export default abstract class ForbiddenRectangle extends Strategy {
 
                // Search for cells in the same row with these candidates
                return withPair.filter(({ point }) => origin.point.row === point.row && origin.point.col < point.col).map(inRow => {
-                  
+
                   // The point & cell which would complete a rectangle made up of the point in the column, in the row and the origin point
                   // and check if this `across` cell also contains both candidates
                   const acrossPoint = { row: inCol.point.row, col: inRow.point.col }
                   const across: CellWithPoint = { point: acrossPoint, ...this.sudoku.cells[acrossPoint.row][acrossPoint.col] }
                   if (pair.some(i => !across.candidates.includes(i))) return null
-                  
+
                   // The corners of the rectangle
                   const corners = [origin, inCol, inRow, across]
 
@@ -44,8 +44,13 @@ export default abstract class ForbiddenRectangle extends Strategy {
                   const ninths = corners.map(c => ninthAt(c.point)).filter((n1, i1, a) => !a.some((n2, i2) => i2 < i1 && n1 === n2))
                   if (ninths.length !== 2) return null
 
-                  // If there are less than two corners with exactly two candidates, return
-                  if (corners.filter(c => c.candidates.length === 2).length < 2) return null
+                  // If there are less than two corners with exactly two candidates, which are part of the same group, return
+                  const withTwo = corners
+                     .filter(c => c.candidates.length === 2)
+                     .filter((c1, i1, a) => a.some((c2, i2) => i1 !== i2 && (
+                        c1.point.row === c2.point.row || c1.point.col === c2.point.row || ninthAt(c1.point) === ninthAt(c2.point)
+                     )))
+                  if (withTwo.length < 2) return null
 
                   return {
                      corners,

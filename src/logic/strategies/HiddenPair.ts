@@ -11,7 +11,7 @@ export default class HiddenPair extends Strategy {
    }
 
    getHints() {
-      return this.forGroups(cells => {
+      return this.forGroups((cells, type) => {
 
          return HiddenPair.pairs.map<Hint | null>(candidates => {
 
@@ -22,6 +22,7 @@ export default class HiddenPair extends Strategy {
             const otherCandidates = matching.map(c => c.candidates).flat().filter(c => !candidates.includes(c))
 
             return {
+               ...this.highlightGroup(type, matching[0].point),
                actions: matching.map(({ point }) => otherCandidates.map(value => ({
                   value,
                   ...point,
