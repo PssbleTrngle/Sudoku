@@ -14,6 +14,29 @@ Wenn eine gewissen Anzahl von gelöschten Feldern, welche von der Schwierigkeit 
 
 \subsubsection{Erzeugen eines gefüllten Sudokus}
 
+Zuerst muss ein vollständig gefülltes Sudoku generiert werden, welches das gelöste Sudoku darstellt.
+Dazu wird für alle Ziffern von 1-9 versucht eine Stelle in jedem Neuntel des Sudokus zu finden, in welche diese Ziffern
+platziert werden kann.
+Um zu verhindern dass der Algorithmus an einer Stelle stecken bleibt, wird Backtracking verwendet.
+Sollte die Ausführung an einem Punkt kommen, an dem sie kein mögliches Feld mehr findet, wird das vorläufige Feld
+bis zu einem vorherig gespeichertem Meilenstein zurückgesetzt.
+Je öfters der Algorithmus feststeckt, ohne dass der nächste Meilenstein erreicht wird, wird das Sudoku um ein immer größeres Stück
+zurückgesetzt.
+\newline 
+\newline
+Beim Füllen des Sudokus werden dabei nach jeder, in jedem Neuntel erfolgreich eingetragener Ziffer ein Meilenstein gesetzt.
+
 \subsubsection{Leeren des Sudokus}
 
+Sobald das Sudoku vollständig gefüllt ist, werden Stück für Stück wieder Ziffern herausgestrichen.
+Dabei muss nach jedem Streichen überprüft werden, ob das Sudoku nach eine eindeutige Lösung hat.
+Wenn das nicht der Fall ist, wird, ähnlich wie beim Füllen, das Sudoku um einen Schritt zurückgesetzt. 
+
 \subsubsection{Lösungsalgorithmus}
+
+Um zu überprüfen ob das Sudoku eine eindeutige Lösung hat, muss jeder mögliche Lösungpfad verfolgt werden.
+Dabei wird ein rekursiver Algorithmus verwendet, welcher bei jedem Schritt all momentan potentiell eintragebaren Ziffern einträgt
+und den nächsten Rekursionsschritt aufruft. 
+Die Abbruchkondition wird dabei durch die vollständige Lösung oder ein Sudoku ohne weitere möglichen Schritte dargestellt.
+Nachdem alle möglichen Schritte durchgeführt werden, wird überprüft ob alle zurückgegebenen Lösungen identisch sind.
+Sollte das nicht der Fall sein, besitzt das Sudoku keine eindeutige Lösung mehr.
