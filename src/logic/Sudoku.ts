@@ -54,6 +54,12 @@ export function withPoints(cells: Cell[][]): CellWithPoint[] {
     return cells.map((a, row) => a.map((cell, col) => ({ ...cell, point: { col, row } }))).flat()
 }
 
+export const inGroup = (...points: Point[]) =>  {
+    if(points.length === 0) return true
+    const {row, col} = points[0]
+    const ninth = ninthAt(points[0])
+    return points.every(p => p.col === col || p.row === row || ninthAt(p) === ninth)
+}
 export const inRow = (row: number, s: Sudoku) => withPoints(s.cells).filter(c => c.point.row === row) ?? []
 export const inCol = (col: number, s: Sudoku) => withPoints(s.cells).filter(c => c.point.col === col) ?? []
 export const inNinth = (point: Point, s: Sudoku) => withPoints(s.cells).filter(c => ninthAt(c.point) === ninthAt(point))

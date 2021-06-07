@@ -1,5 +1,5 @@
 import { arrayEqual, exists } from "../../../util";
-import { CellWithPoint, Hint, ninthAt, possibleBlockers } from "../../Sudoku";
+import { CellWithPoint, Hint, inGroup, possibleBlockers } from "../../Sudoku";
 import ForbiddenRectangle from './Base';
 
 export interface Rectangle {
@@ -19,9 +19,10 @@ export default class ForbiddenRectangle2 extends ForbiddenRectangle {
 
          const withAdditional = corners.filter(c => c.candidates.length === 3)
 
-         if (withAdditional.length !== 2 || withAdditional.some((c, _, a) =>
-            !arrayEqual(c.candidates, a[0].candidates) || ninthAt(c.point) !== ninthAt(a[0].point)
-         )) return null;
+         if (withAdditional.length !== 2
+            || withAdditional.some((c, _, a) => !arrayEqual(c.candidates, a[0].candidates))
+            || !inGroup(...withAdditional.map(c => c.point))
+         ) return null;
 
          const blockers = possibleBlockers(this.sudoku, ...withAdditional.map(c => c.point))
          const [candidate] = withAdditional[0].candidates.filter(c => !candidates.includes(c))

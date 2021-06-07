@@ -6,32 +6,6 @@ const NUMS = arrayOf(9)
 
 export default function solve(sudoku: Sudoku, firstOnly = true) {
 
-
-   /*
-   const solver = new History(sudoku)
-
-   const emptyCells = withPoints(sudoku.cells).filter(c => !c.value)
-
-
-   emptyCells.forEach(({ point }, i) => {
-
-      if (i % Math.round(emptyCells.length / 9) === 0) solver.mark()
-
-      solver.step(async (s, attempt) => {
-
-         const possibles = NUMS.filter(i => canPut(point.x, point.y, i, solver.current))
-         console.log(possibles, attempt)
-         if (possibles.length === 0 || attempt > possibles.length) throw new Error()
-
-         const value = possibles[attempt % possibles.length]
-         return modifySudoku(point.x, point.y, { value })(s)
-
-      })
-
-
-   })
-   */
-
    const observer = new Observer<Sudoku>()
 
    window.setTimeout(() =>
@@ -67,7 +41,9 @@ export async function recursiveSolve(sudoku: Sudoku, onlyFirst = false): Promise
 
          const solutions = await Promise.all(modfied.map(async mod => {
             return recursiveSolve(mod)
-         })).then(a => a.filter(exists))
+         })).then(a => a.filter(exists).filter((s1, i1, a) => !a.some((s2, i2) => 
+            i2 < i1 && idendical(s1, s2)
+         )))
 
          if (solutions.length > 1) throw new Error('More than one solution')
          else return solutions[0]
@@ -80,4 +56,10 @@ export async function recursiveSolve(sudoku: Sudoku, onlyFirst = false): Promise
 
    return null
 
+}
+
+function idendical(a: Sudoku, b: Sudoku) {
+   return withPoints(a.cells).every(c =>
+      b.cells[c.point.row][c.point.col].value === c.value  
+   )
 }

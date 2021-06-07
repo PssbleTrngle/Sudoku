@@ -42,7 +42,7 @@ export default abstract class ForbiddenRectangle extends Strategy {
 
                   // Check if all corners are in one of two ninths
                   const ninths = corners.map(c => ninthAt(c.point)).filter((n1, i1, a) => !a.some((n2, i2) => i2 < i1 && n1 === n2))
-                  if (ninths.length !== 2) return null
+                  if (ninths.length < 2) return null
 
                   // If there are less than two corners with exactly two candidates, which are part of the same group, return
                   const withTwo = corners
