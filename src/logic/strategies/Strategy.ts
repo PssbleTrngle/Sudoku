@@ -1,5 +1,5 @@
 import { arrayOf } from "../../util";
-import { Blocker, CellWithPoint, Hint, ninthAt, Point, Sudoku } from "../Sudoku";
+import { Blocker, CellWithPoint, Hint, ninthAt, Point, Sudoku, withPoints } from "../Sudoku";
 
 export default abstract class Strategy {
 
@@ -8,8 +8,7 @@ export default abstract class Strategy {
     abstract getName(): string;
 
     protected cells(): CellWithPoint[] {
-        return this.sudoku.cells.map((r, row) => r.map((cell, col) => ({ ...cell, point: { col, row } })))
-            .reduce((a, b) => [...a, ...b], [])
+        return withPoints(this.sudoku.cells)
     }
 
     find(matcher: (cell: CellWithPoint) => boolean) {
