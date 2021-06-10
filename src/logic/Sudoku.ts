@@ -16,6 +16,10 @@ export interface Point {
     row: number
 }
 
+export interface ExactPoint extends Point {
+    at?: number
+}
+
 export interface Hint {
     actions: Action[]
     highlights?: Array<Point & {
@@ -25,7 +29,7 @@ export interface Hint {
     highlightCols?: number[]
     highlightRows?: number[]
     highlightNinths?: number[]
-    connections?: Point[][]
+    connections?: ExactPoint[][]
 }
 
 export type Action = Point & {

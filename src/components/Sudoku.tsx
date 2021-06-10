@@ -3,7 +3,7 @@ import React, { Dispatch, FC, memo, Reducer, SetStateAction, useCallback, useEff
 import '../assets/style/sudoku.scss'
 import { usePromise } from '../Hooks'
 import Strategies from '../logic/strategies'
-import { Action, Cell as ICell, CellWithPoint, Hint, modifySudoku, ninthAt, Point, possibleValues, Sudoku as ISudoku, withPoints } from '../logic/Sudoku'
+import { Action, Cell as ICell, CellWithPoint, ExactPoint, Hint, modifySudoku, ninthAt, possibleValues, Sudoku as ISudoku, withPoints } from '../logic/Sudoku'
 import { arrayEqual, arrayOf, exists } from '../util'
 
 const NUMS = arrayOf(9)
@@ -115,7 +115,7 @@ const Sudoku = ({ onChange, sudoku, fillcandidates }: SudokuProps) => {
 }
 
 const Connections: FC<{
-    connections?: Point[][]
+    connections?: ExactPoint[][]
 }> = ({ connections = [] }) => (
     <svg className='connections'>
         {connections.filter(c => c.length === 2).map(([a, b], i) =>
@@ -125,19 +125,24 @@ const Connections: FC<{
 )
 
 const Line: FC<{
-    from: Point,
-    to: Point,
-}> = ({ from, to }) => (
-    <line
-        x1={`${(from.col + 0.5) * (100 / 9)}%`}
-        x2={`${(to.col + 0.5) * (100 / 9)}%`}
-        y1={`${(from.row + 0.5) * (100 / 9)}%`}
-        y2={`${(to.row + 0.5) * (100 / 9)}%`}
-        stroke='rgb(71, 157, 255)'
+    from: ExactPoint,
+    to: ExactPoint,
+}> = props => {
+
+    const [from, to] = [props.from, props.to].map(p => ({
+        col: p.col + ((p.at ?? 5) - 1) % 3 / 3 + (1 / 6),
+        row: p.row + Math.floor(((p.at ?? 5) - 1) / 3) / 3 + (1 / 6),
+    }))
+
+    return <line
+        x1={`${(from.col) * (100 / 9)}%`}
+        x2={`${(to.col) * (100 / 9)}%`}
+        y1={`${(from.row) * (100 / 9)}%`}
+        y2={`${(to.row) * (100 / 9)}%`}
+        stroke='rgb(71, 157, 255, 0.5)'
         strokeWidth={2}
-        strokeDasharray={4}
     />
-)
+}
 
 type HintProps = {
     sudoku: ISudoku,
