@@ -69,11 +69,10 @@ export function withPoints(cells: Cell[][]): CellWithPoint[] {
 }
 
 /**
- * @param first the cell all others have to be in the same group of
  * @param points an array of points
  * @returns If all the points are in the same group as the first one
  */
-export const inGroup = (first: Point, ...points: Point[]) => {
+export const inGroup = (...[first, ...points]: Point[]) => {
     if (points.length === 0) return true
     const { row, col } = first
     const ninth = ninthAt(first)

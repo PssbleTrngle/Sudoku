@@ -14,6 +14,7 @@ import Strategy from "./Strategy";
 import ThirdEye from "./ThirdEye";
 import WrongCandidates from "./WrongCandidates";
 import XWing from "./XWing";
+import XYWing from "./XYWing";
 
 export interface Hint {
     row: number,
@@ -28,7 +29,7 @@ const strategies: (new (sudoku: Sudoku) => Strategy)[] = [
     RBC, BRC,
     ForbiddenRectangle1, ForbiddenRectangle2, ForbiddenRectangle4,
     ThirdEye,
-    XWing,
+    XWing, XYWing,
 ];
 
 async function getHints(sudoku: Sudoku) {
