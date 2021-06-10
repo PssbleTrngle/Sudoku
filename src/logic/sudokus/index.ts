@@ -1,12 +1,24 @@
 import { arrayOf, exists } from '../../util'
+import Strategy from '../strategies/Strategy'
 import { Cell, Sudoku, symbols } from '../Sudoku'
 
 type SudokuLike = string | (Cell | number | number[])[][]
 
-const MAP = new Map<string, Sudoku>()
+export interface SudokuInfo {
+   sudoku: Sudoku,
+   strategy?: string
+   description?: string,
+}
 
-export function define(name: string, sudoku: SudokuLike) {
-   MAP.set(name, parse(sudoku))
+const MAP = new Map<string, SudokuInfo>()
+
+export function define(name: string, sudoku: SudokuLike, strategy?: { new(sudoku: Sudoku): Strategy }, description?: string) {
+   const parsed = parse(sudoku)
+   MAP.set(name, {
+      sudoku: parsed,
+      strategy: strategy && new strategy(parsed).getName(),
+      description,
+   })
 }
 
 export function names() {
@@ -23,14 +35,14 @@ function parse(value: SudokuLike): Sudoku {
    const json =
       typeof value === 'string'
          ? value
-              .trim()
-              .split('\n')
-              .map(line =>
-                 line
-                    .trim()
-                    .split('')
-                    .map(s => Number.parseInt(s))
-              )
+            .trim()
+            .split('\n')
+            .map(line =>
+               line
+                  .trim()
+                  .split('')
+                  .map(s => Number.parseInt(s))
+            )
          : value
 
    const size = arrayOf(9)
@@ -59,19 +71,4 @@ function parse(value: SudokuLike): Sudoku {
    return { cells }
 }
 
-require('./1')
-require('./2')
-require('./Versteckter Single')
-require('./Versteckter Single 2')
-require('./X Wing')
-require('./XYWing')
-require('./NakedPair')
-require('./NakedTriple')
-require('./HiddenPair')
-require('./rectangles')
-require('./ThirdEye')
-require('./RBC')
-require('./BRC')
-require('./XChain')
-require('./WWing')
-require('./Steinbutt')
+require('./import')
