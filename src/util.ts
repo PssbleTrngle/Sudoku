@@ -22,3 +22,8 @@ export function arrayOf(size: number) {
 export function arrayEqual<T>(a: T[], b: T[]) {
     return a.length === b.length && a.every((v, i) => b[i] === v)
 }
+
+export function cross<T>(values: T[], other = values): [T, T][] {
+    const different = other !== values
+    return values.map((a, ia) => other.filter((_, ib) => different || ia < ib).map(b => [a, b] as [T, T])).flat()
+}

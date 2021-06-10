@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
 import './assets/style/app.scss';
 import Sudoku from './components/Sudoku';
 import generator, { createEmpty } from './logic/generator';
@@ -55,8 +55,19 @@ function App() {
     }
 
     useEffect(() => {
-        if(fillcandidates) setFillCandidates(false)
+        if (fillcandidates) setFillCandidates(false)
     }, [fillcandidates])
+
+    const copy = useCallback(() => {
+        const minified = sudoku.cells.map(r => `[${r.map(c => {
+            if (c.value) return c.value.toString()
+            else if (c.candidates) return `[${c.candidates.join(',')}]`
+            else return '0'
+        }).join(', ')}]`).join(',\n   ')
+        navigator.clipboard.writeText(`[
+            ${minified}
+        ]`)
+    }, [sudoku])
 
     return <>
 
@@ -76,11 +87,7 @@ function App() {
                 <button key={k} onClick={generating ? cancel : call}>{generating ? 'Cancel' : k}</button>
             )}
 
-            {/*}
-            <label htmlFor='fill-candidates'>Fill Candidates</label>
-            <input type='checkbox' id='fill-candidates' checked={fillcandidates} onChange={e => setFillCandidates(e.target.checked)} />
-            */}
-
+            <button onClick={copy}>Copy</button>
 
             <button onClick={() => setFillCandidates(true)}>Fill Candidates</button>
 

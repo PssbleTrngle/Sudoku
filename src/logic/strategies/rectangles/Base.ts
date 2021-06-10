@@ -1,4 +1,4 @@
-import { exists } from "../../../util";
+import { cross, exists } from "../../../util";
 import { CellWithPoint, ninthAt } from "../../Sudoku";
 import Strategy from "../Strategy";
 
@@ -18,7 +18,7 @@ export default abstract class ForbiddenRectangle extends Strategy {
       return this.cells().map(origin => {
 
          // Possible pairs of candidates this cell contains ([1,2], [1,3]  ... [3,2] ...)
-         const pairs = origin.candidates.map(a => origin.candidates.filter(b => a < b).map(b => [a, b])).flat()
+         const pairs = cross(origin.candidates)
 
          return pairs.map(pair => {
 

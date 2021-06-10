@@ -25,6 +25,7 @@ export interface Hint {
     highlightCols?: number[]
     highlightRows?: number[]
     highlightNinths?: number[]
+    connections?: Point[][]
 }
 
 export type Action = Point & {
@@ -72,11 +73,20 @@ export function withPoints(cells: Cell[][]): CellWithPoint[] {
  * @param points an array of points
  * @returns If all the points are in the same group as the first one
  */
-export const inGroup = (...[first, ...points]: Point[]) => {
+export const inGroup = (...points: Point[]) => {
     if (points.length === 0) return true
+    return sharedGroups(...points).length > 0
+}
+
+export const sharedGroups = (...[first, ...points]: Point[]) => {
+    if (points.length === 0) return []
     const { row, col } = first
     const ninth = ninthAt(first)
-    return points.every(p => p.col === col || p.row === row || ninthAt(p) === ninth)
+    const sources = []
+    if (points.every(p => p.col === col)) sources.push('col')
+    if (points.every(p => p.row === row)) sources.push('row')
+    if (points.every(p => ninthAt(p) === ninth)) sources.push('ninth')
+    return sources as Array<'col' | 'row' | 'ninth'>
 }
 
 export const inRow = (row: number, s: Sudoku) => withPoints(s.cells).filter(c => c.point.row === row) ?? []
@@ -106,8 +116,9 @@ export function possibleBlockers(s: Sudoku, ...points: Point[]): Blocker[] {
     const c = points.every(p => p.col === col) ? inCol(col, s) : []
     const r = points.every(p => p.row === row) ? inRow(row, s) : []
     const n = points.every(p => ninthAt(p) === ninth) ? inNinth(points[0], s) : []
+    const e = withPoints(s.cells).filter(it => points.every(p => inGroup(p, it.point)))
 
-    const all = [c, r, n].flat() as Blocker[]
+    const all = [c, r, n, e].flat() as Blocker[]
     return all.filter(uniqByPoint)
         .filter(c => points.every(p => c.point.col !== p.col || c.point.row !== p.row))
         .map(b => {

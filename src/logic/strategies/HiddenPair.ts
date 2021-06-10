@@ -1,10 +1,10 @@
-import { arrayOf, exists } from "../../util";
+import { arrayOf, cross, exists } from "../../util";
 import { Action, Hint } from "../Sudoku";
 import Strategy from "./Strategy";
 
 export default class HiddenPair extends Strategy {
 
-   private static pairs = arrayOf(9).map(a => arrayOf(9).filter(b => a < b).map(b => [a, b])).flat()
+   private static pairs = cross(arrayOf(9))
 
    getName() {
       return 'Verstecktes Paar'
