@@ -29,6 +29,7 @@ function useObserver<K extends string>(setSudoku: Set<ISudoku>, generators: Reco
 
     useEffect(() => {
         observer?.cancel('Component reloading')
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const cancel = () => observer?.cancel('Manully Cancelled')

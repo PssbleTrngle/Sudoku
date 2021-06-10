@@ -1,10 +1,11 @@
-import classes from 'classnames'
-import React, { Dispatch, FC, memo, Reducer, SetStateAction, useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import React, { Dispatch, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
 import '../assets/style/sudoku.scss'
-import { usePromise } from '../Hooks'
-import Strategies from '../logic/strategies'
-import { Action, Cell as ICell, CellWithPoint, ExactPoint, Hint, modifySudoku, ninthAt, possibleValues, Sudoku as ISudoku, Symbol, symbols, withPoints } from '../logic/Sudoku'
+import { Hint, modifySudoku, Point, possibleValues, Sudoku as ISudoku, withPoints } from '../logic/Sudoku'
 import { arrayEqual, exists } from '../util'
+import Cell from './Cell'
+import Connections from './Connections'
+import Focused from './Focused'
+import Hints from './Hints'
 
 type SudokuProps = {
     sudoku: ISudoku
@@ -12,16 +13,14 @@ type SudokuProps = {
     onChange: Dispatch<SetStateAction<ISudoku>>
 }
 
-type P = [number, number] | undefined
-const keepInBounds: Reducer<P, P> = (_, value) => {
-    return value?.map(i => Math.max(0, Math.min(8, i))) as P
-}
-
 const Sudoku = ({ onChange, sudoku, fillcandidates }: SudokuProps) => {
     const { cells } = sudoku;
-    const [f, setFocused] = useReducer(keepInBounds, [0, 0])
-
-    const [fx, fy] = f ?? []
+    const [focused, setFocused] = useReducer((_: Point, { row, col }: Point) => {
+        return {
+            row: Math.max(0, Math.min(8, row)),
+            col: Math.max(0, Math.min(8, col)),
+        }
+    }, { row: 0, col: 0 })
 
     useEffect(() => {
         if (fillcandidates) {
@@ -55,16 +54,15 @@ const Sudoku = ({ onChange, sudoku, fillcandidates }: SudokuProps) => {
     const [hint, setHint] = useState<Hint>()
 
     const onKey = useCallback((e: KeyboardEvent) => {
-        if (f) {
-            const [x, y] = f
+        if (focused) {
             switch (e.key) {
-                case 'ArrowLeft': return setFocused([e.shiftKey ? 0 : x - 1, y])
-                case 'ArrowRight': return setFocused([e.shiftKey ? 8 : x + 1, y])
-                case 'ArrowUp': return setFocused([x, e.shiftKey ? 0 : y - 1])
-                case 'ArrowDown': return setFocused([x, e.shiftKey ? 8 : y + 1])
+                case 'ArrowLeft': return setFocused({ ...focused, col: e.shiftKey ? 0 : focused.col - 1, })
+                case 'ArrowRight': return setFocused({ ...focused, col: e.shiftKey ? 8 : focused.col + 1, })
+                case 'ArrowUp': return setFocused({ ...focused, row: e.shiftKey ? 0 : focused.row - 1 })
+                case 'ArrowDown': return setFocused({ ...focused, row: e.shiftKey ? 8 : focused.row + 1 })
             }
         }
-    }, [f])
+    }, [focused])
 
     useEffect(() => {
         window.addEventListener('keydown', onKey)
@@ -92,9 +90,9 @@ const Sudoku = ({ onChange, sudoku, fillcandidates }: SudokuProps) => {
                 <Cell {...cell}
                     col={col}
                     row={row}
-                    selected={fx === col && fy === row}
+                    selected={focused.col === col && focused.row === row}
                     key={`${col}/${row}`}
-                    onSelect={() => setFocused([col, row])}
+                    onSelect={() => setFocused({ col, row })}
                     hint={hint}
                 />
             ))}
@@ -103,8 +101,8 @@ const Sudoku = ({ onChange, sudoku, fillcandidates }: SudokuProps) => {
 
         </div>
 
-        {(fx !== undefined && fy !== undefined)
-            ? <Focused x={fx} y={fy} {...cells[fy][fx]} onChange={c => onChange(modifySudoku(fy, fx, c))} />
+        {focused
+            ? <Focused col={focused.col} row={focused.row} {...cells[focused.row][focused.col]} onChange={c => onChange(modifySudoku(focused.row, focused.col, c))} />
             : <p className='focused'>Select a Cell</p>
         }
 
@@ -112,185 +110,5 @@ const Sudoku = ({ onChange, sudoku, fillcandidates }: SudokuProps) => {
 
     </section>
 }
-
-const Connections: FC<{
-    connections?: ExactPoint[][]
-}> = ({ connections = [] }) => (
-    <svg className='connections'>
-        {connections.filter(c => c.length === 2).map(([a, b], i) =>
-            <Line key={i} from={a} to={b} />
-        )}
-    </svg>
-)
-
-const Line: FC<{
-    from: ExactPoint,
-    to: ExactPoint,
-}> = props => {
-
-    const [from, to] = [props.from, props.to].map(p => {
-        const at = p.at ? symbols.indexOf(p.at) : 4;
-        return {
-            col: p.col + at % 3 / 3 + (1 / 6),
-            row: p.row + Math.floor(at / 3) / 3 + (1 / 6),
-        }
-    })
-
-    return <line
-        x1={`${(from.col) * (100 / 9)}%`}
-        x2={`${(to.col) * (100 / 9)}%`}
-        y1={`${(from.row) * (100 / 9)}%`}
-        y2={`${(to.row) * (100 / 9)}%`}
-        stroke='rgb(71, 157, 255)'
-        strokeWidth={2}
-    />
-}
-
-type HintProps = {
-    sudoku: ISudoku,
-    onChange?: Dispatch<SetStateAction<Hint | undefined>>,
-    hint?: Hint,
-    onApply: () => void,
-}
-
-const Hints = ({ onChange, sudoku, hint, onApply }: HintProps) => {
-    const loadingStrats = usePromise(() => Strategies.getHints(sudoku), [sudoku])
-    const strats = useMemo(() => loadingStrats ?? [], [loadingStrats])
-    const [selectedStrat, selectStrat] = useState(-1)
-    const [strategy, setStrategy] = useState<string>()
-
-    useEffect(() => {
-        if (onChange) onChange(undefined)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sudoku])
-
-    useEffect(() => {
-        if (strats.length <= selectedStrat) selectStrat(-1)
-    }, [strats, selectedStrat, selectStrat])
-
-    const getHint = () => {
-        const strat = Math.max(0, selectedStrat)
-        const [hint] = strats[strat]?.hints ?? []
-        if (hint && onChange) {
-            onChange(hint)
-            setStrategy(strats[strat].strategy)
-            console.log(hint)
-        }
-    }
-
-    if (strats.length === 0) return <p className='hints'>No hints possible</p>
-
-    return <div className='hints'>
-
-        <select onChange={e => selectStrat(parseInt(e.target.value))}>
-            <option value={-1}>Any</option>
-            {strats.map(({ strategy }, i) =>
-                <option value={i} key={i}>{strategy}</option>
-            )}
-        </select>
-
-        <button onClick={getHint}>Get a hint</button>
-
-        {hint && <div className='info'>
-            <h3>{strategy}</h3>
-            <button onClick={onApply}>Apply</button>
-        </div>}
-
-    </div>
-}
-
-type FocusedProps = ICell & {
-    onChange(c: Partial<ICell>): void;
-    x: number;
-    y: number;
-}
-const Focused = memo(({ value, candidates, onChange, x, y }: FocusedProps) => {
-
-    const setValue = useCallback((v?: Symbol) => {
-        const value = (v && symbols.includes(v)) ? v : undefined;
-        onChange({ value, candidates: value ? candidates : [] })
-    }, [onChange, candidates])
-
-    const toggle = useCallback((p: Symbol) => {
-        if (candidates.includes(p))
-            onChange({ candidates: candidates.filter(i => i !== p) })
-        else
-            onChange({ candidates: [...candidates, p].sort() })
-    }, [onChange, candidates])
-
-    const ref = useRef<HTMLInputElement>(null)
-    useEffect(() => {
-        ref.current?.focus()
-    }, [x, y])
-
-    return <div className='focused'>
-
-        <div className='cell'>
-
-            <input {...{ ref }}
-                className='value'
-                type='text'
-                value={value ?? ''}
-                onKeyPress={e => setValue(e.key)}
-                onChange={e => {
-                    if (e.target.value.length === 0) setValue(undefined)
-                }}
-            />
-        </div>
-
-        <div className='candidates-buttons'>
-            {symbols.map(i =>
-                <button
-                    disabled={!!value}
-                    onClick={() => toggle(i)}
-                    className={classes({ selected: candidates.includes(i) })}
-                    key={i}>
-                    {i}
-                </button>
-            )}
-        </div>
-
-    </div>
-});
-
-type CellProps = CellWithPoint & {
-    onSelect?: () => void;
-    selected?: boolean;
-    hint?: Hint,
-}
-const Cell = memo(({ onSelect, hint, selected, col, row, candidates, ...cell }: CellProps) => {
-
-    const actions = useMemo(() => hint?.actions.filter(a => a?.col === col && a.row === row), [hint, col, row])
-    const hintValue = useMemo(() => actions?.find(a => a.type === 'value')?.value, [actions])
-    const value = useMemo(() => cell.value ?? hintValue, [cell.value, hintValue])
-
-    const highlighted = hint?.highlights?.some(c => c.row === row && c.col === col)
-    const blocked = hint?.blocked?.some(c => c.row === row && c.col === col)
-    const filled = hint?.highlightRows?.some(r => row === r) || hint?.highlightCols?.some(c => col === c) || hint?.highlightNinths?.some(n => ninthAt({ row, col }) === n)
-
-    const highlightedCandidates = hint?.highlights?.find(c => c.row === row && c.col === col)?.highlightedCandidates
-
-    return <span onClick={onSelect} className={classes('cell', { selected, highlighted, blocked, filled, hint: hintValue })}>
-        <span className='value'>{value}</span>
-        <Candidates highlighted={highlightedCandidates} candidates={cell.value ? [] : candidates} actions={actions} />
-    </span>
-})
-
-const Candidates: FC<{
-    candidates: Symbol[]
-    actions?: Action[]
-    highlighted?: Symbol[]
-}> = ({ candidates, actions, highlighted }) => (
-    <div className='candidates'>
-        {symbols.map(i =>
-            <span className={classes({
-                crossed: actions?.some(a => a.type === 'exclude' && a.value === i),
-                highlighted: highlighted?.includes(i)
-            })} key={i}>
-                {candidates.includes(i) ? i : ''}
-            </span>
-        )}
-    </div>
-)
 
 export default Sudoku
