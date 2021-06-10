@@ -66,3 +66,4 @@ require('./ThirdEye');
 require('./RBC');
 require('./BRC');
 require('./XChain');
+require('./WWing');

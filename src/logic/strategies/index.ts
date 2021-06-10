@@ -13,6 +13,7 @@ import ForbiddenRectangle4 from "./rectangles/Type4";
 import Strategy from "./Strategy";
 import ThirdEye from "./ThirdEye";
 import WrongCandidates from "./WrongCandidates";
+import WWing from "./WWing";
 import XChain from "./XChain";
 import XWing from "./XWing";
 import XYWing from "./XYWing";
@@ -30,7 +31,7 @@ const strategies: (new (sudoku: Sudoku) => Strategy)[] = [
     RBC, BRC,
     ForbiddenRectangle1, ForbiddenRectangle2, ForbiddenRectangle4,
     ThirdEye,
-    XWing, XYWing,
+    XWing, XYWing, WWing,
     XChain,
 ];
 

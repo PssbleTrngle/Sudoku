@@ -195,6 +195,7 @@ section#sudoku {
 
             &.highlighted {
                 box-shadow: 0 0 0 2px rgb(71, 157, 255);
+                z-index: 9000000;
             }
 
             &.hint {

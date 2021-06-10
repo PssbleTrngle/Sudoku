@@ -139,7 +139,7 @@ const Line: FC<{
         x2={`${(to.col) * (100 / 9)}%`}
         y1={`${(from.row) * (100 / 9)}%`}
         y2={`${(to.row) * (100 / 9)}%`}
-        stroke='rgb(71, 157, 255, 0.5)'
+        stroke='rgb(71, 157, 255)'
         strokeWidth={2}
     />
 }
