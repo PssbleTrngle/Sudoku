@@ -1,14 +1,14 @@
-import React, { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
 import '../assets/style/sudoku.scss'
 import { usePromise } from '../Hooks'
 import Strategies from '../logic/strategies'
 import { Hint, Sudoku as ISudoku } from '../logic/Sudoku'
 
 const Hints: FC<{
-   sudoku: ISudoku,
-   onChange?: Dispatch<SetStateAction<Hint | undefined>>,
-   hint?: Hint,
-   onApply: () => void,
+   sudoku: ISudoku
+   onChange?: Dispatch<SetStateAction<Hint | undefined>>
+   hint?: Hint
+   onApply: () => void
 }> = ({ onChange, sudoku, hint, onApply }) => {
    const loadingStrats = usePromise(() => Strategies.getHints(sudoku), [sudoku])
    const strats = useMemo(() => loadingStrats ?? [], [loadingStrats])
@@ -30,29 +30,32 @@ const Hints: FC<{
       if (hint && onChange) {
          onChange(hint)
          setStrategy(strats[strat].strategy)
-         console.log(hint)
       }
    }
 
    if (strats.length === 0) return <p className='hints'>No hints possible</p>
 
-   return <div className='hints'>
+   return (
+      <div className='hints'>
+         <select onChange={e => selectStrat(parseInt(e.target.value))}>
+            <option value={-1}>Any</option>
+            {strats.map(({ strategy }, i) => (
+               <option value={i} key={i}>
+                  {strategy}
+               </option>
+            ))}
+         </select>
 
-      <select onChange={e => selectStrat(parseInt(e.target.value))}>
-         <option value={-1}>Any</option>
-         {strats.map(({ strategy }, i) =>
-            <option value={i} key={i}>{strategy}</option>
+         <button onClick={getHint}>Get a hint</button>
+
+         {hint && (
+            <div className='info'>
+               <h3>{strategy}</h3>
+               <button onClick={onApply}>Apply</button>
+            </div>
          )}
-      </select>
-
-      <button onClick={getHint}>Get a hint</button>
-
-      {hint && <div className='info'>
-         <h3>{strategy}</h3>
-         <button onClick={onApply}>Apply</button>
-      </div>}
-
-   </div>
+      </div>
+   )
 }
 
 export default Hints

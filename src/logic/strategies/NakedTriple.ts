@@ -1,7 +1,6 @@
-import Naked from "./Naked";
+import Naked from './Naked'
 
 export default class NakedTriple extends Naked {
-
    getName() {
       return 'Nackter Dreier'
    }
@@ -9,5 +8,4 @@ export default class NakedTriple extends Naked {
    partnerCount() {
       return 3
    }
-
 }

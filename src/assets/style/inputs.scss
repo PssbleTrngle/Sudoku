@@ -4,14 +4,14 @@ button,
 label {
    padding: 0.5rem;
 
-    & + & {
+   & + & {
       margin-left: 0.5rem;
    }
 }
 
-input[type="submit"],
+input[type='submit'],
 button,
-[role="button"] {
+[role='button'] {
    cursor: pointer;
 
    &:disabled {

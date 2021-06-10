@@ -1,21 +1,14 @@
-import { CellWithPoint } from "../Sudoku";
-import Strategy from "./Strategy";
+import { CellWithPoint } from '../Sudoku'
+import Strategy from './Strategy'
 
 export interface Chain {
-   start: CellWithPoint,
-   end: CellWithPoint,
+   start: CellWithPoint
+   end: CellWithPoint
    chains: CellWithPoint[][]
 }
 
 export default abstract class ChainStrategy extends Strategy {
-
-   getChains(
-      endPredicate: (c: CellWithPoint) => boolean,
-      connectionPredicate: (a: CellWithPoint, b: CellWithPoint) => boolean,
-      cells?: CellWithPoint[],
-      maxLength = 10
-   ): Chain[] {
-
+   getChains(endPredicate: (c: CellWithPoint) => boolean, connectionPredicate: (a: CellWithPoint, b: CellWithPoint) => boolean, cells?: CellWithPoint[], maxLength = 10): Chain[] {
       const all = this.cells() ?? cells
 
       const endpoints = all.filter(endPredicate)
@@ -29,21 +22,17 @@ export default abstract class ChainStrategy extends Strategy {
 
          if (chain.length > maxLength) return []
 
-         const nextCells = all.filter(it => !chain.some(c => c.row === it.row && c.col === it.col))
-            .filter(it => connectionPredicate(start, it))
+         const nextCells = all.filter(it => !chain.some(c => c.row === it.row && c.col === it.col)).filter(it => connectionPredicate(start, it))
 
          return nextCells.map(n => next([...chain, n], to)).flat(1)
-
       }
 
-      return pairs.map(([start, end]) => {
+      return pairs
+         .map(([start, end]) => {
+            const chains = next([start], end).filter(c => c.length > 2)
 
-         const chains = next([start], end).filter(c => c.length > 2)
-
-         return ({ start, end, chains })
-
-      }).filter(c => c.chains.length > 0)
-
+            return { start, end, chains }
+         })
+         .filter(c => c.chains.length > 0)
    }
-
 }

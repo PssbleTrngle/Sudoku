@@ -1,6 +1,8 @@
-import { define } from ".";
+import { define } from '.'
 
-define('XY-Wing', `
+define(
+   'XY-Wing',
+   `
    3  456782
    482
    765   3
@@ -10,4 +12,5 @@ define('XY-Wing', `
    9 83   2
    2  8  1  
    6  5  8
-`)
+`
+)

@@ -1,9 +1,9 @@
 /**
- * @param t The value 
+ * @param t The value
  * @returns if the value is not `null` and not `undefined`
  */
 export function exists<T>(t: T | undefined | null): t is T {
-    return (t ?? null) !== null;
+   return (t ?? null) !== null
 }
 
 /**
@@ -11,7 +11,7 @@ export function exists<T>(t: T | undefined | null): t is T {
  * @returns an array of the given size filled with incrementing number starting at 1
  */
 export function arrayOf(size: number) {
-    return new Array(size).fill(null).map((_, i) => i + 1)
+   return new Array(size).fill(null).map((_, i) => i + 1)
 }
 
 /**
@@ -20,10 +20,10 @@ export function arrayOf(size: number) {
  * @returns wether or not both arrays are equal
  */
 export function arrayEqual<T>(a: T[], b: T[]) {
-    return a.length === b.length && a.every((v, i) => b[i] === v)
+   return a.length === b.length && a.every((v, i) => b[i] === v)
 }
 
 export function cross<T>(values: T[], other = values): [T, T][] {
-    const different = other !== values
-    return values.map((a, ia) => other.filter((_, ib) => different || ia < ib).map(b => [a, b] as [T, T])).flat()
+   const different = other !== values
+   return values.map((a, ia) => other.filter((_, ib) => different || ia < ib).map(b => [a, b] as [T, T])).flat()
 }

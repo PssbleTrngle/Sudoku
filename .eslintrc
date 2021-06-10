@@ -1,0 +1,22 @@
+{
+   "extends": "react-app",
+   "rules": {
+      "no-debugger": "error",
+      "no-alert": "error",
+      "no-console": [
+         "warn",
+         {
+            "allow": [
+               "warn",
+               "error"
+            ]
+         }
+      ],
+      "@typescript-eslint/no-unused-vars": [
+         "warn",
+         {
+            "argsIgnorePattern": "^_"
+         }
+      ]
+   }
+}
