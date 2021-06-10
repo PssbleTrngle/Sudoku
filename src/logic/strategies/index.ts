@@ -47,10 +47,13 @@ const strategies: (new (sudoku: Sudoku) => Strategy)[] = [
 ]
 
 async function getHints(sudoku: Sudoku) {
-   return strategies
+   const all = await Promise.all(strategies
       .map(s => new s(sudoku))
-      .map(s => ({ hints: s.getHints().filter(h => h.actions.length > 0), strategy: s.getName() }))
-      .filter(s => s.hints.length > 0)
+      .map(async s => ({ hints: s.getHints().filter(h => h.actions.length > 0), strategy: s.getName() }))
+
+   )
+
+   return all.filter(s => s.hints.length > 0)
 }
 
 const Strategies = { getHints }
