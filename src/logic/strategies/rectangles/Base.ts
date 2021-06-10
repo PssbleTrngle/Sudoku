@@ -1,10 +1,10 @@
 import { cross, exists } from "../../../util";
-import { CellWithPoint, ninthAt } from "../../Sudoku";
+import { CellWithPoint, ninthAt, Symbol } from "../../Sudoku";
 import Strategy from "../Strategy";
 
 export interface Rectangle {
    corners: CellWithPoint[]
-   candidates: number[]
+   candidates: Symbol[]
 }
 
 export default abstract class ForbiddenRectangle extends Strategy {

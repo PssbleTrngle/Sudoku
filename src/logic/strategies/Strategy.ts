@@ -1,7 +1,9 @@
-import { arrayOf } from "../../util";
-import { Blocker, CellWithPoint, Hint, ninthAt, Point, Sudoku, withPoints } from "../Sudoku";
+import { arrayOf, cross } from "../../util";
+import { Blocker, CellWithPoint, Hint, ninthAt, Point, Sudoku, symbols, withPoints } from "../Sudoku";
 
 export default abstract class Strategy {
+
+    protected static pairs = cross(symbols)
 
     constructor(protected sudoku: Sudoku) { }
 

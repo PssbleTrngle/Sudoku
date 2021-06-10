@@ -1,10 +1,13 @@
 import { SetStateAction } from "react"
 import { arrayOf } from "../util"
 
+export const symbols = arrayOf(9).map(i => i.toString())
+//export const symbols = 'ABCDEFGHI'.split('')
+export type Symbol = string
 
 export interface Cell {
-    value?: number;
-    candidates: number[];
+    value?: Symbol;
+    candidates: Symbol[];
 }
 
 export type Sudoku = {
@@ -17,13 +20,13 @@ export interface Point {
 }
 
 export interface ExactPoint extends Point {
-    at?: number
+    at?: Symbol
 }
 
 export interface Hint {
     actions: Action[]
     highlights?: Array<Point & {
-        candidates?: number[]
+        candidates?: Symbol[]
     }>
     blocked?: Point[]
     highlightCols?: number[]
@@ -33,7 +36,7 @@ export interface Hint {
 }
 
 export type Action = Point & {
-    value: number
+    value: Symbol
     type: 'value' | 'exclude'
 }
 
@@ -95,7 +98,7 @@ export const sharedGroups = (...[first, ...points]: Point[]) => {
 
 export const inRow = (row: number, s: Sudoku) => withPoints(s.cells).filter(c => c.point.row === row) ?? []
 export const inCol = (col: number, s: Sudoku) => withPoints(s.cells).filter(c => c.point.col === col) ?? []
-export const inNinth = (point: Point, s: Sudoku) => withPoints(s.cells).filter(c => ninthAt(c.point) === ninthAt(point))
+export const inNinth = (point: Point | number, s: Sudoku) => withPoints(s.cells).filter(c => ninthAt(c.point) === (typeof point === 'number' ? point : ninthAt(point)))
 
 export interface CellWithPoint extends Cell {
     point: Point
@@ -145,7 +148,7 @@ export function uniqByPoint(c1: CellWithPoint, i1: number, a: CellWithPoint[]) {
  */
 export function possibleValues(point: Point, sudoku: Sudoku) {
     const takenValues = possibleBlockers(sudoku, point).filter(c => !!c.value)
-    const possibleValues = arrayOf(9).filter(i => !takenValues.some(c => c.value === i))
+    const possibleValues = symbols.filter(i => !takenValues.some(c => c.value === i))
     return possibleValues
 }
 
@@ -156,7 +159,7 @@ export function possibleValues(point: Point, sudoku: Sudoku) {
  * @param sudoku The sudoku
  * @returns If the value can be placed in the given cell
  */
-export function canPut(point: Point, value: number, sudoku: Sudoku) {
+export function canPut(point: Point, value: Symbol, sudoku: Sudoku) {
     if (!!sudoku.cells[point.row][point.col].value) return false;
     if (possibleBlockers(sudoku, point).some(c => c.value === value)) return false;
     return true;
@@ -168,8 +171,12 @@ export function canPut(point: Point, value: number, sudoku: Sudoku) {
  * @param sudoku The sudoku
  * @returns All blockers of the cell that contain this value
  */
-export function blockedBy(point: Point, value: number, sudoku: Sudoku): Blocker[] {
+export function blockedBy(point: Point, value: Symbol, sudoku: Sudoku): Blocker[] {
     if (!!sudoku.cells[point.row][point.col].value) return [];
     return possibleBlockers(sudoku, point).filter(c => c.value === value)
 
+}
+
+export function connectionsOf(chain: Point[]) {
+    return chain.slice(1).map((a, i) => [a, chain[i]])
 }

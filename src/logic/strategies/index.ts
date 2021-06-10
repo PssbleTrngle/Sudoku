@@ -10,6 +10,7 @@ import RBC from "./RBC";
 import ForbiddenRectangle1 from "./rectangles/Type1";
 import ForbiddenRectangle2 from "./rectangles/Type2";
 import ForbiddenRectangle4 from "./rectangles/Type4";
+import Steinbutt from "./Steinbutt";
 import Strategy from "./Strategy";
 import ThirdEye from "./ThirdEye";
 import WrongCandidates from "./WrongCandidates";
@@ -28,6 +29,7 @@ const strategies: (new (sudoku: Sudoku) => Strategy)[] = [
     WrongCandidates, LonelyCandidates,
     HiddenSingle, NakedSingle,
     NakedPair, NakedTriple, HiddenPair,
+    Steinbutt,
     RBC, BRC,
     ForbiddenRectangle1, ForbiddenRectangle2, ForbiddenRectangle4,
     ThirdEye,

@@ -3,10 +3,8 @@ import React, { Dispatch, FC, memo, Reducer, SetStateAction, useCallback, useEff
 import '../assets/style/sudoku.scss'
 import { usePromise } from '../Hooks'
 import Strategies from '../logic/strategies'
-import { Action, Cell as ICell, CellWithPoint, ExactPoint, Hint, modifySudoku, ninthAt, possibleValues, Sudoku as ISudoku, withPoints } from '../logic/Sudoku'
-import { arrayEqual, arrayOf, exists } from '../util'
-
-const NUMS = arrayOf(9)
+import { Action, Cell as ICell, CellWithPoint, ExactPoint, Hint, modifySudoku, ninthAt, possibleValues, Sudoku as ISudoku, Symbol, symbols, withPoints } from '../logic/Sudoku'
+import { arrayEqual, exists } from '../util'
 
 type SudokuProps = {
     sudoku: ISudoku
@@ -129,10 +127,13 @@ const Line: FC<{
     to: ExactPoint,
 }> = props => {
 
-    const [from, to] = [props.from, props.to].map(p => ({
-        col: p.col + ((p.at ?? 5) - 1) % 3 / 3 + (1 / 6),
-        row: p.row + Math.floor(((p.at ?? 5) - 1) / 3) / 3 + (1 / 6),
-    }))
+    const [from, to] = [props.from, props.to].map(p => {
+        const at = p.at ? symbols.indexOf(p.at) : 4;
+        return {
+            col: p.col + at % 3 / 3 + (1 / 6),
+            row: p.row + Math.floor(at / 3) / 3 + (1 / 6),
+        }
+    })
 
     return <line
         x1={`${(from.col) * (100 / 9)}%`}
@@ -204,15 +205,12 @@ type FocusedProps = ICell & {
 }
 const Focused = memo(({ value, candidates, onChange, x, y }: FocusedProps) => {
 
-    const setValue = useCallback((value: number) => {
-        const v = Math.min(9, Math.max(1, value))
-        onChange({
-            value: isNaN(v) ? undefined : v,
-            candidates: isNaN(v) ? candidates : [],
-        })
+    const setValue = useCallback((v?: Symbol) => {
+        const value = (v && symbols.includes(v)) ? v : undefined;
+        onChange({ value, candidates: value ? candidates : [] })
     }, [onChange, candidates])
 
-    const toggle = useCallback((p: number) => {
+    const toggle = useCallback((p: Symbol) => {
         if (candidates.includes(p))
             onChange({ candidates: candidates.filter(i => i !== p) })
         else
@@ -232,18 +230,15 @@ const Focused = memo(({ value, candidates, onChange, x, y }: FocusedProps) => {
                 className='value'
                 type='text'
                 value={value ?? ''}
-                onKeyPress={e => {
-                    const v = parseInt(e.key)
-                    if (!isNaN(v)) setValue(v)
-                }}
+                onKeyPress={e => setValue(e.key)}
                 onChange={e => {
-                    if (e.target.value.length === 0) setValue(NaN)
+                    if (e.target.value.length === 0) setValue(undefined)
                 }}
             />
         </div>
 
         <div className='candidates-buttons'>
-            {NUMS.map(i =>
+            {symbols.map(i =>
                 <button
                     disabled={!!value}
                     onClick={() => toggle(i)}
@@ -282,12 +277,12 @@ const Cell = memo(({ onSelect, hint, selected, point, candidates, ...cell }: Cel
 })
 
 const Candidates: FC<{
-    candidates: number[]
+    candidates: Symbol[]
     actions?: Action[]
-    highlighted?: number[]
+    highlighted?: Symbol[]
 }> = ({ candidates, actions, highlighted }) => (
     <div className='candidates'>
-        {arrayOf(9).map(i =>
+        {symbols.map(i =>
             <span className={classes({
                 crossed: actions?.some(a => a.type === 'exclude' && a.value === i),
                 highlighted: highlighted?.includes(i)

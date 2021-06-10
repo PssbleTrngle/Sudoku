@@ -1,10 +1,8 @@
-import { arrayOf, cross, exists } from "../../util";
+import { exists } from "../../util";
 import { Action, Hint } from "../Sudoku";
 import Strategy from "./Strategy";
 
 export default class HiddenPair extends Strategy {
-
-   private static pairs = cross(arrayOf(9))
 
    getName() {
       return 'Verstecktes Paar'

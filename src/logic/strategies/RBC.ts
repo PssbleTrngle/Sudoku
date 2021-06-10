@@ -1,5 +1,5 @@
 import { arrayOf, exists } from "../../util";
-import { Hint, inNinth, ninthAt } from "../Sudoku";
+import { Hint, inNinth, ninthAt, symbols } from "../Sudoku";
 import Strategy from "./Strategy";
 
 export default class RBC extends Strategy {
@@ -10,7 +10,6 @@ export default class RBC extends Strategy {
 
    getHints() {
 
-      const candidates = arrayOf(9)
       const empty = this.find(c => !c.value)
 
       // Checking for every row of the field
@@ -20,7 +19,7 @@ export default class RBC extends Strategy {
          const inRow = empty.filter(c => c.point.row === row)
 
          // Checking for every possible number from 1-9
-         return candidates.map(candidate => {
+         return symbols.map(candidate => {
 
             // Find all cells in the row with this candidate
             // Return when no cells contains it

@@ -1,8 +1,6 @@
-import { arrayOf, exists } from '../../util';
+import { exists } from '../../util';
 import Observer from '../generator/Observer';
-import { canPut, modifySudoku, Sudoku, withPoints } from "../Sudoku";
-
-const NUMS = arrayOf(9)
+import { canPut, modifySudoku, Sudoku, symbols, withPoints } from "../Sudoku";
 
 export default function solve(sudoku: Sudoku, firstOnly = true) {
 
@@ -27,7 +25,7 @@ export async function recursiveSolve(sudoku: Sudoku, onlyFirst = false): Promise
 
    if (empty) {
       const { col: x, row: y } = empty.point
-      const candidates = NUMS.filter(i => canPut(empty.point, i, sudoku))
+      const candidates = symbols.filter(i => canPut(empty.point, i, sudoku))
       const modfied = candidates.map(value => modifySudoku(x, y, { value })(sudoku))
 
       if (onlyFirst) {
@@ -41,7 +39,7 @@ export async function recursiveSolve(sudoku: Sudoku, onlyFirst = false): Promise
 
          const solutions = await Promise.all(modfied.map(async mod => {
             return recursiveSolve(mod)
-         })).then(a => a.filter(exists).filter((s1, i1, a) => !a.some((s2, i2) => 
+         })).then(a => a.filter(exists).filter((s1, i1, a) => !a.some((s2, i2) =>
             i2 < i1 && idendical(s1, s2)
          )))
 
@@ -60,6 +58,6 @@ export async function recursiveSolve(sudoku: Sudoku, onlyFirst = false): Promise
 
 function idendical(a: Sudoku, b: Sudoku) {
    return withPoints(a.cells).every(c =>
-      b.cells[c.point.row][c.point.col].value === c.value  
+      b.cells[c.point.row][c.point.col].value === c.value
    )
 }

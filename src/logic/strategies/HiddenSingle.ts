@@ -1,5 +1,5 @@
-import { arrayOf, exists } from "../../util";
-import { blockedBy, canPut, Hint } from "../Sudoku";
+import { exists } from "../../util";
+import { blockedBy, canPut, Hint, symbols } from "../Sudoku";
 import Strategy from "./Strategy";
 
 export default class HiddenSingle extends Strategy {
@@ -16,7 +16,7 @@ export default class HiddenSingle extends Strategy {
             .map(c => c.value)
             .filter(exists)
 
-         const missing = arrayOf(9).filter(i => !filled.includes(i))
+         const missing = symbols.filter(i => !filled.includes(i))
 
          return missing.map(value => {
 

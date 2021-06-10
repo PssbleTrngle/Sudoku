@@ -1,6 +1,6 @@
 import { arrayOf } from "../../util";
 import { recursiveSolve } from "../solver";
-import { canPut, modifySudoku, Sudoku, withPoints } from "../Sudoku";
+import { canPut, modifySudoku, Sudoku, symbols, withPoints } from "../Sudoku";
 import History from './History';
 
 const NUMS = arrayOf(9)
@@ -17,7 +17,7 @@ export default function generate() {
     const builder = new History<Sudoku>()
 
     // Fill with number 1-9
-    NUMS.forEach(value => {
+    symbols.forEach(value => {
 
         builder.mark()
 

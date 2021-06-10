@@ -1,5 +1,5 @@
-import { arrayOf } from "../../util";
-import { Cell, Sudoku } from "../Sudoku";
+import { arrayOf, exists } from "../../util";
+import { Cell, Sudoku, symbols } from "../Sudoku";
 
 type SudokuLike = string | (
    Cell | number | number[]
@@ -34,13 +34,13 @@ function parse(value: SudokuLike): Sudoku {
       const n = json[row]?.[col] ?? 0
 
       if (typeof n === 'number') return {
-         value: ((n === 0 || isNaN(n)) ? undefined : n) ?? undefined,
+         value: symbols[n - 1],
          candidates: [],
       }
 
       else if (Array.isArray(n)) return {
          value: undefined,
-         candidates: n,
+         candidates: n.map(n => symbols[n - 1]).filter(exists).sort(),
       }
 
       else if (typeof n === 'object') return n as Cell
@@ -67,3 +67,4 @@ require('./RBC');
 require('./BRC');
 require('./XChain');
 require('./WWing');
+require('./Steinbutt');

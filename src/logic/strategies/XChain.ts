@@ -1,5 +1,5 @@
-import { arrayOf, cross, exists } from "../../util";
-import { CellWithPoint, Hint, possibleBlockers, sharedGroups } from "../Sudoku";
+import { cross, exists } from "../../util";
+import { CellWithPoint, connectionsOf, Hint, possibleBlockers, sharedGroups, symbols } from "../Sudoku";
 import ChainStrategy from "./ChainStrategy";
 
 export default class XChain extends ChainStrategy {
@@ -10,7 +10,7 @@ export default class XChain extends ChainStrategy {
 
     getHints() {
 
-        return arrayOf(9).map(candidate => {
+        return symbols.map(candidate => {
 
             const predicate = (it: CellWithPoint) => {
                 if (!it.candidates.includes(candidate)) return false
@@ -40,7 +40,7 @@ export default class XChain extends ChainStrategy {
             return chains.map(({ chains }) =>
                 chains.filter(C => C.length > 4).map<Hint>(chain => {
 
-                    const connections = chain.slice(1).map((a, i) => [a, chain[i]].map(it => ({ ...it.point })))
+                    const connections = connectionsOf(chain.map(it => it.point))
 
                     const eitherOrs = cross(
                         chain.filter((_, i) => i % 2 === 0),

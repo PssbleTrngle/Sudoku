@@ -4,8 +4,6 @@ import Strategy from "./Strategy";
 
 export default class WWing extends Strategy {
 
-    static pairs = cross(arrayOf(9))
-
     getName() {
         return 'W-Wing'
     }
