@@ -25,8 +25,8 @@ export default class HiddenPair extends Strategy {
                   actions: matching
                      .map(point =>
                         otherCandidates.map(value => ({
-                           value,
                            ...point,
+                           value,
                            type: 'exclude',
                         }))
                      )

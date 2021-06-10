@@ -36,8 +36,8 @@ const Candidates: FC<{
    <div className='candidates'>
       {symbols.map(i => (
          <span
-            className={classes({
-               crossed: actions?.some(a => a.type === 'exclude' && a.value === i),
+         className={classes({
+            crossed: actions?.some(a => a.type === 'exclude' && a.value === i),
                highlighted: highlighted?.includes(i),
             })}
             key={i}>

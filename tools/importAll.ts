@@ -11,12 +11,14 @@ glob(path, (e, matches) => {
 
    const dir = dirname(matches[0])
 
-   writeFileSync(join(dir, 'import.ts'), matches
+   const imports = matches
       .map(it => parse(it).name)
       .map(it => it.replace(/['`"]/g, ''))
-      //.map(name => `require('./${name}')`)
-      .map(name => `export * from './${name}'`)
+      .map(name => `require('./${name}')`)
+      //.map(name => `export * from './${name}'`)
       .join('\n')
-   )
+
+
+   writeFileSync(join(dir, 'import.ts'), `${imports}\nexport default {}`)
 
 })

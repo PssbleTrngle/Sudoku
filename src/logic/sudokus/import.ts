@@ -1,18 +1,19 @@
-export * from './1'
-export * from './2'
-export * from './BRC'
-export * from './HiddenPair'
-export * from './import'
-export * from './index'
-export * from './NakedPair'
-export * from './NakedTriple'
-export * from './RBC'
-export * from './rectangles'
-export * from './Steinbutt'
-export * from './ThirdEye'
-export * from './Versteckter Single 2'
-export * from './Versteckter Single'
-export * from './WWing'
-export * from './X Wing'
-export * from './XChain'
-export * from './XYWing'
+require('./1')
+require('./2')
+require('./BRC')
+require('./HiddenPair')
+require('./import')
+require('./index')
+require('./NakedPair')
+require('./NakedTriple')
+require('./RBC')
+require('./rectangles')
+require('./Steinbutt')
+require('./ThirdEye')
+require('./Versteckter Single 2')
+require('./Versteckter Single')
+require('./WWing')
+require('./X Wing')
+require('./XChain')
+require('./XYWing')
+export default {}

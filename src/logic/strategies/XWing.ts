@@ -18,23 +18,31 @@ export default class XWing extends Strategy {
                // Search for cells in the same column with this candidate
                return withCandidate
                   .filter(point => origin.col === point.col && origin.row < point.row)
-                  .map(inCol => {
+                  .map(bottomLeft => {
                      // Search for cells in the same row with this candidate
                      return withCandidate
                         .filter(point => origin.row === point.row && origin.col < point.col)
-                        .map(inRow => {
+                        .map(topRight => {
                            // The point & cell which would complete a rectangle made up of the point in the column, in the row and the origin point
                            // and check if this `across` cell also contains the candidate
-                           const acrossPoint = { row: inCol.row, col: inRow.col }
+                           const acrossPoint = { row: bottomLeft.row, col: topRight.col }
                            const across: CellWithPoint = { ...acrossPoint, ...this.sudoku.cells[acrossPoint.row][acrossPoint.col] }
                            if (!across.candidates.includes(canditate)) return null
 
                            // The corners of the rectangle
-                           const corners = [origin, inCol, inRow, across]
+                           const corners = [origin, bottomLeft, topRight, across]
 
                            // Check if all corners are in different ninths
                            const ninths = corners.map(c => ninthAt(c)).filter((n1, i1, a) => !a.some((n2, i2) => i2 < i1 && n1 === n2))
                            if (ninths.length !== 4) return null
+
+                           const removeIn = ['row', 'col'].map(c => c as 'row' | 'col').filter(source =>
+                              [origin, across].every(it =>
+                                 this.find(c => c[source] === it[source] && c.candidates.includes(canditate)).length === 2
+                              )
+                           )
+
+                           if(removeIn.length !== 1) return null
 
                            // Search for cells which are in the same row or column as one of the corners
                            // but are not one of the corners
@@ -47,9 +55,9 @@ export default class XWing extends Strategy {
                            // Propose to remove the candidate the corners share from these blockers
                            const hint: Hint = {
                               actions: blockers.map(b => ({
+                                 ...b,
                                  type: 'exclude',
                                  value: canditate,
-                                 ...b,
                               })),
                               highlights: corners.map(c => ({ ...c, highlightedCandidates: [canditate] })),
                               highlightCols: corners.map(c => c.col),

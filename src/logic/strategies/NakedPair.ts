@@ -30,9 +30,9 @@ export default class NakedPair extends Strategy {
                      b.candidates
                         .filter(i => candidates.includes(i))
                         .map(value => ({
+                           ...b,
                            type: 'exclude',
                            value,
-                           ...b,
                         }))
                   )
                   .flat(),

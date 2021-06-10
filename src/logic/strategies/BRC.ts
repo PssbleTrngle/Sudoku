@@ -35,9 +35,9 @@ export default class BRC extends Strategy {
                // Return all found cells as an `exclude` hint
                const hint: Hint = {
                   actions: remove.map(c => ({
+                     ...c,
                      type: 'exclude',
                      value: candidate,
-                     ...c,
                   })),
                   highlights: withCandidate.map(c => ({ ...c, highlightedCandidates: [candidate] })),
                   highlightNinths: [ninth],

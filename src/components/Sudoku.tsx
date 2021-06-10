@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
 import '../assets/style/sudoku.scss'
 import { Hint, modifySudoku, Point, possibleValues, Sudoku as ISudoku, withPoints } from '../logic/Sudoku'
 import { arrayEqual, exists } from '../util'
@@ -7,13 +7,12 @@ import Connections from './Connections'
 import Focused from './Focused'
 import Hints from './Hints'
 
-type SudokuProps = {
+
+const Sudoku: FC<{
    sudoku: ISudoku
    fillcandidates?: boolean
    onChange: Dispatch<SetStateAction<ISudoku>>
-}
-
-const Sudoku = ({ onChange, sudoku, fillcandidates }: SudokuProps) => {
+}> = ({ onChange, sudoku, fillcandidates }) => {
    const { cells } = sudoku
    const [focused, setFocused] = useReducer(
       (_: Point, { row, col }: Point) => {
