@@ -11,19 +11,19 @@ export default class WrongCandidates extends Strategy {
    getHints() {
 
       // Search for candidates that are also contained in the group as another cell's value
-      return this.find(c => c.candidates.length > 0).map(({ point, ...cell }) =>
+      return this.find(c => c.candidates.length > 0).map(cell =>
          cell.candidates.map(value => {
 
             // Search other cells that are in the same group as this one
             // and already contain the value
-            const blockers = blockedBy(point, value, this.sudoku);
+            const blockers = blockedBy(cell, value, this.sudoku);
             if (blockers.length === 0) return null
 
             else {
 
                const hint: Hint = {
                   actions: [{
-                     ...point,
+                     ...cell,
                      value,
                      type: 'exclude',
                   }],

@@ -29,7 +29,7 @@ export default abstract class ChainStrategy extends Strategy {
 
          if (chain.length > maxLength) return []
 
-         const nextCells = all.filter(it => !chain.some(c => c.point.row === it.point.row && c.point.col === it.point.col))
+         const nextCells = all.filter(it => !chain.some(c => c.row === it.row && c.col === it.col))
             .filter(it => connectionPredicate(start, it))
 
          return nextCells.map(n => next([...chain, n], to)).flat(1)

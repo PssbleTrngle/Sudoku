@@ -15,7 +15,7 @@ export default class XYWing extends Strategy {
       return withTwo.map(origin => {
 
          const possiblePartners = withTwo
-            .filter(it => inGroup(it.point, origin.point))
+            .filter(it => inGroup(it, origin))
             .filter(it => !arrayEqual(it.candidates, origin.candidates))
 
          const [ca, cb] = origin.candidates
@@ -26,18 +26,18 @@ export default class XYWing extends Strategy {
 
          return pairs.map<Hint | null>(pair => {
 
-            if (inGroup(...pair.map(it => it.point))) return null
+            if (inGroup(...pair)) return null
 
             const c = pair[0].candidates.find(c => !origin.candidates.includes(c))!
-            const blockers = possibleBlockers(this.sudoku, ...pair.map(p => p.point)).filter(it => it.candidates.includes(c))
+            const blockers = possibleBlockers(this.sudoku, ...pair).filter(it => it.candidates.includes(c))
 
             return {
                actions: blockers.map(cell => ({
-                  ...cell.point,
+                  ...cell,
                   type: 'exclude',
                   value: c,
                })),
-               highlights: [origin, ...pair].map(it => ({ ...it.point, candidates: [c] })),
+               highlights: [origin, ...pair].map(it => ({ ...it, highlightedCandidates: [c] })),
             }
 
          })

@@ -14,7 +14,7 @@ export default abstract class Naked extends Strategy {
          const { candidates } = cell
          if (candidates.length !== 2) return null
 
-         const blockers = possibleBlockers(this.sudoku, cell.point)
+         const blockers = possibleBlockers(this.sudoku, cell)
 
          const partners = [...blockers, cell]
             .filter(c => c.candidates.length === 2)
@@ -23,8 +23,7 @@ export default abstract class Naked extends Strategy {
 
          if (partners.length !== partnerCount) return null
 
-         const points = partners.map(p => p.point)
-         const partnerBlockers = possibleBlockers(this.sudoku, ...points)
+         const partnerBlockers = possibleBlockers(this.sudoku, ...partners)
 
          return partnerBlockers
             .filter(c => !arrayEqual(c.candidates, candidates))
@@ -33,12 +32,12 @@ export default abstract class Naked extends Strategy {
                   .filter(i => candidates.includes(i))
                   .map<Hint>(value => ({
                      actions: [{
+                        ...b,
                         type: 'exclude',
                         value,
-                        ...b.point,
                      }],
                      ...this.blockingHighlights([b]),
-                     highlights: points
+                     highlights: partners
                   }))
             )
 

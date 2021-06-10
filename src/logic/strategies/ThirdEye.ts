@@ -20,7 +20,7 @@ export default class ThirdEye extends Strategy {
         if (!withMore || rest.length > 0) return []
 
         // Find cells that could block this cell
-        const blockers = possibleBlockers(this.sudoku, withMore.point)
+        const blockers = possibleBlockers(this.sudoku, withMore)
 
         // Search for the candidate that should be filled in
         const hit = withMore.candidates.map(c => {
@@ -53,12 +53,12 @@ export default class ThirdEye extends Strategy {
 
         // Return the other candidates as an `exclude` hint
         const hint: Hint = {
-            highlights: [withMore.point, ...hit[0].blockers.map(b => ({
-                ...b.point,
-                candidates: [hit[0].candidate],
+            highlights: [withMore, ...hit[0].blockers.map(b => ({
+                ...b,
+                highlightedCandidates: [hit[0].candidate],
             }))],
             actions: remove.map(value => ({
-                ...withMore.point,
+                ...withMore,
                 type: 'exclude',
                 value,
             })),

@@ -1,11 +1,6 @@
 import { arrayEqual, exists } from "../../../util";
-import { CellWithPoint, Hint } from "../../Sudoku";
+import { Hint } from "../../Sudoku";
 import ForbiddenRectangle from './Base';
-
-export interface Rectangle {
-   corners: CellWithPoint[]
-   candidates: number[]
-}
 
 export default class ForbiddenRectangle1 extends ForbiddenRectangle {
 
@@ -23,10 +18,10 @@ export default class ForbiddenRectangle1 extends ForbiddenRectangle {
 
          return {
             actions: candidates.map(value => ({
-               ...withAdditional[0].point,
+               ...withAdditional[0],
                type: 'exclude', value,
             })),
-            highlights: corners.map(c => ({ ...c.point, candidates })),
+            highlights: corners.map(c => ({ ...c, highlightedCandidates: candidates })),
          }
 
       }).filter(exists)

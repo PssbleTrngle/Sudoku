@@ -20,21 +20,20 @@ export default class HiddenSingle extends Strategy {
 
          return missing.map(value => {
 
-            const possibilities = empty.filter(cell => canPut(cell.point, value, this.sudoku))
+            const possibilities = empty.filter(cell => canPut(cell, value, this.sudoku))
 
             if (possibilities.length === 1) {
                const [cell] = possibilities
 
-               const blockers = empty.map(cell => blockedBy(cell.point, value, this.sudoku)).flat()
+               const blockers = empty.map(cell => blockedBy(cell, value, this.sudoku)).flat()
 
                const hint: Hint = {
                   actions: [{
                      ...cell,
-                     ...cell.point,
                      value,
                      type: 'value',
                   }],
-                  blocked: empty.map(e => e.point).filter(e => e.col !== cell.point.col || e.row !== cell.point.row),
+                  blocked: empty.filter(it => it.col !== cell.col || it.row !== cell.row),
                   ...this.blockingHighlights(blockers),
                }
 

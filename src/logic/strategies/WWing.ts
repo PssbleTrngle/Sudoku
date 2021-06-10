@@ -17,10 +17,9 @@ export default class WWing extends Strategy {
 
             return cross(onlyPair).map(pair => {
 
-                const pairPoints = pair.map(it => it.point)
-                if (inGroup(...pairPoints)) return null
+                if (inGroup(...pair)) return null
 
-                const otherRows = arrayOf(9).map(i => i - 1).filter(r => !pair.some(it => it.point.row === r))
+                const otherRows = arrayOf(9).map(i => i - 1).filter(r => !pair.some(it => it.row === r))
 
                 return candidates.map(primary => {
                     const secondary = candidates.find(c => c !== primary)!
@@ -30,25 +29,25 @@ export default class WWing extends Strategy {
                         if (inRow(row, this.sudoku).filter(it => it.candidates.includes(primary)).length !== 2) return null
 
                         const corners: CellWithPoint[] = pair
-                            .map(it => ({ ...it.point, row }))
-                            .map(point => ({ point, ...this.sudoku.cells[point.row][point.col] }))
+                            .map(it => ({ ...it, row }))
+                            .map(point => ({ ...point, ...this.sudoku.cells[point.row][point.col] }))
 
                         if (!corners.every(it => it.candidates.includes(primary))) return null
 
-                        const remove = possibleBlockers(this.sudoku, ...pairPoints).filter(it => it.candidates.includes(secondary))
+                        const remove = possibleBlockers(this.sudoku, ...pair).filter(it => it.candidates.includes(secondary))
 
                         return {
                             actions: remove.map(it => ({
-                                ...it.point,
+                                ...it,
                                 value: secondary,
                                 type: 'exclude',
                             })),
                             highlights: [
-                                ...pairPoints.map(it => ({ ...it, candidates })),
-                                ...corners.map(it => ({ ...it.point, candidates: [primary] })),
+                                ...pair.map(it => ({ ...it, candidates })),
+                                ...corners.map(it => ({ ...it, highlightedCandidates: [primary] })),
                             ],
                             highlightRows: [row],
-                            highlightCols: corners.map(it => it.point.col),
+                            highlightCols: corners.map(it => it.col),
                         }
 
                     })

@@ -26,7 +26,7 @@ export interface ExactPoint extends Point {
 export interface Hint {
     actions: Action[]
     highlights?: Array<Point & {
-        candidates?: Symbol[]
+        highlightedCandidates?: Symbol[]
     }>
     blocked?: Point[]
     highlightCols?: number[]
@@ -73,7 +73,7 @@ export function ninthAt(point: Point) {
  * @returns An array of cells with points
  */
 export function withPoints(cells: Cell[][]): CellWithPoint[] {
-    return cells.map((a, row) => a.map((cell, col) => ({ ...cell, point: { col, row } }))).flat()
+    return cells.map((a, row) => a.map((cell, col) => ({ ...cell, col, row }))).flat()
 }
 
 /**
@@ -96,13 +96,11 @@ export const sharedGroups = (...[first, ...points]: Point[]) => {
     return sources as Array<'col' | 'row' | 'ninth'>
 }
 
-export const inRow = (row: number, s: Sudoku) => withPoints(s.cells).filter(c => c.point.row === row) ?? []
-export const inCol = (col: number, s: Sudoku) => withPoints(s.cells).filter(c => c.point.col === col) ?? []
-export const inNinth = (point: Point | number, s: Sudoku) => withPoints(s.cells).filter(c => ninthAt(c.point) === (typeof point === 'number' ? point : ninthAt(point)))
+export const inRow = (row: number, s: Sudoku) => withPoints(s.cells).filter(c => c.row === row) ?? []
+export const inCol = (col: number, s: Sudoku) => withPoints(s.cells).filter(c => c.col === col) ?? []
+export const inNinth = (point: Point | number, s: Sudoku) => withPoints(s.cells).filter(c => ninthAt(c) === (typeof point === 'number' ? point : ninthAt(point)))
 
-export interface CellWithPoint extends Cell {
-    point: Point
-}
+export interface CellWithPoint extends Cell, Point { }
 
 export interface Blocker extends CellWithPoint {
     source: Array<'col' | 'row' | 'ninth'>
@@ -123,11 +121,11 @@ export function possibleBlockers(s: Sudoku, ...points: Point[]): Blocker[] {
     const c = points.every(p => p.col === col) ? inCol(col, s) : []
     const r = points.every(p => p.row === row) ? inRow(row, s) : []
     const n = points.every(p => ninthAt(p) === ninth) ? inNinth(points[0], s) : []
-    const e = withPoints(s.cells).filter(it => points.every(p => inGroup(p, it.point)))
+    const e = withPoints(s.cells).filter(it => points.every(p => inGroup(p, it)))
 
     const all = [c, r, n, e].flat() as Blocker[]
     return all.filter(uniqByPoint)
-        .filter(c => points.every(p => c.point.col !== p.col || c.point.row !== p.row))
+        .filter(c => points.every(p => c.col !== p.col || c.row !== p.row))
         .map(b => {
             const source: Blocker['source'] = []
             if (c.includes(b)) source.push('col')
@@ -138,7 +136,7 @@ export function possibleBlockers(s: Sudoku, ...points: Point[]): Blocker[] {
 }
 
 export function uniqByPoint(c1: CellWithPoint, i1: number, a: CellWithPoint[]) {
-    return !a.some((c2, i2) => i2 < i1 && c1.point.col === c2.point.col && c1.point.row === c2.point.row)
+    return !a.some((c2, i2) => i2 < i1 && c1.col === c2.col && c1.row === c2.row)
 }
 
 /**

@@ -14,10 +14,10 @@ export default class LonelyCandidates extends Strategy {
        * If every is correctly filled in, this should be
        * the only possible value for this cell
        */
-      return this.find(c => c.candidates.length === 1).map(({ point, ...cell }) =>
+      return this.find(c => c.candidates.length === 1).map(cell =>
          cell.candidates.map<Hint>(value => ({
             actions: [{
-               ...point,
+               ...cell,
                value,
                type: 'value',
             }],

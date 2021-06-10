@@ -16,7 +16,7 @@ export default class RBC extends Strategy {
       return arrayOf(9).map(row => {
 
          // All cells in this row
-         const inRow = empty.filter(c => c.point.row === row)
+         const inRow = empty.filter(c => c.row === row)
 
          // Checking for every possible number from 1-9
          return symbols.map(candidate => {
@@ -27,22 +27,22 @@ export default class RBC extends Strategy {
             if (withCandidate.length === 0) return null
 
             // Check if all the cells with this candidate are in the same ninth
-            const [ninth, ...ninths] = withCandidate.map(c => ninthAt(c.point)).filter((n1, i1, a) => !a.some((n2, i2) => i2 < i1 && n1 === n2))
+            const [ninth, ...ninths] = withCandidate.map(c => ninthAt(c)).filter((n1, i1, a) => !a.some((n2, i2) => i2 < i1 && n1 === n2))
             if (ninths.length > 0) return null;
 
             // Search for other cells in this ninth that contain the candidate
-            const remove = inNinth(withCandidate[0].point, this.sudoku)
+            const remove = inNinth(withCandidate[0], this.sudoku)
                .filter(c => c.candidates.includes(candidate))
-               .filter(c => c.point.row !== row)
+               .filter(c => c.row !== row)
 
             // Return all found cells as an `exclude` hint
             const hint: Hint = {
                actions: remove.map(c => ({
                   type: 'exclude',
                   value: candidate,
-                  ...c.point,
+                  ...c,
                })),
-               highlights: withCandidate.map(c => ({ ...c.point, candidates: [candidate] })),
+               highlights: withCandidate.map(c => ({ ...c, highlightedCandidates: [candidate] })),
                highlightNinths: [ninth],
                highlightRows: [row],
             }

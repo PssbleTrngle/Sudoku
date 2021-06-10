@@ -26,19 +26,19 @@ export default abstract class Strategy {
 
     blockingHighlights(blockers: Blocker[]): Partial<Hint> {
         return {
-            highlights: blockers.map(c => c.point),
-            highlightCols: blockers.filter(c => c.source.includes('col')).map(c => c.point.col),
-            highlightRows: blockers.filter(c => c.source.includes('row')).map(c => c.point.row),
-            highlightNinths: blockers.filter(c => c.source.includes('ninth')).map(c => ninthAt(c.point)),
+            highlights: blockers,
+            highlightCols: blockers.filter(c => c.source.includes('col')).map(c => c.col),
+            highlightRows: blockers.filter(c => c.source.includes('row')).map(c => c.row),
+            highlightNinths: blockers.filter(c => c.source.includes('ninth')).map(c => ninthAt(c)),
         }
     }
 
     forGroups(func: (cells: CellWithPoint[], group: 'col' | 'row' | 'ninth') => Hint[]) {
         return arrayOf(9).map(i => i - 1).map(i => {
 
-            const inNinth = this.find(({ point }) => ninthAt(point) === i)
-            const inCol = this.find(({ point }) => point.col === i)
-            const inRow = this.find(({ point }) => point.row === i)
+            const inNinth = this.find(point => ninthAt(point) === i)
+            const inCol = this.find(point => point.col === i)
+            const inRow = this.find(point => point.row === i)
 
             const groups = {
                 col: inCol,

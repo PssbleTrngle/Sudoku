@@ -20,13 +20,13 @@ export default class HiddenPair extends Strategy {
             const otherCandidates = matching.map(c => c.candidates).flat().filter(c => !candidates.includes(c))
 
             return {
-               ...this.highlightGroup(type, matching[0].point),
-               actions: matching.map(({ point }) => otherCandidates.map(value => ({
+               ...this.highlightGroup(type, matching[0]),
+               actions: matching.map(point => otherCandidates.map(value => ({
                   value,
                   ...point,
                   type: 'exclude',
                }))).flat() as Action[],
-               highlights: matching.map(m => ({ ...m.point, candidates })),
+               highlights: matching.map(m => ({ ...m, highlightedCandidates: candidates })),
             }
 
          }).filter(exists)

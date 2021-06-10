@@ -24,8 +24,8 @@ export async function recursiveSolve(sudoku: Sudoku, onlyFirst = false): Promise
    const empty = withPoints(sudoku.cells).find(c => !c.value)
 
    if (empty) {
-      const { col: x, row: y } = empty.point
-      const candidates = symbols.filter(i => canPut(empty.point, i, sudoku))
+      const { col: x, row: y } = empty
+      const candidates = symbols.filter(i => canPut(empty, i, sudoku))
       const modfied = candidates.map(value => modifySudoku(x, y, { value })(sudoku))
 
       if (onlyFirst) {
@@ -58,6 +58,6 @@ export async function recursiveSolve(sudoku: Sudoku, onlyFirst = false): Promise
 
 function idendical(a: Sudoku, b: Sudoku) {
    return withPoints(a.cells).every(c =>
-      b.cells[c.point.row][c.point.col].value === c.value
+      b.cells[c.row][c.col].value === c.value
    )
 }

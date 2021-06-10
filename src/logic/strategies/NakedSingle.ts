@@ -12,7 +12,7 @@ export default class NakedSingle extends Strategy {
 
       return this.find(c => !c.value).map(cell => {
 
-         const takenValues = possibleBlockers(this.sudoku, cell.point).filter(c => !!c.value)
+         const takenValues = possibleBlockers(this.sudoku, cell).filter(c => !!c.value)
          const possibleValues = symbols.filter(i => !takenValues.some(c => c.value === i))
 
          if (possibleValues.length === 1) {
@@ -21,14 +21,14 @@ export default class NakedSingle extends Strategy {
 
             const hint: Hint = {
                actions: [{
-                  ...cell.point,
+                  ...cell,
                   type: 'value',
                   value,
                }],
-               highlights: takenValues.map(c => c.point),
-               highlightRows: sources.includes('row') ? [cell.point.row] : undefined,
-               highlightCols: sources.includes('col') ? [cell.point.col] : undefined,
-               highlightNinths: sources.includes('ninth') ? [ninthAt(cell.point)] : undefined,
+               highlights: takenValues,
+               highlightRows: sources.includes('row') ? [cell.row] : undefined,
+               highlightCols: sources.includes('col') ? [cell.col] : undefined,
+               highlightNinths: sources.includes('ninth') ? [ninthAt(cell)] : undefined,
             }
 
             return hint;

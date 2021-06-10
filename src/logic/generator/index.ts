@@ -53,7 +53,7 @@ export default function generate() {
             const [cell] = withPoints(s.cells).filter(c => !!c.value).sort(() => Math.random() - 0.5)
 
             if (cell) {
-                const modified = modifySudoku(cell.point.col, cell.point.row, { value: undefined })(s)
+                const modified = modifySudoku(cell.col, cell.row, { value: undefined })(s)
                 await recursiveSolve(modified)
                 return modified
             }

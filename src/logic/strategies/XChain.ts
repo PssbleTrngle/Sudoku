@@ -14,7 +14,7 @@ export default class XChain extends ChainStrategy {
 
             const predicate = (it: CellWithPoint) => {
                 if (!it.candidates.includes(candidate)) return false
-                const blockers = possibleBlockers(this.sudoku, it.point)
+                const blockers = possibleBlockers(this.sudoku, it)
                 return ['col', 'row', 'ninth'].some(s =>
                     blockers.filter(b => b.source.includes(s as any) && b.candidates.includes(candidate)).length === 1
                 )
@@ -26,7 +26,7 @@ export default class XChain extends ChainStrategy {
                 predicate,
                 (a, b) => {
                     if ([a, b].some(it => !it.candidates.includes(candidate))) return false
-                    const points = [a, b].map(it => it.point)
+                    const points = [a, b]
                     const shared = sharedGroups(...points)
                     if (shared.length === 0) return false
                     const blockers = possibleBlockers(this.sudoku, ...points)
@@ -40,7 +40,7 @@ export default class XChain extends ChainStrategy {
             return chains.map(({ chains }) =>
                 chains.filter(C => C.length > 4).map<Hint>(chain => {
 
-                    const connections = connectionsOf(chain.map(it => it.point))
+                    const connections = connectionsOf(chain)
 
                     const eitherOrs = cross(
                         chain.filter((_, i) => i % 2 === 0),
@@ -48,19 +48,19 @@ export default class XChain extends ChainStrategy {
                     )
 
                     const blockers = eitherOrs.map(c =>
-                        possibleBlockers(this.sudoku, ...c.map(it => it.point))
+                        possibleBlockers(this.sudoku, ...c)
                             .filter(it => it.candidates.includes(candidate))
                             .map(b => ({ ...b, by: c }))
-                    ).flat().filter(b => !chain.some(it => it.point.col === b.point.col && it.point.row === b.point.row))
+                    ).flat().filter(b => !chain.some(it => it.col === b.col && it.row === b.row))
 
                     return {
                         actions: blockers.map(c => ({
-                            ...c.point,
+                            ...c,
                             value: candidate,
                             type: 'exclude',
                         })),
                         connections,
-                        highlights: chain.map(c => ({ ...c.point, candidates: [candidate] })),
+                        highlights: chain.map(c => ({ ...c, highlightedCandidates: [candidate] })),
                     }
                 })
             )

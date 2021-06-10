@@ -30,7 +30,7 @@ const Sudoku = ({ onChange, sudoku, fillcandidates }: SudokuProps) => {
                 const changed = withPoints(sudoku.cells).map(c => {
 
                     if (c.value) return null
-                    const candidates = possibleValues(c.point, sudoku)
+                    const candidates = possibleValues(c, sudoku)
                     if (arrayEqual(candidates, c.candidates)) return null
                     return { ...c, candidates }
 
@@ -42,7 +42,7 @@ const Sudoku = ({ onChange, sudoku, fillcandidates }: SudokuProps) => {
                     cells: sudoku.cells.map((row, y) =>
                         row.map((cell, x) => ({
                             ...cell, candidates:
-                                changed.find(c => c.point.col === x && c.point.row === y)?.candidates
+                                changed.find(c => c.col === x && c.row === y)?.candidates
                                 ?? cell.candidates
                         }))
                     )
@@ -90,7 +90,8 @@ const Sudoku = ({ onChange, sudoku, fillcandidates }: SudokuProps) => {
         <div className='sudoku'>
             {cells.map((r, row) => r.map((cell, col) =>
                 <Cell {...cell}
-                    point={{ row, col }}
+                    col={col}
+                    row={row}
                     selected={fx === col && fy === row}
                     key={`${col}/${row}`}
                     onSelect={() => setFocused([col, row])}
@@ -257,8 +258,7 @@ type CellProps = CellWithPoint & {
     selected?: boolean;
     hint?: Hint,
 }
-const Cell = memo(({ onSelect, hint, selected, point, candidates, ...cell }: CellProps) => {
-    const { row, col } = point
+const Cell = memo(({ onSelect, hint, selected, col, row, candidates, ...cell }: CellProps) => {
 
     const actions = useMemo(() => hint?.actions.filter(a => a?.col === col && a.row === row), [hint, col, row])
     const hintValue = useMemo(() => actions?.find(a => a.type === 'value')?.value, [actions])
@@ -268,7 +268,7 @@ const Cell = memo(({ onSelect, hint, selected, point, candidates, ...cell }: Cel
     const blocked = hint?.blocked?.some(c => c.row === row && c.col === col)
     const filled = hint?.highlightRows?.some(r => row === r) || hint?.highlightCols?.some(c => col === c) || hint?.highlightNinths?.some(n => ninthAt({ row, col }) === n)
 
-    const highlightedCandidates = hint?.highlights?.find(c => c.row === row && c.col === col)?.candidates
+    const highlightedCandidates = hint?.highlights?.find(c => c.row === row && c.col === col)?.highlightedCandidates
 
     return <span onClick={onSelect} className={classes('cell', { selected, highlighted, blocked, filled, hint: hintValue })}>
         <span className='value'>{value}</span>
