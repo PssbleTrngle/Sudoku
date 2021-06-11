@@ -2,6 +2,7 @@ import { Sudoku } from '../Sudoku'
 import BRC from './BRC'
 import HiddenPair from './HiddenPair'
 import HiddenSingle from './HiddenSingle'
+import Kite from './Kite'
 import LonelyCandidates from './LonelyCandidates'
 import NakedPair from './NakedPair'
 import NakedSingle from './NakedSingle'
@@ -34,6 +35,7 @@ const strategies: (new (sudoku: Sudoku) => Strategy)[] = [
    NakedTriple,
    HiddenPair,
    Steinbutt,
+   Kite,
    RBC,
    BRC,
    ForbiddenRectangle1,

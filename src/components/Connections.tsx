@@ -20,15 +20,21 @@ const Line: FC<{
 }> = props => {
    const [from, to] = [props.from, props.to].map(p => {
       const at = p.at ? numSymbols.indexOf(p.at) : 4
-      return {
-         col: p.col + (at % 3) / 3 + 1 / 6,
-         row: p.row + Math.floor(at / 3) / 3 + 1 / 6,
-      }
+      const [col, row] = [
+         p.col + (at % 3) / 3 + 1 / 6,
+         p.row + Math.floor(at / 3) / 3 + 1 / 6,
+      ].map(i => `${i * (100 / 9)}%`)
+      return { col, row }
    })
 
    const { highlight } = useTheme()
 
-   return <line x1={`${from.col * (100 / 9)}%`} x2={`${to.col * (100 / 9)}%`} y1={`${from.row * (100 / 9)}%`} y2={`${to.row * (100 / 9)}%`} stroke={highlight} strokeLinecap='round' strokeWidth={2} />
+   return <>
+      <line x1={from.col} x2={to.col} y1={from.row} y2={to.row} stroke={highlight} strokeLinecap='round' strokeWidth={2} />
+      {[from, to].map((point, i) =>
+         <circle key={i} cx={point.col} cy={point.row} fill={highlight} r={5} />
+      )}
+   </>
 }
 
 const Style = styled.svg`

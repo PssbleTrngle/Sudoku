@@ -27,7 +27,7 @@ const StrategyTrainer: FC = () => {
 
 const Example: FC<SudokuInfo> = ({ strategy, sudoku, description }) => {
 
-   const [hint] = useMemo(() => strategy!.create(sudoku).getHints() ?? [], [strategy, sudoku])
+   const [hint] = useMemo(() => strategy!.create(sudoku).getHints().filter(h => h.actions.length > 0) ?? [], [strategy, sudoku])
 
    return (
       <>
