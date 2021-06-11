@@ -9,7 +9,7 @@ export default class HiddenPair extends Strategy {
 
    getHints() {
       return this.forGroups((cells, type) => {
-         return HiddenPair.pairs
+         return this.pairs
             .map<Hint | null>(candidates => {
                const any = cells.filter(cell => candidates.some(c => cell.candidates.includes(c)))
                const matching = cells.filter(cell => candidates.every(c => cell.candidates.includes(c)))

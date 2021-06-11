@@ -1,6 +1,6 @@
 import { exists } from '../../util'
 import Observer from '../generator/Observer'
-import { canPut, modifySudoku, Sudoku, symbols, withPoints } from '../Sudoku'
+import { canPut, modifySudoku, numSymbols, Sudoku, withPoints } from '../Sudoku'
 
 export default function solve(sudoku: Sudoku, firstOnly = true) {
    const observer = new Observer<Sudoku>()
@@ -23,7 +23,7 @@ export async function recursiveSolve(sudoku: Sudoku, onlyFirst = false): Promise
 
    if (empty) {
       const { col: x, row: y } = empty
-      const candidates = symbols.filter(i => canPut(empty, i, sudoku))
+      const candidates = numSymbols.filter(i => canPut(empty, i, sudoku))
       const modfied = candidates.map(value => modifySudoku(x, y, { value })(sudoku))
 
       if (onlyFirst) {

@@ -1,5 +1,5 @@
 import { exists } from '../../util'
-import { Hint, ninthAt, possibleBlockers, symbols } from '../Sudoku'
+import { Hint, ninthAt, possibleBlockers } from '../Sudoku'
 import Strategy from './Strategy'
 
 export default class NakedSingle extends Strategy {
@@ -11,7 +11,7 @@ export default class NakedSingle extends Strategy {
       return this.find(c => !c.value)
          .map(cell => {
             const takenValues = possibleBlockers(this.sudoku, cell).filter(c => !!c.value)
-            const possibleValues = symbols.filter(i => !takenValues.some(c => c.value === i))
+            const possibleValues = this.symbols.filter(i => !takenValues.some(c => c.value === i))
 
             if (possibleValues.length === 1) {
                const [value] = possibleValues

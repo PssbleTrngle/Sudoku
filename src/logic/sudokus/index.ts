@@ -1,12 +1,19 @@
+import slugify from 'slugify'
 import { arrayOf, exists } from '../../util'
 import Strategy from '../strategies/Strategy'
-import { Cell, Sudoku, symbols } from '../Sudoku'
+import { Cell, numSymbols as symbols, Sudoku } from '../Sudoku'
 
 type SudokuLike = string | (Cell | number | number[])[][]
 
 export interface SudokuInfo {
+   name: string
+   slug: string
    sudoku: Sudoku,
-   strategy?: string
+   strategy?: {
+      create(sudoku: Sudoku): Strategy,
+      slug: string,
+      name: string,
+   }
    description?: string,
 }
 
@@ -14,15 +21,25 @@ const MAP = new Map<string, SudokuInfo>()
 
 export function define(name: string, sudoku: SudokuLike, strategy?: { new(sudoku: Sudoku): Strategy }, description?: string) {
    const parsed = parse(sudoku)
+   const strategyInstance = strategy && new strategy(parsed)
    MAP.set(name, {
+      name, slug: slugify(name, { lower: true }),
       sudoku: parsed,
-      strategy: strategy && new strategy(parsed).getName(),
+      strategy: strategy && {
+         create: s => new strategy(s),
+         slug: slugify(strategyInstance!.getName(), { lower: true }),
+         name: strategyInstance!.getName(),
+      },
       description,
    })
 }
 
 export function names() {
    return Array.from(MAP.keys())
+}
+
+export function getSudokus() {
+   return Array.from(MAP.values())
 }
 
 export async function getSudoku(name: string) {

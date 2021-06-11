@@ -1,5 +1,5 @@
 import { cross, exists } from '../../util'
-import { CellWithPoint, connectionsOf, Hint, possibleBlockers, sharedGroups, symbols } from '../Sudoku'
+import { CellWithPoint, connectionsOf, Hint, possibleBlockers, sharedGroups } from '../Sudoku'
 import ChainStrategy from './ChainStrategy'
 
 export default class XChain extends ChainStrategy {
@@ -8,7 +8,7 @@ export default class XChain extends ChainStrategy {
    }
 
    getHints() {
-      return symbols
+      return this.symbols
          .map(candidate => {
             const predicate = (it: CellWithPoint) => {
                if (!it.candidates.includes(candidate)) return false

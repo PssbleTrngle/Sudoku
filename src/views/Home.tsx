@@ -1,8 +1,9 @@
 import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { ButtonStyle } from '../components/Inputs'
 
-const Creator: FC = () => {
+const Home: FC = () => {
 
    return (
       <>
@@ -36,11 +37,16 @@ const Buttons = styled.ul`
    list-style: none;
 
    li {
-      font-size: 1rem;
-      padding: 6.7rem 6rem;
-      background: #0002;
+      ${ButtonStyle};
+      font-size: 3rem;
+      padding: 6rem 4rem;
       border-radius: 10px;
+
+   }
+    
+   a {
+      text-decoration: none;
    }
 `
 
-export default Creator
+export default Home

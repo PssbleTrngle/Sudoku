@@ -1,7 +1,7 @@
 import { SetStateAction } from 'react'
 import { arrayOf } from '../util'
 
-export const symbols = arrayOf(9).map(i => i.toString())
+export const numSymbols = arrayOf(9).map(i => i.toString())
 //export const symbols = 'ABCDEFGHI'.split('')
 export type Symbol = string
 
@@ -151,7 +151,7 @@ export function uniqByPoint(c1: CellWithPoint, i1: number, a: CellWithPoint[]) {
  */
 export function possibleValues(point: Point, sudoku: Sudoku) {
    const takenValues = possibleBlockers(sudoku, point).filter(c => !!c.value)
-   const possibleValues = symbols.filter(i => !takenValues.some(c => c.value === i))
+   const possibleValues = numSymbols.filter(i => !takenValues.some(c => c.value === i))
    return possibleValues
 }
 

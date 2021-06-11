@@ -56,5 +56,9 @@ async function getHints(sudoku: Sudoku) {
    return all.filter(s => s.hints.length > 0)
 }
 
+export function getStrategies() {
+   return [...strategies]
+}
+
 const Strategies = { getHints }
 export default Strategies

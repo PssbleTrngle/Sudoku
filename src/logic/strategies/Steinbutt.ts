@@ -1,5 +1,5 @@
 import { arrayEqual, arrayOf, exists } from '../../util'
-import { connectionsOf, Hint, inNinth, inRow, ninthAt, sharedGroups, symbols } from '../Sudoku'
+import { connectionsOf, Hint, inNinth, inRow, ninthAt, sharedGroups } from '../Sudoku'
 import Strategy from './Strategy'
 
 export default class Steinbutt extends Strategy {
@@ -10,7 +10,7 @@ export default class Steinbutt extends Strategy {
    getHints() {
       const rows = arrayOf(9).map(i => i - 1)
 
-      return symbols
+      return this.symbols
          .map(candidate => {
             return rows.map(row => {
                const pair = inRow(row, this.sudoku).filter(it => it.candidates.includes(candidate))

@@ -1,5 +1,7 @@
 import { FC, useCallback, useEffect, useState } from 'react'
-import Sudoku from '../components/Sudoku'
+import styled from 'styled-components'
+import { Button, Label, Select } from '../components/Inputs'
+import SudokuEditor from '../components/SudokuEditor'
 import { useObserver } from '../Hooks'
 import generator, { createEmpty } from '../logic/generator'
 import solver from '../logic/solver'
@@ -48,35 +50,44 @@ const Creator: FC = () => {
 
    return (
       <>
-         <div className='toolbar'>
-            <label htmlFor='load'>Select Sudoku:</label>
+         <Toolbar>
+            <Label htmlFor='load'>Select Sudoku:</Label>
 
-            <select id='load' disabled={generating} onChange={e => setSelected(e.target.value)}>
+            <Select id='load' disabled={generating} onChange={e => setSelected(e.target.value)}>
                {selections.map(s => (
                   <option key={s} value={s}>
                      {s}
                   </option>
                ))}
-            </select>
+            </Select>
 
-            <button disabled={generating} onClick={load}>
+            <Button disabled={generating} onClick={load}>
                Load
-            </button>
+            </Button>
 
             {Object.entries(generators).map(([k, call]) => (
-               <button key={k} onClick={generating ? cancel : call}>
+               <Button key={k} onClick={generating ? cancel : call}>
                   {generating ? 'Cancel' : k}
-               </button>
+               </Button>
             ))}
 
-            <button onClick={copy}>Copy</button>
+            <Button onClick={copy}>Copy</Button>
 
-            <button onClick={() => setFillCandidates(true)}>Fill Candidates</button>
-         </div>
+            <Button onClick={() => setFillCandidates(true)}>Fill Candidates</Button>
+         </Toolbar>
 
-         <Sudoku fillcandidates={fillcandidates} sudoku={sudoku} onChange={setSudoku} />
+         <SudokuEditor fillCandidates={fillcandidates} sudoku={sudoku} onChange={setSudoku} />
       </>
    )
 }
+
+const Toolbar = styled.div`
+   display: grid;
+   grid-auto-flow: column;
+   justify-content: center;
+   padding: 2rem;
+   align-items: center;
+   gap: 0.5rem;
+`
 
 export default Creator

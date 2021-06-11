@@ -1,10 +1,11 @@
 import { arrayOf, cross } from '../../util'
-import { Blocker, CellWithPoint, Hint, ninthAt, Point, Sudoku, symbols, withPoints } from '../Sudoku'
+import { Blocker, CellWithPoint, Hint, ninthAt, numSymbols, Point, Sudoku, withPoints } from '../Sudoku'
 
 export default abstract class Strategy {
-   protected static pairs = cross(symbols)
+   protected readonly pairs = cross(numSymbols)
+   protected readonly symbols = numSymbols
 
-   constructor(protected sudoku: Sudoku) {}
+   constructor(protected readonly sudoku: Sudoku) { }
 
    abstract getName(): string
 

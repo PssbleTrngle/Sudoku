@@ -1,5 +1,5 @@
 import { arrayOf, exists } from '../../util'
-import { Hint, inRow, ninthAt, symbols } from '../Sudoku'
+import { Hint, inRow, ninthAt } from '../Sudoku'
 import Strategy from './Strategy'
 
 export default class BRC extends Strategy {
@@ -17,7 +17,7 @@ export default class BRC extends Strategy {
             const inNinth = empty.filter(c => ninthAt(c) === ninth)
 
             // Checking for every possible number from 1-9
-            return symbols.map(candidate => {
+            return this.symbols.map(candidate => {
                // Find all cells in the ninth with this candidate
                // Return when no cells contains it
                const withCandidate = inNinth.filter(c => c.candidates.includes(candidate))

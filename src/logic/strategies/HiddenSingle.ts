@@ -1,5 +1,5 @@
 import { exists } from '../../util'
-import { blockedBy, canPut, Hint, symbols } from '../Sudoku'
+import { blockedBy, canPut, Hint } from '../Sudoku'
 import Strategy from './Strategy'
 
 export default class HiddenSingle extends Strategy {
@@ -13,7 +13,7 @@ export default class HiddenSingle extends Strategy {
 
          const filled = cells.map(c => c.value).filter(exists)
 
-         const missing = symbols.filter(i => !filled.includes(i))
+         const missing = this.symbols.filter(i => !filled.includes(i))
 
          return missing
             .map(value => {

@@ -1,13 +1,2 @@
 @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
-
-#root {
-   font-family: 'Indie Flower', cursive, sans-serif;
-}
-
-* {
-   margin: 0;
-   padding: 0;
-}
-
-@import 'toolbar';
-@import 'inputs';
+@import 'reset.css';

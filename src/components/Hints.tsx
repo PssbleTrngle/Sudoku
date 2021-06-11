@@ -1,8 +1,9 @@
 import { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
-import '../assets/style/sudoku.scss'
+import styled from 'styled-components'
 import { usePromise } from '../Hooks'
 import Strategies from '../logic/strategies'
 import { Hint, Sudoku as ISudoku } from '../logic/Sudoku'
+import { Button, Select } from './Inputs'
 
 const Hints: FC<{
    sudoku: ISudoku
@@ -33,29 +34,53 @@ const Hints: FC<{
       }
    }
 
-   if (strats.length === 0) return <p className='hints'>No hints possible</p>
+   if (strats.length === 0) return <NoHints>No hints possible</NoHints>
 
    return (
-      <div className='hints'>
-         <select onChange={e => selectStrat(parseInt(e.target.value))}>
+      <Style>
+         <Select onChange={e => selectStrat(parseInt(e.target.value))}>
             <option value={-1}>Any</option>
             {strats.map(({ strategy }, i) => (
                <option value={i} key={i}>
                   {strategy}
                </option>
             ))}
-         </select>
+         </Select>
 
-         <button onClick={getHint}>Get a hint</button>
+         <Button onClick={getHint}>Get a hint</Button>
 
          {hint && (
-            <div className='info'>
+            <Info>
                <h3>{strategy}</h3>
-               <button onClick={onApply}>Apply</button>
-            </div>
+               <Button onClick={onApply}>Apply</Button>
+            </Info>
          )}
-      </div>
+      </Style>
    )
 }
+
+const NoHints = styled.p`
+   grid-area: hints;
+   text-align: center;
+`
+
+const Info = styled.div`
+   padding: 20px 0;
+   display: grid;
+   align-items: center;
+   gap: 0.5rem;
+   grid-template:
+      'name apply'
+      'desc desc';
+`
+
+const Style = styled.div`
+   grid-area: hints;
+   margin: 0 auto;
+
+   & > button {
+      margin-left: 0.5rem;
+   }
+`
 
 export default Hints

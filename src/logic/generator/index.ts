@@ -1,11 +1,11 @@
 import { arrayOf } from '../../util'
 import { recursiveSolve } from '../solver'
-import { canPut, modifySudoku, Sudoku, symbols, withPoints } from '../Sudoku'
+import { canPut, modifySudoku, numSymbols as symbols, Sudoku, Symbol, withPoints } from '../Sudoku'
 import History from './History'
 
 const NUMS = arrayOf(9)
 
-export function createEmpty(): Sudoku {
+export function createEmpty(symbols?: Symbol[]): Sudoku {
    const cells = NUMS.map(() =>
       NUMS.map(() => ({
          candidates: [],

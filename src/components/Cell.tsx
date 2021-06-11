@@ -1,7 +1,9 @@
-import classes from 'classnames'
+import { lighten, mix } from 'polished'
 import React, { FC, useMemo } from 'react'
-import '../assets/style/sudoku.scss'
-import { Action, CellWithPoint, Hint, ninthAt, Symbol, symbols } from '../logic/Sudoku'
+import styled, { css } from 'styled-components'
+import { CellWithPoint, Hint, ninthAt } from '../logic/Sudoku'
+import useSymbols from '../useSymbols'
+import Candidates from './Candidates'
 
 const Cell: FC<
    CellWithPoint & {
@@ -10,6 +12,8 @@ const Cell: FC<
       hint?: Hint
    }
 > = ({ onSelect, hint, selected, col, row, candidates, ...cell }) => {
+   const { transform } = useSymbols()
+
    const actions = useMemo(() => hint?.actions.filter(a => a?.col === col && a.row === row), [hint, col, row])
    const hintValue = useMemo(() => actions?.find(a => a.type === 'value')?.value, [actions])
    const value = useMemo(() => cell.value ?? hintValue, [cell.value, hintValue])
@@ -21,30 +25,78 @@ const Cell: FC<
    const highlightedCandidates = hint?.highlights?.find(c => c.row === row && c.col === col)?.highlightedCandidates
 
    return (
-      <span onClick={onSelect} className={classes('cell', { selected, highlighted, blocked, filled, hint: hintValue })}>
-         <span className='value'>{value}</span>
+      <Style onClick={onSelect} {...{ selected, highlighted, blocked, filled, hint: !!hintValue }} >
+         <span>{transform(value)}</span>
          <Candidates highlighted={highlightedCandidates} candidates={cell.value ? [] : candidates} actions={actions} />
-      </span>
+      </Style>
    )
 }
 
-const Candidates: FC<{
-   candidates: Symbol[]
-   actions?: Action[]
-   highlighted?: Symbol[]
-}> = ({ candidates, actions, highlighted }) => (
-   <div className='candidates'>
-      {symbols.map(i => (
-         <span
-         className={classes({
-            crossed: actions?.some(a => a.type === 'exclude' && a.value === i),
-               highlighted: highlighted?.includes(i),
-            })}
-            key={i}>
-            {candidates.includes(i) ? i : ''}
-         </span>
-      ))}
-   </div>
-)
+export const CellStyle = css`
+   position: relative;
+   display: grid;
+   align-items: center;
+
+   width: 8vh;
+   height: 8vh;
+   font-size: calc(8vh / 2);
+
+   text-align: center;
+   padding: 5px;
+   border-radius: 5px;
+   background-color: ${p => p.theme.cells};
+   font-family: 'Indie Flower', cursive, sans-serif;
+   transition: background 0.1s ease;
+`
+
+const Style = styled.div<{
+   selected?: boolean,
+   highlighted?: boolean,
+   blocked?: boolean,
+   filled?: boolean,
+   hint?: boolean,
+}>`
+   background: red;
+   ${CellStyle};
+   cursor: pointer;
+   user-select: none;
+
+   &:hover {
+      background: ${p => lighten(0.08, p.theme.cells)};
+   }
+
+   ${p => p.filled && css`
+      background: lighten(${p => p.theme.highlight}, 25%);
+
+      &:hover {
+         background: lighten(${p => p.theme.highlight}, 30%);
+      }
+   `}
+
+   ${p => p.blocked && css`
+      background-image: repeating-linear-gradient(-45deg, #0001, #0001 19%, transparent 20%, transparent 39%) !important;
+   `}
+
+   ${p => p.selected && css`
+      background: ${p => mix(0.7, p.theme.cells, p.theme.highlight)} !important;
+   `}
+
+   ${p => p.highlighted && css`
+      box-shadow: 0 0 0 2px ${p => p.theme.highlight};
+      z-index: 9000000;
+   `}
+
+   ${p => p.hint && css`
+      color: rgb(72, 168, 28);
+   `}
+
+   &:nth-of-type(3n):not(:nth-of-type(9n)) {
+      margin-right: 10px;
+   }
+
+   &:nth-of-type(27n):not(:nth-of-type(81n)) {
+      margin-bottom: 10px;
+   }
+`
 
 export default Cell

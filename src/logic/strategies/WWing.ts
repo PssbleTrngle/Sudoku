@@ -8,7 +8,7 @@ export default class WWing extends Strategy {
    }
 
    getHints() {
-      return WWing.pairs
+      return this.pairs
          .map(candidates => {
             const withPair = this.find(it => candidates.some(c => it.candidates.includes(c)))
             const onlyPair = withPair.filter(it => arrayEqual(candidates, it.candidates))
