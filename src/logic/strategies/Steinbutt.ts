@@ -33,7 +33,7 @@ export default class Steinbutt extends Strategy {
                      if (!sniperA || !sniperB) return null
 
                      const points = [direct, removed, sniperA, sniperB, indirect].map(it => ({ ...it, highlightedCandidates: [candidate] }))
-                     if(points.filter(uniqByPoint).length < 5) return null
+                     if (points.filter(uniqByPoint).length < 5) return null
 
                      return {
                         actions: [

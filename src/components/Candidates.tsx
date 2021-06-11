@@ -11,16 +11,15 @@ const Candidates: FC<{
 }> = ({ candidates, actions, highlighted }) => {
    const { transform } = useSymbols()
 
-   return <Style>
-      {numSymbols.map(i => (
-         <Candidate
-            crossed={actions?.some(a => a.type === 'exclude' && a.value === i)}
-            highlighted={highlighted?.includes(i)}
-            key={i}>
-            {candidates.includes(i) ? transform(i) : ''}
-         </Candidate>
-      ))}
-   </Style>
+   return (
+      <Style>
+         {numSymbols.map(i => (
+            <Candidate crossed={actions?.some(a => a.type === 'exclude' && a.value === i)} highlighted={highlighted?.includes(i)} key={i}>
+               {candidates.includes(i) ? transform(i) : ''}
+            </Candidate>
+         ))}
+      </Style>
+   )
 }
 
 const Style = styled.div`
@@ -45,13 +44,17 @@ const Candidate = styled.span<{
    color: ${p => mix(0.3, p.theme.cells, p.theme.text)};
    font-weight: bold;
 
-   ${p => p.highlighted && css`
-      color: ${p => p.theme.highlight};
-   `}
+   ${p =>
+      p.highlighted &&
+      css`
+         color: ${p => p.theme.highlight};
+      `}
 
-   ${p => p.crossed && css`
-      color: red;
-   `}
+   ${p =>
+      p.crossed &&
+      css`
+         color: red;
+      `}
 
    font-size: calc(8vh / 6);
 `

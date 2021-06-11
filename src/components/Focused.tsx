@@ -51,7 +51,7 @@ const Focused: FC<
 
          <ul>
             {numSymbols.map(i => (
-               <Candidate key={i} disabled={!!value} onClick={() => toggle(i)} selected={candidates.includes(i)} >
+               <Candidate key={i} disabled={!!value} onClick={() => toggle(i)} selected={candidates.includes(i)}>
                   {transform(i)}
                </Candidate>
             ))}
@@ -76,9 +76,11 @@ const Candidate = styled.button<{ selected?: boolean }>`
       background: ${p => lighten(0.05, p.theme.cells)};
    }
 
-   ${p => p.selected && css`
-      background: ${lighten(0.1, mix(0.4, p.theme.cells, p.theme.highlight))};
-   `}
+   ${p =>
+      p.selected &&
+      css`
+         background: ${lighten(0.1, mix(0.4, p.theme.cells, p.theme.highlight))};
+      `}
 
    &:disabled {
       cursor: not-allowed;
@@ -90,6 +92,7 @@ const Cell = styled.div`
 
    input {
       font-family: 'Indie Flower', cursive, sans-serif;
+      color: ${p => p.theme.text};
       border: none;
       outline: none;
       text-align: center;

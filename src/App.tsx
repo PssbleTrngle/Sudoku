@@ -11,14 +11,9 @@ import Creator from './views/Creator'
 import Home from './views/Home'
 import Trainer from './views/Trainer'
 
-const SYMBOLS: Symbol[][] = [
-   numSymbols,
-   'ABCDEFGHI'.split(''),
-   ['🌒', '😎', '❤', '✨', '💎', '🍪', '🌺', '💥', '☀️'],
-]
+const SYMBOLS: Symbol[][] = [numSymbols, 'ABCDEFGHI'.split(''), ['🍆', '😎', '🤣', '✨', '💎', '🍪', '🌺', '💥', '🍀']]
 
 const App: FC = () => {
-
    const [dark, toggleDark] = useReducer((v: boolean) => {
       localStorage.setItem('darkmode', `${!v}`)
       return !v
@@ -33,16 +28,18 @@ const App: FC = () => {
    return (
       <ThemeProvider theme={dark ? darkTheme : defaultTheme}>
          <SymbolProvider value={symbols}>
+            <Global />
 
             <ButtonBar>
-               <LinkButton rel='noopener noreferrer' target='_blank' href='https://github.com/PssbleTrngle/Sudoku'>Source</LinkButton>
+               <LinkButton rel='noopener noreferrer' target='_blank' href='https://github.com/PssbleTrngle/Sudoku'>
+                  Source
+               </LinkButton>
                <Button onClick={toggleDark}>{dark ? '☀️' : '🌒'}</Button>
                <Button onClick={cycleSymbols}>🎲</Button>
             </ButtonBar>
 
             <Router>
                <Switch>
-
                   <Route path='/' exact component={Home} />
 
                   <Route path='/creator' component={Creator} />
@@ -50,11 +47,8 @@ const App: FC = () => {
                   <Route path='/trainer' component={Trainer} />
 
                   <Redirect to='/' />
-
                </Switch>
             </Router>
-
-            <Global />
          </SymbolProvider>
       </ThemeProvider>
    )
@@ -73,12 +67,9 @@ const Global = createGlobalStyle`
    body, html {
       background: ${p => p.theme.bg};
       font-family: sans-serif;
-   }
-
-   * {
       color: ${p => p.theme.text};
    }
-
+   
    ul {
       list-style: none;
    }

@@ -10,10 +10,11 @@ export function usePromise<T>(func: () => T | Promise<T>, depencencies?: any[]) 
    useEffect(() => {
       const p = new Promise(res =>
          window.setTimeout(
-            () => Promise.resolve(func()).then(r => {
-               set(r)
-               res()
-            }),
+            () =>
+               Promise.resolve(func()).then(r => {
+                  set(r)
+                  res()
+               }),
             0
          )
       )

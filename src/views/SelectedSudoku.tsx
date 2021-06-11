@@ -12,16 +12,15 @@ const SelectedSudoku: FC = () => {
 
    if (!info) return <Redirect to='/trainer' />
 
-   return <Style>
+   return (
+      <Style>
+         <Sudoku {...info.sudoku} hint={hints?.[0]} />
 
-      <Sudoku {...info.sudoku} hint={hints?.[0]} />
+         <h2>{info.strategy?.name}</h2>
 
-      <h2>{info.strategy?.name}</h2>
-
-      <p>{info.description || 'No description provided'}</p>
-
-   </Style>
-
+         <p>{info.description || 'No description provided'}</p>
+      </Style>
+   )
 }
 
 const Style = styled.section`
@@ -36,16 +35,16 @@ const Style = styled.section`
    h2 {
       grid-area: strategy;
    }
-   
+
    p {
       grid-area: description;
    }
 
    grid-template:
-      "sudoku ." 200px
-      "sudoku strategy"
-      "sudoku description"
-      "sudoku ."
+      'sudoku .' 200px
+      'sudoku strategy'
+      'sudoku description'
+      'sudoku .'
       / 1fr 300px;
 `
 

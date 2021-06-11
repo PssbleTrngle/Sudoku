@@ -28,17 +28,7 @@ const Line: FC<{
 
    const { highlight } = useTheme()
 
-   return (
-      <line
-         x1={`${from.col * (100 / 9)}%`}
-         x2={`${to.col * (100 / 9)}%`}
-         y1={`${from.row * (100 / 9)}%`}
-         y2={`${to.row * (100 / 9)}%`}
-         stroke={highlight}
-         strokeLinecap='round'
-         strokeWidth={2}
-      />
-   )
+   return <line x1={`${from.col * (100 / 9)}%`} x2={`${to.col * (100 / 9)}%`} y1={`${from.row * (100 / 9)}%`} y2={`${to.row * (100 / 9)}%`} stroke={highlight} strokeLinecap='round' strokeWidth={2} />
 }
 
 const Style = styled.svg`

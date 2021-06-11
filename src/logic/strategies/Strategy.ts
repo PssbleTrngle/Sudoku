@@ -5,7 +5,7 @@ export default abstract class Strategy {
    protected readonly pairs = cross(numSymbols)
    protected readonly symbols = numSymbols
 
-   constructor(protected readonly sudoku: Sudoku) { }
+   constructor(protected readonly sudoku: Sudoku) {}
 
    abstract getName(): string
 

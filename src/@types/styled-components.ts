@@ -1,7 +1,7 @@
-import 'styled-components';
+import 'styled-components'
 
 declare module 'styled-components' {
-   export interface DefaultTheme  {
+   export interface DefaultTheme {
       bg: string
       cells: string
       highlight: string

@@ -36,13 +36,11 @@ export default class XWing extends Strategy {
                            const ninths = corners.map(c => ninthAt(c)).filter((n1, i1, a) => !a.some((n2, i2) => i2 < i1 && n1 === n2))
                            if (ninths.length !== 4) return null
 
-                           const removeIn = ['row', 'col'].map(c => c as 'row' | 'col').filter(source =>
-                              [origin, across].every(it =>
-                                 this.find(c => c[source] === it[source] && c.candidates.includes(canditate)).length === 2
-                              )
-                           )
+                           const removeIn = ['row', 'col']
+                              .map(c => c as 'row' | 'col')
+                              .filter(source => [origin, across].every(it => this.find(c => c[source] === it[source] && c.candidates.includes(canditate)).length === 2))
 
-                           if(removeIn.length !== 1) return null
+                           if (removeIn.length !== 1) return null
 
                            // Search for cells which are in the same row or column as one of the corners
                            // but are not one of the corners

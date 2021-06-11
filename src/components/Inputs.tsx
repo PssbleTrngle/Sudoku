@@ -1,6 +1,6 @@
-import { lighten, mix, transparentize } from "polished";
-import { Link } from "react-router-dom";
-import styled, { css } from "styled-components";
+import { lighten, mix, transparentize } from 'polished'
+import { Link } from 'react-router-dom'
+import styled, { css } from 'styled-components'
 
 export const InputStyle = () => css`
    padding: 0.5rem;
@@ -14,9 +14,7 @@ export const InputStyle = () => css`
    }
 
    &:focus {
-      box-shadow: 
-         0 0 0 0.15rem ${p => p.theme.highlight},
-         0 0 0 0.4rem ${p => transparentize(0.8, p.theme.highlight)};
+      box-shadow: 0 0 0 0.15rem ${p => p.theme.highlight}, 0 0 0 0.4rem ${p => transparentize(0.8, p.theme.highlight)};
       border: none;
       outline: none;
    }

@@ -9,7 +9,6 @@ import { Sudoku as ISudoku } from '../logic/Sudoku'
 import { getSudoku, names } from '../logic/sudokus'
 
 const Creator: FC = () => {
-
    const selections = names()
    const [selected, setSelected] = useState(selections[0])
    const [sudoku, setSudoku] = useState<ISudoku>(createEmpty())

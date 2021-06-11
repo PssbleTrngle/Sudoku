@@ -9,23 +9,27 @@ const Cell: FC<
    CellWithPoint & {
       onSelect?: () => void
       selected?: boolean
+      incorrect?: boolean
       hint?: Hint
    }
-> = ({ onSelect, hint, selected, col, row, candidates, ...cell }) => {
+> = ({ onSelect, hint, selected, col, row, candidates, incorrect, ...cell }) => {
    const { transform } = useSymbols()
 
    const actions = useMemo(() => hint?.actions.filter(a => a?.col === col && a.row === row), [hint, col, row])
    const hintValue = useMemo(() => actions?.find(a => a.type === 'value')?.value, [actions])
    const value = useMemo(() => cell.value ?? hintValue, [cell.value, hintValue])
 
-   const highlighted = hint?.highlights?.some(c => c.row === row && c.col === col)
-   const blocked = hint?.blocked?.some(c => c.row === row && c.col === col)
-   const filled = hint?.highlightRows?.some(r => row === r) || hint?.highlightCols?.some(c => col === c) || hint?.highlightNinths?.some(n => ninthAt({ row, col }) === n)
+   const highlighted = useMemo(() => hint?.highlights?.some(c => c.row === row && c.col === col), [col, row, hint?.highlights])
+   const blocked = useMemo(() => hint?.blocked?.some(c => c.row === row && c.col === col), [col, row, hint?.blocked])
+   const filled = useMemo(
+      () => hint?.highlightRows?.some(r => row === r) || hint?.highlightCols?.some(c => col === c) || hint?.highlightNinths?.some(n => ninthAt({ row, col }) === n),
+      [col, row, hint?.highlightCols, hint?.highlightRows, hint?.highlightNinths]
+   )
 
    const highlightedCandidates = hint?.highlights?.find(c => c.row === row && c.col === col)?.highlightedCandidates
 
    return (
-      <Style onClick={onSelect} {...{ selected, highlighted, blocked, filled, hint: !!hintValue }} >
+      <Style onClick={onSelect} {...{ selected, highlighted, blocked, filled, incorrect, hint: !!hintValue }}>
          <span>{transform(value)}</span>
          <Candidates highlighted={highlightedCandidates} candidates={cell.value ? [] : candidates} actions={actions} />
       </Style>
@@ -50,13 +54,13 @@ export const CellStyle = css`
 `
 
 const Style = styled.div<{
-   selected?: boolean,
-   highlighted?: boolean,
-   blocked?: boolean,
-   filled?: boolean,
-   hint?: boolean,
+   selected?: boolean
+   highlighted?: boolean
+   blocked?: boolean
+   filled?: boolean
+   hint?: boolean
+   incorrect?: boolean
 }>`
-   background: red;
    ${CellStyle};
    cursor: pointer;
    user-select: none;
@@ -65,30 +69,46 @@ const Style = styled.div<{
       background: ${p => lighten(0.08, p.theme.cells)};
    }
 
-   ${p => p.filled && css`
-      background: lighten(${p => p.theme.highlight}, 25%);
+   ${p =>
+      p.filled &&
+      css`
+         background: lighten(${p => p.theme.highlight}, 25%);
 
-      &:hover {
-         background: lighten(${p => p.theme.highlight}, 30%);
-      }
-   `}
+         &:hover {
+            background: lighten(${p => p.theme.highlight}, 30%);
+         }
+      `}
 
-   ${p => p.blocked && css`
-      background-image: repeating-linear-gradient(-45deg, #0001, #0001 19%, transparent 20%, transparent 39%) !important;
-   `}
+   ${p =>
+      p.blocked &&
+      css`
+         background-image: repeating-linear-gradient(-45deg, #0001, #0001 19%, transparent 20%, transparent 39%) !important;
+      `}
 
-   ${p => p.selected && css`
-      background: ${p => mix(0.7, p.theme.cells, p.theme.highlight)} !important;
-   `}
+   ${p =>
+      p.selected &&
+      css`
+         background: ${p => mix(0.7, p.theme.cells, p.theme.highlight)} !important;
+      `}
 
-   ${p => p.highlighted && css`
-      box-shadow: 0 0 0 2px ${p => p.theme.highlight};
-      z-index: 9000000;
-   `}
+   ${p =>
+      p.highlighted &&
+      css`
+         box-shadow: 0 0 0 2px ${p => p.theme.highlight};
+         z-index: 9000000;
+      `}
 
-   ${p => p.hint && css`
-      color: rgb(72, 168, 28);
-   `}
+   ${p =>
+      p.hint &&
+      css`
+         color: rgb(72, 168, 28);
+      `}
+
+   ${p =>
+      p.incorrect &&
+      css`
+         color: red;
+      `}
 
    &:nth-of-type(3n):not(:nth-of-type(9n)) {
       margin-right: 10px;

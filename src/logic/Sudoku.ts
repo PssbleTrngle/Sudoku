@@ -162,8 +162,8 @@ export function possibleValues(point: Point, sudoku: Sudoku) {
  * @param sudoku The sudoku
  * @returns If the value can be placed in the given cell
  */
-export function canPut(point: Point, value: Symbol, sudoku: Sudoku) {
-   if (!!sudoku.cells[point.row][point.col].value) return false
+export function canPut(point: Point, value: Symbol, sudoku: Sudoku, ignoreThis = false) {
+   if (!ignoreThis && !!sudoku.cells[point.row][point.col].value) return false
    if (possibleBlockers(sudoku, point).some(c => c.value === value)) return false
    return true
 }

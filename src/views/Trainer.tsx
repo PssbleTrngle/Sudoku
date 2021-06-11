@@ -11,7 +11,14 @@ const Trainer: FC = () => {
    const { url } = useRouteMatch()
 
    const sudokus = useMemo(() => getSudokus().filter(s => s.strategy), [])
-   const strategies = useMemo(() => uniqBy(sudokus.map(s => s.strategy), 'name').filter(exists), [sudokus])
+   const strategies = useMemo(
+      () =>
+         uniqBy(
+            sudokus.map(s => s.strategy),
+            'name'
+         ).filter(exists),
+      [sudokus]
+   )
 
    return (
       <>
@@ -19,11 +26,11 @@ const Trainer: FC = () => {
 
          <Route path={url} exact>
             <List>
-               {strategies.map(strategy =>
+               {strategies.map(strategy => (
                   <Link key={strategy.name} to={`/trainer/${strategy.slug}`}>
                      <li>{strategy.name}</li>
                   </Link>
-               )}
+               ))}
             </List>
          </Route>
       </>

@@ -24,15 +24,14 @@ const SudokuEditor: FC<{
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [load, sudoku])
 
-   const [focused, setFocused] = useReducer(
-      (_: Point | undefined, point: Point | undefined) => {
-         return point && {
+   const [focused, setFocused] = useReducer((_: Point | undefined, point: Point | undefined) => {
+      return (
+         point && {
             row: Math.max(0, Math.min(8, point.row)),
             col: Math.max(0, Math.min(8, point.col)),
          }
-      },
-      undefined
-   )
+      )
+   }, undefined)
 
    useEffect(() => {
       if (fillCandidates) {
@@ -104,11 +103,7 @@ const SudokuEditor: FC<{
       <Style id='sudoku'>
          <Sudoku {...sudoku} focused={focused} onSelect={setFocused} hint={hint} />
 
-         {focused ? (
-            <Focused {...focused} {...cells[focused.row][focused.col]} onChange={c => onChange?.(modifySudoku(focused.row, focused.col, c))} />
-         ) : (
-            <NoSelected>Select a Cell</NoSelected>
-         )}
+         {focused ? <Focused {...focused} {...cells[focused.row][focused.col]} onChange={c => onChange?.(modifySudoku(focused.row, focused.col, c))} /> : <NoSelected>Select a Cell</NoSelected>}
 
          <Hints {...{ sudoku }} onChange={setHint} hint={hint} onApply={applyHint} />
       </Style>

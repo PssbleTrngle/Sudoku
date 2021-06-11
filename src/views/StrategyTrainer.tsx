@@ -16,21 +16,17 @@ const StrategyTrainer: FC = () => {
 
    return (
       <>
-
          <Route path={`${url}/:slug`} component={SelectedSudoku} />
 
          <Route path={url} exact>
-
             <List>
-               {sudokus.map(sudoku =>
+               {sudokus.map(sudoku => (
                   <Link key={sudoku.name} to={`/trainer/${slug}/${sudoku.slug}`}>
                      <li>{sudoku.name}</li>
                   </Link>
-               )}
+               ))}
             </List>
-
          </Route>
-
       </>
    )
 }

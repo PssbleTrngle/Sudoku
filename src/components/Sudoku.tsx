@@ -1,28 +1,37 @@
 import { mix } from 'polished'
 import { Dispatch, FC } from 'react'
 import styled from 'styled-components'
-import { Hint, Point, Sudoku as ISudoku } from '../logic/Sudoku'
+import { canPut, Hint, Point, Sudoku as ISudoku } from '../logic/Sudoku'
 import Cell from './Cell'
 import Connections from './Connections'
 
-const Sudoku: FC<ISudoku & {
-   hint?: Hint
-   focused?: Point
-   onSelect?: Dispatch<Point>
-}> = ({ focused, hint, onSelect, ...sudoku }) => {
+const Sudoku: FC<
+   ISudoku & {
+      hint?: Hint
+      focused?: Point
+      onSelect?: Dispatch<Point>
+      showIncorrect?: boolean
+   }
+> = ({ focused, hint, onSelect, showIncorrect = true, cells }) => (
+   <Style>
+      {cells.map((r, row) =>
+         r.map((cell, col) => (
+            <Cell
+               key={`${col}/${row}`}
+               {...cell}
+               incorrect={showIncorrect && !!cell.value && !canPut({ col, row }, cell.value, { cells }, true)}
+               col={col}
+               row={row}
+               selected={focused?.col === col && focused?.row === row}
+               onSelect={() => onSelect?.({ col, row })}
+               hint={hint}
+            />
+         ))
+      )}
 
-   return (
-      <Style>
-         {sudoku.cells.map((r, row) =>
-            r.map((cell, col) => (
-               <Cell {...cell} col={col} row={row} selected={focused?.col === col && focused?.row === row} key={`${col}/${row}`} onSelect={() => onSelect?.({ col, row })} hint={hint} />
-            ))
-         )}
-
-         <Connections connections={hint?.connections} />
-      </Style>
-   )
-}
+      <Connections connections={hint?.connections} />
+   </Style>
+)
 
 const Style = styled.div`
    grid-area: sudoku;
@@ -61,6 +70,5 @@ const Style = styled.div`
       height: 34%;
    }
 `
-
 
 export default Sudoku
