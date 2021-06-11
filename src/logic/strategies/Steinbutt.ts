@@ -1,5 +1,5 @@
 import { arrayEqual, arrayOf, exists } from '../../util'
-import { connectionsOf, Hint, inNinth, inRow, ninthAt, sharedGroups } from '../Sudoku'
+import { connectionsOf, Hint, inNinth, inRow, ninthAt, sharedGroups, uniqByPoint } from '../Sudoku'
 import Strategy from './Strategy'
 
 export default class Steinbutt extends Strategy {
@@ -33,6 +33,7 @@ export default class Steinbutt extends Strategy {
                      if (!sniperA || !sniperB) return null
 
                      const points = [direct, removed, sniperA, sniperB, indirect].map(it => ({ ...it, highlightedCandidates: [candidate] }))
+                     if(points.filter(uniqByPoint).length < 5) return null
 
                      return {
                         actions: [

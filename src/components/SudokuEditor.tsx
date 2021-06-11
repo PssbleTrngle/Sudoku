@@ -1,6 +1,9 @@
+import query from 'query-string'
 import { Dispatch, FC, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { Hint, modifySudoku, Point, possibleValues, Sudoku as ISudoku, withPoints } from '../logic/Sudoku'
+import { getSudokus } from '../logic/sudokus'
 import { arrayEqual, exists } from '../util'
 import Focused from './Focused'
 import Hints from './Hints'
@@ -12,6 +15,14 @@ const SudokuEditor: FC<{
    onChange?: Dispatch<SetStateAction<ISudoku>>
 }> = ({ onChange, sudoku, fillCandidates }) => {
    const { cells } = sudoku
+
+   const { load } = query.parse(useLocation().search)
+   useEffect(() => {
+      if (withPoints(cells).some(it => it.value || it.candidates.length)) return
+      const info = getSudokus().find(s => s.slug === load)
+      if (info) onChange?.(info.sudoku)
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [load, sudoku])
 
    const [focused, setFocused] = useReducer(
       (_: Point | undefined, point: Point | undefined) => {
@@ -91,12 +102,12 @@ const SudokuEditor: FC<{
 
    return (
       <Style id='sudoku'>
-         <Sudoku {...sudoku} focused={focused} onSelect={setFocused} />
+         <Sudoku {...sudoku} focused={focused} onSelect={setFocused} hint={hint} />
 
          {focused ? (
             <Focused {...focused} {...cells[focused.row][focused.col]} onChange={c => onChange?.(modifySudoku(focused.row, focused.col, c))} />
          ) : (
-            <p style={{ gridArea: 'focused' }}>Select a Cell</p>
+            <NoSelected>Select a Cell</NoSelected>
          )}
 
          <Hints {...{ sudoku }} onChange={setHint} hint={hint} onApply={applyHint} />
@@ -104,6 +115,10 @@ const SudokuEditor: FC<{
    )
 }
 
+const NoSelected = styled.p`
+   grid-area: focused;
+   text-align: center;
+`
 
 const Style = styled.section`
    display: grid;
@@ -115,7 +130,7 @@ const Style = styled.section`
       'sudoku focused'
       'sudoku hints'
       'sudoku .'
-      / auto 300px;
+      / auto 350px;
 `
 
 export default SudokuEditor

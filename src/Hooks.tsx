@@ -8,7 +8,15 @@ export function usePromise<T>(func: () => T | Promise<T>, depencencies?: any[]) 
    const [get, set] = useState<T>()
 
    useEffect(() => {
-      const p = Promise.resolve(func()).then(r => set(r))
+      const p = new Promise(res =>
+         window.setTimeout(
+            () => Promise.resolve(func()).then(r => {
+               set(r)
+               res()
+            }),
+            0
+         )
+      )
 
       return () => p.cancel()
       // eslint-disable-next-line react-hooks/exhaustive-deps
