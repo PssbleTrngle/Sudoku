@@ -72,10 +72,10 @@ const Style = styled.div<{
    ${p =>
       p.filled &&
       css`
-         background: lighten(${p => p.theme.highlight}, 25%);
+         background: ${p => mix(0.25, p.theme.highlight, p.theme.cells)};
 
          &:hover {
-            background: lighten(${p => p.theme.highlight}, 30%);
+            background: ${p => mix(0.3, p.theme.highlight, p.theme.cells)};
          }
       `}
 
