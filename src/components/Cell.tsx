@@ -88,7 +88,7 @@ const Style = styled.div<{
    ${p =>
       p.selected &&
       css`
-         background: ${p => mix(0.7, p.theme.cells, p.theme.highlight)} !important;
+         background: ${p => mix(0.85, p.theme.cells, p.theme.highlight)} !important;
       `}
 
    ${p =>

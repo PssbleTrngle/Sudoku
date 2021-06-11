@@ -1,4 +1,4 @@
-import { arrayOf, cross, exists } from '../../util'
+import { arrayOf, crossDiff, exists } from '../../util'
 import { connectionsOf, Hint, inCol, inRow, ninthAt, possibleBlockers } from '../Sudoku'
 import Strategy from './Strategy'
 
@@ -25,7 +25,7 @@ export default class Kite extends Strategy {
 
                   const points = [...colCells, ...rowCells]
 
-                  const [sameNinth, ...rest] = cross(colCells, rowCells).filter(([a, b]) => ninthAt(a) === ninthAt(b))
+                  const [sameNinth, ...rest] = crossDiff(colCells, rowCells).filter(([a, b]) => ninthAt(a) === ninthAt(b))
                   if (!sameNinth || rest.length > 0) return null
 
                   const [rowSniper, colSniper] = [rowCells, colCells].map(c => c.find(it => !sameNinth.includes(it)))

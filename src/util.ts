@@ -23,7 +23,10 @@ export function arrayEqual<T>(a: T[], b: T[]) {
    return a.length === b.length && a.every((v, i) => b[i] === v)
 }
 
-export function cross<T>(values: T[], other = values): [T, T][] {
-   const different = other !== values
-   return values.map((a, ia) => other.filter((_, ib) => different || ia < ib).map(b => [a, b] as [T, T])).flat()
+export function cross<A>(values: A[]): [A, A][] {
+   return values.map((a, ia) => values.filter((_, ib) => ia < ib).map(b => [a, b] as [A, A])).flat()
+}
+
+export function crossDiff<A, B>(values: A[], other: B[]): [A, B][] {
+   return values.map(a => other.map(b => [a, b] as [A, B])).flat()
 }

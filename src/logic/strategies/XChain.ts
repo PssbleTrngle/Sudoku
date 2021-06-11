@@ -1,4 +1,4 @@
-import { cross, exists } from '../../util'
+import { crossDiff, exists } from '../../util'
 import { CellWithPoint, connectionsOf, Hint, possibleBlockers, sharedGroups } from '../Sudoku'
 import ChainStrategy from './ChainStrategy'
 
@@ -37,7 +37,7 @@ export default class XChain extends ChainStrategy {
                   .map<Hint>(chain => {
                      const connections = connectionsOf(chain)
 
-                     const eitherOrs = cross(
+                     const eitherOrs = crossDiff(
                         chain.filter((_, i) => i % 2 === 0),
                         chain.filter((_, i) => i % 2 === 1)
                      )
