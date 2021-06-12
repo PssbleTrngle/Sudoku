@@ -1,3 +1,5 @@
+import { Github } from '@styled-icons/fa-brands'
+import { Moon, Random, Sun } from '@styled-icons/fa-solid'
 import { FC, useReducer } from 'react'
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom'
 import styled, { createGlobalStyle, ThemeProvider } from 'styled-components'
@@ -5,6 +7,7 @@ import './assets/style/app.scss'
 import darkTheme from './assets/themes/dark'
 import defaultTheme from './assets/themes/default'
 import { Button, LinkButton } from './components/Inputs'
+import Nav from './components/Nav'
 import { numSymbols, Symbol } from './logic/Sudoku'
 import { SymbolProvider } from './useSymbols'
 import Creator from './views/Creator'
@@ -29,16 +32,18 @@ const App: FC = () => {
       <ThemeProvider theme={dark ? darkTheme : defaultTheme}>
          <SymbolProvider value={symbols}>
             <Global />
-
-            <ButtonBar>
-               <LinkButton rel='noopener noreferrer' target='_blank' href='https://github.com/PssbleTrngle/Sudoku'>
-                  Source
-               </LinkButton>
-               <Button onClick={toggleDark}>{dark ? '☀️' : '🌒'}</Button>
-               <Button onClick={cycleSymbols}>🎲</Button>
-            </ButtonBar>
-
             <Router>
+
+               <Nav />
+
+               <ButtonBar>
+                  <LinkButton rel='noopener noreferrer' target='_blank' href='https://github.com/PssbleTrngle/Sudoku'>
+                     <Github size='1rem' />
+                  </LinkButton>
+                  <Button onClick={toggleDark}>{dark ? <Sun size='1rem' /> : <Moon size='1rem' />}</Button>
+                  <Button onClick={cycleSymbols}><Random size='1rem' /></Button>
+               </ButtonBar>
+
                <Switch>
                   <Route path='/' exact component={Home} />
 

@@ -3,6 +3,7 @@ import { FC, useMemo } from 'react'
 import { Route, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
 import { RouterLinkButton as Link } from '../components/Inputs'
+import Title from '../components/Title'
 import { getSudokus } from '../logic/sudokus'
 import { exists } from '../util'
 import StrategyTrainer from './StrategyTrainer'
@@ -25,6 +26,9 @@ const Trainer: FC = () => {
          <Route path={`${url}/:slug`} component={StrategyTrainer} />
 
          <Route path={url} exact>
+
+            <Title>Wähle eine Strategie</Title>
+
             <List>
                {strategies.map(strategy => (
                   <Link key={strategy.name} to={`/trainer/${strategy.slug}`}>
@@ -32,6 +36,7 @@ const Trainer: FC = () => {
                   </Link>
                ))}
             </List>
+         
          </Route>
       </>
    )

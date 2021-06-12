@@ -2,11 +2,12 @@ import { FC } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { ButtonStyle } from '../components/Inputs'
+import Title from '../components/Title'
 
 const Home: FC = () => {
    return (
       <>
-         <h1>Sudoku Trainer</h1>
+         <Title>Sudoku Trainer</Title>
 
          <Buttons>
             <Link to='/creator'>
