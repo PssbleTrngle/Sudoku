@@ -17,8 +17,8 @@ require('./ThirdEye')
 require('./Versteckter Single 2')
 require('./Versteckter Single')
 require('./WWing')
-require('./X Wing')
 require('./XChain')
+require('./XWing')
 require('./XYWing')
 //eslint-disable-next-line import/no-anonymous-default-export
 export default {}
