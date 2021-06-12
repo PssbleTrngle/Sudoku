@@ -10,7 +10,7 @@ define('X-Wing', [
    [9, 0, 1, [5], 6, 2, [5], 0, 8],
    [0, 0, 0, 3, 0, 0, 9, 0, 1],
    [0, 5, 0, 9, 1, 0, 2, 0, 7],
-])
+], X-Wing, 'Um einen X Wing anzuwenden, müssen Sie nach zwei Zeilen suchen, in denen ein Kandidatenwert genau zweimal vorkommt. Diese vier Kandidatenwerte sollten außerdem in genau zwei Spalten liegen. Im Beispiel sind diese vier Felder blau umrandet und der vorkommende Kandidatenwert ist die 8. Nun müssen Sie nach weiteren Kandidaten dieses Wertes in den beiden Spalten suchen. Diese können Sie streichen, da der Wert in einer diagonalen Konstellation dieser vier Eckfelder eingetragen werden muss. Im Beispiel sehen Sie, wie die 8en in den markierten Spalten gestrichen wurden. Diese Strategie ist außerdem auch umgekehrt anwendbar für Spalten mit nur je zwei Kandidatenwerten und dem Streichen aus zwei Zeilen.')
 
 define('X-Wing incorrect', [
    [3, [1, 4, 7, 8], [4, 7, 8], [4, 7, 9], [1, 4, 7, 9], 5, [1, 6, 7, 9], [1, 6, 7, 8], 2],
