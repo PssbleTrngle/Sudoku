@@ -1,6 +1,7 @@
 require('./1')
 require('./2')
 require('./BRC')
+require('./ClonedPair')
 require('./HiddenPair')
 require('./import')
 require('./index')

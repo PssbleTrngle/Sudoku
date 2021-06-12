@@ -1,5 +1,6 @@
 import { Sudoku } from '../Sudoku'
 import BRC from './BRC'
+import ClonedPair from './ClonedPair'
 import HiddenPair from './HiddenPair'
 import HiddenSingle from './HiddenSingle'
 import Kite from './Kite'
@@ -47,6 +48,7 @@ const strategies: (new (sudoku: Sudoku) => Strategy)[] = [
    XWing,
    XYWing,
    WWing,
+   ClonedPair,
    XChain,
 ]
 
