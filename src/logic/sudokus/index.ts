@@ -35,7 +35,7 @@ export function define(name: string, sudoku: SudokuLike, strategy?: { new(sudoku
 }
 
 export function names() {
-   return Array.from(MAP.keys())
+   return Array.from(MAP.keys()).sort()
 }
 
 export function getSudokus() {

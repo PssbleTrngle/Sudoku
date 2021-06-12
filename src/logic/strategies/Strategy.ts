@@ -5,7 +5,7 @@ export default abstract class Strategy {
    protected readonly pairs = cross(numSymbols)
    protected readonly symbols = numSymbols
 
-   constructor(protected readonly sudoku: Sudoku) {}
+   constructor(protected readonly sudoku: Sudoku) { }
 
    abstract getName(): string
 
@@ -51,6 +51,11 @@ export default abstract class Strategy {
                .flat()
          })
          .flat()
+   }
+
+   forRowAndCol<T>(func: (source: 'row' | 'col', otherSource: 'row' | 'col') => T) {
+      const sources = ['row', 'col'] as Array<'row' | 'col'>
+      return sources.map(s => func(s, sources.find(g => g !== s)!))
    }
 
    abstract getHints(): Hint[]

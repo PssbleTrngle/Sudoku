@@ -10,14 +10,11 @@ export default class Swordfish extends Strategy {
 
    getHints() {
 
-      const sources = ['row', 'col'] as Array<'row' | 'col'>
-
       return this.symbols.map(candidate => {
 
          const withCandidate = this.find(it => it.candidates.includes(candidate))
 
-         return sources.map(source => {
-            const otherSource = sources.find(g => g !== source)!
+         return this.forRowAndCol((source, otherSource) => {
 
             const groups = uniq(withCandidate.map(it => it[source])).sort()
             const triples = crossDiff(groups, cross(groups)).filter(([a, b]) => b.every(b => a < b)).map(([a, b]) => [a, ...b])

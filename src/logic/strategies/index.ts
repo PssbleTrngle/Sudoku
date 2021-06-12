@@ -12,6 +12,7 @@ import RBC from './RBC'
 import ForbiddenRectangle1 from './rectangles/Type1'
 import ForbiddenRectangle2 from './rectangles/Type2'
 import ForbiddenRectangle4 from './rectangles/Type4'
+import Skyscraper from './Skyscraper'
 import Steinbutt from './Steinbutt'
 import Strategy from './Strategy'
 import Swordfish from './Swordfish'
@@ -38,6 +39,7 @@ const strategies: (new (sudoku: Sudoku) => Strategy)[] = [
    HiddenPair,
    Steinbutt,
    Swordfish,
+   Skyscraper,
    Kite,
    RBC,
    BRC,
