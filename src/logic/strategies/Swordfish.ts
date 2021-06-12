@@ -32,8 +32,6 @@ export default class Swordfish extends Strategy {
 
                const blockers = otherGroups.map(g => withCandidate.filter(it => it[otherSource] === g && !inGroups.includes(it))).flat()
 
-               console.log(triple, source)
-
                return {
                   actions: blockers.map(it => ({
                      ...it,
