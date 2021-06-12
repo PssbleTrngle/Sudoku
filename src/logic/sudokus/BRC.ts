@@ -11,7 +11,7 @@ define('BRC', [
    [8, 0, 0, 0, 7, 0, 0, 0, 0],
    [0, 0, 0, 6, 0, 0, 4, 0, 0],
    [0, 0, 0, 3, 0, 0, 0, 0, 9],
-], BRC, 'In Abbildung 14 ist der betreffende Kandidatenwert die 9. Dieser kommt in der vierten Zeile nur im mittleren Block vor. Diese Felder sind daher blau umrandet. Da die restlichen 9er im mittleren Block gestrichen werden können sind diese in Abbildung 14 rot markiert.')
+], BRC, 'Um einen Block-Reihe-Chreck anzuwenden, suchen Sie nach einem Kandidatenwert, der innerhalb eines Blocks nur in einer Reihe (Zeile oder Spalte) vorkommt. In unserem Beispiel ist dies in der fünften Zeile, im linken Block der Fall. Dort können Sie sehen, dass die 8 innerhalb dieses Blocks nur in der fünften Zeile vorkommt. Weil dies die einzigen beiden 8er in diesem Block sind, muss einer davon der richtige sein. Daher sind alle weiteren 8er Kandidaten in dieser Zeile definitiv falsch und können gestrichen werden. In unserem Beispiel haben wir ihnen dies durch ein rotes Markieren der 8er Kandidaten kenntlich gemacht.')
 
 define('BRC 2', [
    [4, [3, 5, 7, 8, 9], [3, 5, 7, 8], [2, 7, 9], [1, 2, 7, 9], [2, 3, 7], [1, 3, 5, 8], [2, 3, 8], 6],
