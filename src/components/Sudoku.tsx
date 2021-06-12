@@ -12,7 +12,7 @@ const Sudoku: FC<
       onSelect?: Dispatch<Point>
       showIncorrect?: boolean
    }
-> = ({ focused, hint, onSelect, showIncorrect = true, cells }) => (
+> = ({ focused, hint, onSelect, showIncorrect = true, cells, children }) => (
    <Style>
       {cells.map((r, row) =>
          r.map((cell, col) => (
@@ -28,6 +28,8 @@ const Sudoku: FC<
             />
          ))
       )}
+
+      {children}
 
       <Connections connections={hint?.connections} />
    </Style>

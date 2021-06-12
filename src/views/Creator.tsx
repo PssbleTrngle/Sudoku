@@ -1,3 +1,4 @@
+import { Spinner } from '@styled-icons/fa-solid'
 import { FC, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Button, Label, Select } from '../components/Inputs'
@@ -75,10 +76,26 @@ const Creator: FC = () => {
             <Button onClick={() => setFillCandidates(true)}>Fill Candidates</Button>
          </Toolbar>
 
-         <SudokuEditor paused={generating} fillCandidates={fillcandidates} sudoku={sudoku} onChange={setSudoku} />
+         <SudokuEditor paused={generating} fillCandidates={fillcandidates} sudoku={sudoku} onChange={setSudoku}>
+            {generating && <Loading size='15vh' />}
+         </SudokuEditor>
       </>
    )
 }
+
+const Loading = styled(Spinner)`
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   color: ${p => p.theme.highlight};
+
+   @keyframes rotate {
+      from { transform: translate(-50%, -50%) rotate(0deg)  }
+      to { transform: translate(-50%, -50%) rotate(360deg)  }
+   }
+   
+   animation: rotate 1s linear infinite;
+`
 
 const Toolbar = styled.div`
    display: grid;

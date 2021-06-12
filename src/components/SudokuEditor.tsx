@@ -14,7 +14,7 @@ const SudokuEditor: FC<{
    fillCandidates?: boolean
    onChange?: Dispatch<SetStateAction<ISudoku>>
    paused?: boolean
-}> = ({ onChange, sudoku, fillCandidates, paused }) => {
+}> = ({ onChange, sudoku, fillCandidates, paused, children }) => {
    const { cells } = sudoku
 
    const { load } = query.parse(useLocation().search)
@@ -102,11 +102,15 @@ const SudokuEditor: FC<{
 
    return (
       <Style id='sudoku'>
-         <Sudoku {...sudoku} focused={focused} onSelect={setFocused} hint={hint} />
+
+         <Sudoku {...sudoku} focused={focused} onSelect={setFocused} hint={hint}>
+            {children}
+         </Sudoku>
 
          {focused ? <Focused {...focused} {...cells[focused.row][focused.col]} onChange={c => onChange?.(modifySudoku(focused, c))} /> : <NoSelected>Select a Cell</NoSelected>}
 
          <Hints sudoku={sudoku} paused={paused} onChange={setHint} hint={hint} onApply={applyHint} />
+
       </Style>
    )
 }
