@@ -1,12 +1,11 @@
 import { FC, useMemo } from 'react'
-import { Redirect, useParams, useRouteMatch } from 'react-router-dom'
+import { Redirect, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { RouterLinkButton as Link } from '../components/Inputs'
 import Sudoku from '../components/Sudoku'
 import { getSudokus, SudokuInfo } from '../logic/sudokus'
 
 const StrategyTrainer: FC = () => {
-   const { url } = useRouteMatch()
    const { slug } = useParams<Record<string, string>>()
 
    const [example, ...rest] = useMemo(() => getSudokus()

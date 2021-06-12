@@ -1,6 +1,6 @@
 import { uniq } from 'lodash'
 import { cross, crossDiff, exists } from '../../util'
-import { Hint, numSymbols, possibleBlockers } from '../Sudoku'
+import { Hint, ninthAt, numSymbols, possibleBlockers } from '../Sudoku'
 import ChainStrategy from './ChainStrategy'
 
 export default class Skyscraper extends ChainStrategy {
@@ -21,12 +21,15 @@ export default class Skyscraper extends ChainStrategy {
 
                const left = withCandidate.filter(it => it[source] === pillars[0])
                const right = withCandidate.filter(it => it[source] === pillars[1])
-               const sameLevel = crossDiff(left, right).find(c => c.every(it => it[otherSource] === c[0][otherSource]))
+               const points = [...left, ...right]
                
+               if (uniq(points.map(it => ninthAt(it))).length < 4) return null
+
+               const sameLevel = crossDiff(left, right).find(c => c.every(it => it[otherSource] === c[0][otherSource]))
                if (!sameLevel) return null
 
-               const differentLevel = [...left, ...right].filter(it => !sameLevel.includes(it))
-               if(uniq(differentLevel.map(it => it[otherSource])).length <= 1) return null
+               const differentLevel = points.filter(it => !sameLevel.includes(it))
+               if (uniq(differentLevel.map(it => it[otherSource])).length <= 1) return null
 
                const blockers = possibleBlockers(this.sudoku, ...differentLevel)
 
@@ -37,7 +40,7 @@ export default class Skyscraper extends ChainStrategy {
                      type: 'exclude',
                   })),
                   blocked: blockers,
-                  highlights: [...left, ...right].map(it => ({ ...it, highlightedCandidates: [candidate] })),
+                  highlights: points.map(it => ({ ...it, highlightedCandidates: [candidate] })),
                   highlightCols: source === 'col' ? pillars : undefined,
                   highlightRows: source === 'row' ? pillars : undefined,
                }
