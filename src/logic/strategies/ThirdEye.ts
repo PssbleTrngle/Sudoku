@@ -12,7 +12,7 @@ export default class ThirdEye extends Strategy {
       const empty = this.find(c => !c.value)
 
       // All cells with more than one candidate
-      const [withMore, ...rest] = empty.filter(c => c.candidates.length > 2)
+      const [withMore, ...rest] = empty.filter(c => c.candidates.length === 3)
 
       // Return if there are multiple cells with more than one candidate
       if (!withMore || rest.length > 0) return []
