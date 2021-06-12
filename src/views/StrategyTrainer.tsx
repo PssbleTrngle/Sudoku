@@ -32,13 +32,28 @@ const Example: FC<SudokuInfo> = ({ strategy, sudoku, description }) => {
       <>
          <Sudoku {...sudoku} hint={hint} />
 
-         <h2>{strategy!.name}</h2>
+         <Name>{strategy!.name}</Name>
 
-         <p>{description || 'No description provided'}</p>
+         <Description>{(description || 'No description provided').split('\n').filter(s => s.length).map((line, i) =>
+            <p key={i}>{line.trim()}</p>
+         )}</Description>
       </>
    )
 
 }
+
+const Name = styled.h2`
+   text-align: center;
+   grid-area: strategy;
+`
+
+const Description = styled.div`
+   grid-area: description;
+
+   p:not(:last-child) {
+      margin-bottom: 1rem;
+   }
+`
 
 const Style = styled.section`
    display: grid;
@@ -47,15 +62,6 @@ const Style = styled.section`
    gap: 2rem;
    margin: 0 auto;
    width: min-content;
-   text-align: center;
-
-   h2 {
-      grid-area: strategy;
-   }
-
-   p {
-      grid-area: description;
-   }
 
    a {
       grid-area: button;

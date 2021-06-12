@@ -17,6 +17,8 @@ export default class ThirdEye extends Strategy {
       // Return if there are multiple cells with more than one candidate
       if (!withMore || rest.length > 0) return []
 
+      if (empty.filter(e => e !== withMore).some(it => it.candidates.length !== 2)) return []
+
       // Find cells that could block this cell
       const blockers = possibleBlockers(this.sudoku, withMore)
 
