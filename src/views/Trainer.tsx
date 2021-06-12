@@ -41,7 +41,15 @@ export const List = styled.ul`
    display: grid;
    justify-content: center;
    padding: 2rem;
-   gap: 1rem;
+   gap: 10px;
+   grid-template-columns: repeat(auto-fill, 300px);
+   max-width: 1400px;
+   margin: 0 auto;
+
+   li {
+      padding: 3rem 0;
+      text-align: center;
+   }
 `
 
 export default Trainer
