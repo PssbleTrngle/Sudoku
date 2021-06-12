@@ -48,12 +48,12 @@ export type Action = Point & {
  * @param cell The values to overwrite at that cell
  * @returns A function creating a new sudoku with the modified cell
  */
-export function modifySudoku(y: number, x: number, cell: SetStateAction<Partial<Cell>>): (s: Sudoku) => Sudoku {
+export function modifySudoku(point: Point, cell: SetStateAction<Partial<Cell>>): (s: Sudoku) => Sudoku {
    return s => ({
       ...s,
       cells: s.cells.map((row, r) =>
          row.map((ce, c) => {
-            if (y === r && x === c) {
+            if (point.row === r && point.col === c) {
                const unchecked = { ...ce, ...(typeof cell === 'function' ? cell(ce) : cell) }
                return { ...unchecked, candidates: unchecked.value ? [] : unchecked.candidates }
             } else return ce

@@ -10,8 +10,9 @@ const Hints: FC<{
    onChange?: Dispatch<SetStateAction<Hint | undefined>>
    hint?: Hint
    onApply: () => void
-}> = ({ onChange, sudoku, hint, onApply }) => {
-   const loadingStrats = usePromise(() => Strategies.getHints(sudoku), [sudoku])
+   paused?: boolean
+}> = ({ onChange, sudoku, hint, onApply, paused }) => {
+   const loadingStrats = usePromise(() => paused ? [] : Strategies.getHints(sudoku), [sudoku, paused])
    const strats = useMemo(() => loadingStrats ?? [], [loadingStrats])
    const [selectedStrat, selectStrat] = useState(-1)
    const [strategy, setStrategy] = useState<string>()

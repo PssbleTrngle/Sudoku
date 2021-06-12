@@ -13,7 +13,8 @@ const SudokuEditor: FC<{
    sudoku: ISudoku
    fillCandidates?: boolean
    onChange?: Dispatch<SetStateAction<ISudoku>>
-}> = ({ onChange, sudoku, fillCandidates }) => {
+   paused?: boolean
+}> = ({ onChange, sudoku, fillCandidates, paused }) => {
    const { cells } = sudoku
 
    const { load } = query.parse(useLocation().search)
@@ -88,7 +89,7 @@ const SudokuEditor: FC<{
    const applyHint = useCallback(() => {
       if (hint) {
          const consumers = hint.actions.map(action =>
-            modifySudoku(action.row, action.col, c => {
+            modifySudoku(action, c => {
                if (action.type === 'exclude') return { candidates: c.candidates?.filter(i => action.value !== i) }
                if (action.type === 'value') return { value: action.value }
                return {}
@@ -103,9 +104,9 @@ const SudokuEditor: FC<{
       <Style id='sudoku'>
          <Sudoku {...sudoku} focused={focused} onSelect={setFocused} hint={hint} />
 
-         {focused ? <Focused {...focused} {...cells[focused.row][focused.col]} onChange={c => onChange?.(modifySudoku(focused.row, focused.col, c))} /> : <NoSelected>Select a Cell</NoSelected>}
+         {focused ? <Focused {...focused} {...cells[focused.row][focused.col]} onChange={c => onChange?.(modifySudoku(focused, c))} /> : <NoSelected>Select a Cell</NoSelected>}
 
-         <Hints {...{ sudoku }} onChange={setHint} hint={hint} onApply={applyHint} />
+         <Hints sudoku={sudoku} paused={paused} onChange={setHint} hint={hint} onApply={applyHint} />
       </Style>
    )
 }

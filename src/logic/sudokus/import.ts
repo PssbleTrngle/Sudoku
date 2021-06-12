@@ -20,4 +20,5 @@ require('./WWing')
 require('./X Wing')
 require('./XChain')
 require('./XYWing')
+//eslint-disable-next-line import/no-anonymous-default-export
 export default {}

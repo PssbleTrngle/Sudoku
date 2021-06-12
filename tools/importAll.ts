@@ -19,6 +19,12 @@ glob(path, (e, matches) => {
       .join('\n')
 
 
-   writeFileSync(join(dir, 'import.ts'), `${imports}\nexport default {}`)
+   writeFileSync(join(dir, 'import.ts'), `
+
+      ${imports}
+      //eslint-disable-next-line import/no-anonymous-default-export
+      export default {}
+
+   `.split('\n').filter(s => s.length).map(s => s.trim()).join('\n'))
 
 })

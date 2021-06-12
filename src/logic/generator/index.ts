@@ -1,6 +1,6 @@
 import { arrayOf } from '../../util'
 import { recursiveSolve } from '../solver'
-import { canPut, modifySudoku, numSymbols as symbols, Sudoku, withPoints } from '../Sudoku'
+import { canPut, inNinth, modifySudoku, numSymbols as symbols, Sudoku, withPoints } from '../Sudoku'
 import History from './History'
 
 const NUMS = arrayOf(9)
@@ -24,15 +24,13 @@ export default function generate() {
       // For each ninth of the sudoku
       NUMS.map(i => i - 1).forEach(i => {
          builder.step(async s => {
-            const [ninthX, ninthY] = [i % 3, Math.floor(i / 3)].map(i => i * 3)
-            const randomziedFields = NUMS.map(i => i - 1)
-               .map(i => [(i % 3) + ninthX, Math.floor(i / 3) + ninthY])
-               .map(xy => xy as [number, number])
+
+            const randomziedFields = inNinth(i, s)
                .sort(() => Math.random() - 0.5)
 
-            const possible = randomziedFields.find(([col, row]) => canPut({ col, row }, value, builder.current))
-            if (possible) return modifySudoku(...possible, { value })(s)
-            else throw new Error()
+            const possible = randomziedFields.find(it => canPut(it, value, s))
+            if (possible) return modifySudoku(possible, { value })(s)
+            throw new Error()
          })
       })
    })
@@ -49,10 +47,12 @@ export default function generate() {
             .sort(() => Math.random() - 0.5)
 
          if (cell) {
-            const modified = modifySudoku(cell.col, cell.row, { value: undefined })(s)
+            const modified = modifySudoku(cell, { value: undefined })(s)
             await recursiveSolve(modified)
             return modified
-         } else throw new Error()
+         }
+
+         throw new Error()
       })
    })
 
