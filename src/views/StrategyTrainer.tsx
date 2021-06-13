@@ -71,11 +71,11 @@ const Style = styled.section`
    }
 
    grid-template:
-      'sudoku .' 200px
+      'sudoku .' 
       'sudoku strategy'
       'sudoku description'
       'sudoku button'
-      'sudoku .'
+      'sudoku .' 400px
       / 1fr 300px;
 `
 
