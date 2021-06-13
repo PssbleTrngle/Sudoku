@@ -9,8 +9,7 @@ const Hints: FC<{
    onChange?: Dispatch<SetStateAction<Hint | undefined>>
    hint?: Hint
    onApply: () => void
-   paused?: boolean
-}> = ({ onChange, sudoku, hint, onApply, paused }) => {
+}> = ({ onChange, sudoku, hint, onApply }) => {
    const [selectedStrat, selectStrat] = useState(-1)
    const [strategy, setStrategy] = useState<string>()
    const [hints, setHints] = useState<Array<{ hints: Hint[], strategy: string }>>()

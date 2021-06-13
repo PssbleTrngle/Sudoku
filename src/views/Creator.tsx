@@ -76,7 +76,7 @@ const Creator: FC = () => {
             <Button onClick={() => setFillCandidates(true)}>Fill Candidates</Button>
          </Toolbar>
 
-         <SudokuEditor paused={generating} fillCandidates={fillcandidates} sudoku={sudoku} onChange={setSudoku}>
+         <SudokuEditor fillCandidates={fillcandidates} sudoku={sudoku} onChange={setSudoku}>
             {generating && <Loading size='15vh' />}
          </SudokuEditor>
       </>

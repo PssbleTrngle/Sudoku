@@ -32,6 +32,7 @@ export default class WWing extends Strategy {
 
                         if (!corners.every(it => it.candidates.includes(primary))) return null
 
+
                         const remove = possibleBlockers(this.sudoku, ...pair).filter(it => it.candidates.includes(secondary))
 
                         return {

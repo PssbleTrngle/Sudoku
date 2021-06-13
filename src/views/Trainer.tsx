@@ -1,4 +1,4 @@
-import { uniqBy } from 'lodash'
+import { orderBy, uniqBy } from 'lodash'
 import { FC, useMemo } from 'react'
 import { Route, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
@@ -14,10 +14,10 @@ const Trainer: FC = () => {
    const sudokus = useMemo(() => getSudokus().filter(s => s.strategy), [])
    const strategies = useMemo(
       () =>
-         uniqBy(
+         orderBy(uniqBy(
             sudokus.map(s => s.strategy),
             'name'
-         ).filter(exists),
+         ).filter(exists), 'name'),
       [sudokus]
    )
 
@@ -36,7 +36,7 @@ const Trainer: FC = () => {
                   </Link>
                ))}
             </List>
-         
+
          </Route>
       </>
    )
