@@ -49,6 +49,7 @@ const Name = styled.h2`
 
 const Description = styled.div`
    grid-area: description;
+   text-align: justify;
 
    p:not(:last-child) {
       margin-bottom: 1rem;
