@@ -1,5 +1,5 @@
 import { uniq } from 'lodash'
-import { arrayEqual, exists } from '../../../util'
+import { exists } from '../../../util'
 import { CellWithPoint, connectionsOf, Hint, inGroup, possibleBlockers, sharedGroups, uniqByPoint } from '../../Sudoku'
 import ForbiddenRectangle from './Base'
 
@@ -53,8 +53,6 @@ export default class ForbiddenRectangle3 extends ForbiddenRectangle {
          const otherCandidates = uniq(withAdditional.map(it => it.candidates).flat()).filter(c => !candidates.includes(c))
          const blockers = possibleBlockers(this.sudoku, ...withAdditional)
 
-         if (!arrayEqual(['5', '2'], otherCandidates)) return null
-
          const chains = otherCandidates.map(candidate => {
 
             const starts = blockers.filter(it => it.candidates.length === 2 && it.candidates.includes(candidate))
@@ -82,9 +80,7 @@ export default class ForbiddenRectangle3 extends ForbiddenRectangle {
                   if (corners.some(it => it.col === b.col && it.row === b.row)) return false
                   if (!inGroup(...withAdditional, a, b)) return false
                   if (hasOneRemaining(b, chain)) return true
-                  const isTarget = getTargets(a, chain).some(it => it.target.col === b.col && it.target.row === b.row)
-                  if (isTarget) console.log('Adding as target', b.col, b.row)
-                  return isTarget
+                  return getTargets(a, chain).some(it => it.target.col === b.col && it.target.row === b.row)
                },
                (previous, chain) => !hasOneRemaining(previous, chain),
                this.cells(),
@@ -93,19 +89,20 @@ export default class ForbiddenRectangle3 extends ForbiddenRectangle {
 
          })
 
-         console.log(chains)
-
          const targets = chains.flat().map(c => c[c.length - 1]).filter(uniqByPoint)
+
+         console.log(chains)
+         console.log(targets)
 
          return targets.map<Hint | null>(target => {
 
             const attackingChains = chains.map(c => c.find(it => it[it.length - 1].row === target.row && it[it.length - 1].col === target.col)).filter(exists)
             if (attackingChains.length !== otherCandidates.length) return null
 
-            const remove = uniq(attackingChains.map((c, i) => [...c.map(it => it.candidates), otherCandidates[i]].flat()).flat())
+            const remove = uniq(attackingChains.map((c, i) => [...c.slice(0, c.length - 1).map(it => it.candidates), otherCandidates[i]].flat()).flat())
 
             return {
-               actions: remove.map(value => ({
+               actions: remove.filter(c => target.candidates.includes(c)).map(value => ({
                   ...target,
                   type: 'exclude',
                   value,
