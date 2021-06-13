@@ -43,7 +43,7 @@ const Hints: FC<{
       <Style>
          {!!hints?.length ? <>
             <Select onChange={e => selectStrat(parseInt(e.target.value))}>
-               <option value={-1}>Any</option>
+               <option value={-1}>Beliebige Strategie</option>
                {hints.map(({ strategy }, i) => (
                   <option value={i} key={i}>
                      {strategy}
@@ -51,17 +51,17 @@ const Hints: FC<{
                ))}
             </Select>
 
-            <Button onClick={getHint}>Get a hint</Button>
+            <Button onClick={getHint}>Tipp anzeigen</Button>
 
             {hint && (
                <Info>
-                  <h3>{strategy}</h3>
-                  <Button onClick={onApply}>Apply</Button>
+                  {selectedStrat === -1 && <h3>{strategy}</h3>}
+                  <Button onClick={onApply}>Tipp anwenden</Button>
                </Info>
             )}
          </> : (hints === undefined
-            ? <Button onClick={calculateHints}>Check for hints</Button>
-            : <NoHints>No hints possible</NoHints>
+            ? <Button onClick={calculateHints}>Nach Tipps suchen</Button>
+            : <NoHints>Keine Tipps möglich</NoHints>
          )}
       </Style>
    )
@@ -76,10 +76,11 @@ const Info = styled.div`
    padding: 20px 0;
    display: grid;
    align-items: center;
-   gap: 0.5rem;
-   grid-template:
-      'name apply'
-      'desc desc';
+   gap: 1rem;
+
+   h3 {
+      text-align: center;
+   }
 `
 
 const Style = styled.div`

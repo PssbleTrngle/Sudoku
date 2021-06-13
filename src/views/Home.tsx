@@ -11,11 +11,11 @@ const Home: FC = () => {
 
          <Buttons>
             <Link to='/creator'>
-               <li>Creator</li>
+               <li>Lösen {'&'} Erstellen</li>
             </Link>
 
             <Link to='/trainer'>
-               <li>Trainer</li>
+               <li>Strategien lernen</li>
             </Link>
          </Buttons>
       </>

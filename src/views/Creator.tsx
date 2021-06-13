@@ -16,8 +16,8 @@ const Creator: FC = () => {
    const [fillcandidates, setFillCandidates] = useState(false)
 
    const { generating, cancel, ...generators } = useObserver(setSudoku, {
-      generate: generator,
-      solve: () => solver(sudoku),
+      Generieren: generator,
+      Lösen: () => solver(sudoku),
    })
 
    const load = () => {
@@ -51,7 +51,7 @@ const Creator: FC = () => {
    return (
       <>
          <Toolbar>
-            <Label htmlFor='load'>Select Sudoku:</Label>
+            <Label htmlFor='load'>Sudoku laden:</Label>
 
             <Select id='load' disabled={generating} onChange={e => setSelected(e.target.value)}>
                {selections.map(s => (
@@ -67,13 +67,13 @@ const Creator: FC = () => {
 
             {Object.entries(generators).map(([k, call]) => (
                <Button key={k} onClick={generating ? cancel : call}>
-                  {generating ? 'Cancel' : k}
+                  {generating ? 'Abbrechen' : k}
                </Button>
             ))}
 
-            <Button onClick={copy}>Copy</Button>
+            <Button onClick={copy}>Kopieren</Button>
 
-            <Button onClick={() => setFillCandidates(true)}>Fill Candidates</Button>
+            <Button onClick={() => setFillCandidates(true)}>Kandidaten Ausfüllen</Button>
          </Toolbar>
 
          <SudokuEditor fillCandidates={fillcandidates} sudoku={sudoku} onChange={setSudoku}>

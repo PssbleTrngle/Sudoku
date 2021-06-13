@@ -106,7 +106,7 @@ const SudokuEditor: FC<{
             {children}
          </Sudoku>
 
-         {focused ? <Focused {...focused} {...cells[focused.row][focused.col]} onChange={c => onChange?.(modifySudoku(focused, c))} /> : <NoSelected>Select a Cell</NoSelected>}
+         {focused ? <Focused {...focused} {...cells[focused.row][focused.col]} onChange={c => onChange?.(modifySudoku(focused, c))} /> : <NoSelected>Keine Zelle ausgewählt</NoSelected>}
 
          <Hints sudoku={sudoku} onChange={setHint} hint={hint} onApply={applyHint} />
 
