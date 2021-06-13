@@ -1,5 +1,5 @@
 import { arrayEqual, exists } from '../../util'
-import { Hint, inGroup, possibleBlockers } from '../Sudoku'
+import { connectionsOf, Hint, inGroup, possibleBlockers } from '../Sudoku'
 import Strategy from './Strategy'
 
 export default class XYWing extends Strategy {
@@ -33,6 +33,7 @@ export default class XYWing extends Strategy {
                      value: c,
                   })),
                   highlights: [origin, ...pair].map(it => ({ ...it, highlightedCandidates: [c] })),
+                  connections: connectionsOf([pair[0], origin, pair[1]]),
                }
             })
          })

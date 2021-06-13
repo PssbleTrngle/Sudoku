@@ -1,14 +1,14 @@
 import { uniq } from 'lodash'
 import { cross, exists } from '../../../util'
 import { CellWithPoint, ninthAt, Symbol } from '../../Sudoku'
-import ChainStrategy from '../ChainStrategy'
+import Strategy from '../Strategy'
 
 export interface Rectangle {
    corners: CellWithPoint[]
    candidates: Symbol[]
 }
 
-export default abstract class ForbiddenRectangle extends ChainStrategy {
+export default abstract class ForbiddenRectangle extends Strategy {
    /**
     * Finds rectangle which fit all the conditions a of the forbidden rectangle strategies
     * @returns The for corner cells and the candidate pair they share
