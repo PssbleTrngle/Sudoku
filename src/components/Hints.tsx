@@ -1,6 +1,5 @@
-import { Dispatch, FC, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { Dispatch, FC, SetStateAction, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { usePromise } from '../Hooks'
 import Strategies from '../logic/strategies'
 import { Hint, Sudoku as ISudoku } from '../logic/Sudoku'
 import { Button, Select } from './Inputs'
@@ -12,50 +11,61 @@ const Hints: FC<{
    onApply: () => void
    paused?: boolean
 }> = ({ onChange, sudoku, hint, onApply, paused }) => {
-   const loadingStrats = usePromise(() => paused ? [] : Strategies.getHints(sudoku), [sudoku, paused])
-   const strats = useMemo(() => loadingStrats ?? [], [loadingStrats])
    const [selectedStrat, selectStrat] = useState(-1)
    const [strategy, setStrategy] = useState<string>()
+   const [hints, setHints] = useState<Array<{ hints: Hint[], strategy: string }>>()
 
    useEffect(() => {
-      if (onChange) onChange(undefined)
+      onChange?.(undefined)
+      setHints(undefined)
+      setStrategy(undefined)
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [sudoku])
 
    useEffect(() => {
-      if (strats.length <= selectedStrat) selectStrat(-1)
-   }, [strats, selectedStrat, selectStrat])
+      if (hints && hints.length <= selectedStrat) selectStrat(-1)
+   }, [hints, selectedStrat, selectStrat])
 
-   const getHint = () => {
+   const calculateHints = useCallback(() =>
+      Strategies.getHints(sudoku).then(setHints),
+      [setHints]
+   )
+
+   const getHint = useCallback(() => {
       const strat = Math.max(0, selectedStrat)
-      const [hint] = strats[strat]?.hints ?? []
-      if (hint && onChange) {
-         onChange(hint)
-         setStrategy(strats[strat].strategy)
+      const selected = hints?.[strat]
+      if (selected && onChange) {
+         onChange(selected.hints[0])
+         setStrategy(selected.strategy)
       }
-   }
-
-   if (strats.length === 0) return <NoHints>No hints possible</NoHints>
+   }, [hints, selectedStrat, onChange, setStrategy])
 
    return (
       <Style>
-         <Select onChange={e => selectStrat(parseInt(e.target.value))}>
-            <option value={-1}>Any</option>
-            {strats.map(({ strategy }, i) => (
-               <option value={i} key={i}>
-                  {strategy}
-               </option>
-            ))}
-         </Select>
+         {!!hints?.length && <>
+            <Select onChange={e => selectStrat(parseInt(e.target.value))}>
+               <option value={-1}>Any</option>
+               {hints.map(({ strategy }, i) => (
+                  <option value={i} key={i}>
+                     {strategy}
+                  </option>
+               ))}
+            </Select>
 
-         <Button onClick={getHint}>Get a hint</Button>
+            <Button onClick={getHint}>Get a hint</Button>
 
-         {hint && (
-            <Info>
-               <h3>{strategy}</h3>
-               <Button onClick={onApply}>Apply</Button>
-            </Info>
-         )}
+            {hint && (
+               <Info>
+                  <h3>{strategy}</h3>
+                  <Button onClick={onApply}>Apply</Button>
+               </Info>
+            )}
+         </>
+         }
+         {hints === undefined
+            ? <Button onClick={calculateHints}>Check for hints</Button>
+            : <NoHints>No hints possible</NoHints>
+         }
       </Style>
    )
 }
