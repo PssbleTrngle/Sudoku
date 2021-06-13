@@ -1,4 +1,5 @@
 import { define } from '.'
+import Steinbutt from '../strategies/Steinbutt'
 
 define('Steinbutt', [
    [[2, 7, 9], 6, [3, 9], [2, 5, 7, 9], [2, 5, 9], 8, 1, 4, [2, 3, 7]],

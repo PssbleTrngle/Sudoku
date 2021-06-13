@@ -1,5 +1,5 @@
 import { arrayEqual, arrayOf, cross, exists } from '../../util'
-import { CellWithPoint, Hint, inGroup, inRow, possibleBlockers } from '../Sudoku'
+import { CellWithPoint, Hint, inGroup, possibleBlockers } from '../Sudoku'
 import Strategy from './Strategy'
 
 export default class WWing extends Strategy {
@@ -16,37 +16,40 @@ export default class WWing extends Strategy {
             return cross(onlyPair).map(pair => {
                if (inGroup(...pair)) return null
 
-               const otherRows = arrayOf(9)
-                  .map(i => i - 1)
-                  .filter(r => !pair.some(it => it.row === r))
+               return this.forRowAndCol((source, otherSource) => {
 
-               return candidates.map(primary => {
-                  const secondary = candidates.find(c => c !== primary)!
+                  const otherGroups = arrayOf(9)
+                     .map(i => i - 1)
+                     .filter(r => !pair.some(it => it[source] === r))
 
-                  return otherRows.map<Hint | null>(row => {
-                     if (inRow(row, this.sudoku).filter(it => it.candidates.includes(primary)).length !== 2) return null
+                  return candidates.map(primary => {
+                     const secondary = candidates.find(c => c !== primary)!
 
-                     const corners: CellWithPoint[] = pair.map(it => ({ ...it, row })).map(point => ({ ...point, ...this.sudoku.cells[point.row][point.col] }))
+                     return otherGroups.map<Hint | null>(group => {
+                        if (withPair.filter(it => it[source] === group).filter(it => it.candidates.includes(primary)).length !== 2) return null
 
-                     if (!corners.every(it => it.candidates.includes(primary))) return null
+                        const corners: CellWithPoint[] = pair.map(it => ({ ...it, [source]: group })).map(point => ({ ...point, ...this.sudoku.cells[point.row][point.col] }))
 
-                     const remove = possibleBlockers(this.sudoku, ...pair).filter(it => it.candidates.includes(secondary))
+                        if (!corners.every(it => it.candidates.includes(primary))) return null
 
-                     return {
-                        actions: remove.map(it => ({
-                           ...it,
-                           value: secondary,
-                           type: 'exclude',
-                        })),
-                        highlights: [...pair.map(it => ({ ...it, candidates })), ...corners.map(it => ({ ...it, highlightedCandidates: [primary] }))],
-                        highlightRows: [row],
-                        highlightCols: corners.map(it => it.col),
-                     }
+                        const remove = possibleBlockers(this.sudoku, ...pair).filter(it => it.candidates.includes(secondary))
+
+                        return {
+                           actions: remove.map(it => ({
+                              ...it,
+                              value: secondary,
+                              type: 'exclude',
+                           })),
+                           highlights: [...pair.map(it => ({ ...it, candidates })), ...corners.map(it => ({ ...it, highlightedCandidates: [primary] }))],
+                           highlightRows: source === 'row' ? [group] : corners.map(it => it[otherSource]),
+                           highlightCols: (source as any) === 'col' ? [group] : corners.map(it => it[otherSource]),
+                        }
+                     })
                   })
                })
             })
          })
-         .flat(3)
+         .flat(4)
          .filter(exists)
    }
 }
