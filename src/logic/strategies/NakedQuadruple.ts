@@ -12,7 +12,7 @@ export default class NakedQuadruple extends Strategy {
 
       return this.forGroups((cells, source) => {
 
-         const withCandidates = cells.filter(c => !c.value && c.candidates.length <= 4 && c.candidates.length > 0)
+         const withCandidates = cells.filter(c => !c.value && c.candidates.length <= 4 && c.candidates.length > 1)
 
          const quadruples = crossDiff(withCandidates,
             crossDiff(withCandidates, cross(withCandidates)).map(([a, b]) => [a, ...b])
