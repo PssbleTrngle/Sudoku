@@ -91,9 +91,6 @@ export default class ForbiddenRectangle3 extends ForbiddenRectangle {
 
          const targets = chains.flat().map(c => c[c.length - 1]).filter(uniqByPoint)
 
-         console.log(chains)
-         console.log(targets)
-
          return targets.map<Hint | null>(target => {
 
             const attackingChains = chains.map(c => c.find(it => it[it.length - 1].row === target.row && it[it.length - 1].col === target.col)).filter(exists)
