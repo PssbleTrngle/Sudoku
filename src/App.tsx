@@ -14,7 +14,7 @@ import Creator from './views/Creator'
 import Home from './views/Home'
 import Trainer from './views/Trainer'
 
-const SYMBOLS: Symbol[][] = [numSymbols, 'ABCDEFGHI'.split(''), ['🍆', '😎', '🤣', '✨', '💎', '🍪', '🌺', '💥', '🍀']]
+const SYMBOLS: Symbol[][] = [numSymbols, 'ABCDEFGHI'.split(''), ['🍆', '😎', '🌺', '✨', '💎', '🍪', '🤣', '💥', '🍀']]
 
 const App: FC = () => {
    const [dark, toggleDark] = useReducer((v: boolean) => {

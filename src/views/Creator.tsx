@@ -61,9 +61,7 @@ const Creator: FC = () => {
                ))}
             </Select>
 
-            <Button disabled={generating} onClick={load}>
-               Load
-            </Button>
+            <Button disabled={generating} onClick={load}>Laden</Button>
 
             {Object.entries(generators).map(([k, call]) => (
                <Button key={k} onClick={generating ? cancel : call}>
