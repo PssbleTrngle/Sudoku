@@ -14,6 +14,7 @@ import NakedTriple from './NakedTriple'
 import RBC from './RBC'
 import ForbiddenRectangle1 from './rectangles/Type1'
 import ForbiddenRectangle2 from './rectangles/Type2'
+import ForbiddenRectangle3 from './rectangles/Type3'
 import ForbiddenRectangle4 from './rectangles/Type4'
 import Skyscraper from './Skyscraper'
 import Steinbutt from './Steinbutt'
@@ -51,6 +52,7 @@ const strategies: (new (sudoku: Sudoku) => Strategy)[] = [
    BRC,
    ForbiddenRectangle1,
    ForbiddenRectangle2,
+   ForbiddenRectangle3,
    ForbiddenRectangle4,
    ThirdEye,
    XWing,

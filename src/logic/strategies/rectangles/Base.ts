@@ -1,13 +1,14 @@
+import { uniq } from 'lodash'
 import { cross, exists } from '../../../util'
 import { CellWithPoint, ninthAt, Symbol } from '../../Sudoku'
-import Strategy from '../Strategy'
+import ChainStrategy from '../ChainStrategy'
 
 export interface Rectangle {
    corners: CellWithPoint[]
    candidates: Symbol[]
 }
 
-export default abstract class ForbiddenRectangle extends Strategy {
+export default abstract class ForbiddenRectangle extends ChainStrategy {
    /**
     * Finds rectangle which fit all the conditions a of the forbidden rectangle strategies
     * @returns The for corner cells and the candidate pair they share
@@ -40,7 +41,7 @@ export default abstract class ForbiddenRectangle extends Strategy {
                            const corners = [origin, inCol, inRow, across]
 
                            // Check if all corners are in one of two ninths
-                           const ninths = corners.map(c => ninthAt(c)).filter((n1, i1, a) => !a.some((n2, i2) => i2 < i1 && n1 === n2))
+                           const ninths = uniq(corners.map(c => ninthAt(c)))
                            if (ninths.length < 2) return null
 
                            // If there are less than two corners with exactly two candidates, which are part of the same group, return

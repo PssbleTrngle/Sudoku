@@ -8,7 +8,12 @@ export interface Chain {
 }
 
 export default abstract class ChainStrategy extends Strategy {
-   getChains(endPredicate: (c: CellWithPoint) => boolean, connectionPredicate: (a: CellWithPoint, b: CellWithPoint) => boolean, cells?: CellWithPoint[], maxLength = 10): Chain[] {
+   getChains(
+      endPredicate: (c: CellWithPoint) => boolean,
+      connectionPredicate: (a: CellWithPoint, b: CellWithPoint, chain: CellWithPoint[]) => boolean,
+      cells?: CellWithPoint[],
+      maxLength = 10
+   ): Chain[] {
       const all = this.cells() ?? cells
 
       const endpoints = all.filter(endPredicate)
@@ -22,7 +27,7 @@ export default abstract class ChainStrategy extends Strategy {
 
          if (chain.length > maxLength) return []
 
-         const nextCells = all.filter(it => !chain.some(c => c.row === it.row && c.col === it.col)).filter(it => connectionPredicate(start, it))
+         const nextCells = all.filter(it => !chain.some(c => c.row === it.row && c.col === it.col)).filter(it => connectionPredicate(start, it, chain))
 
          return nextCells.map(n => next([...chain, n], to)).flat(1)
       }
