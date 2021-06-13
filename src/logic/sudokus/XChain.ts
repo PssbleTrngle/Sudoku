@@ -10,7 +10,7 @@ define('X-Kette', [
    [[2, 3, 5, 8, 9], [2, 5, 8, 9], 1, 7, [2, 4, 9], [2, 3, 4, 8, 9], [2, 3, 4, 8, 9], 6, [2, 3, 8, 9]],
    [6, [2, 8, 9], 7, [4, 8, 9], [2, 4, 9], [2, 3, 4, 8, 9], [1, 2, 3, 4, 8, 9], 5, [1, 2, 3, 8, 9]],
    [4, [2, 8, 9], [2, 3, 8], 5, 1, 6, [2, 3, 8, 9], 7, [2, 3, 8, 9]],
-])
+], X-Kette, 'Um eine X-Kette zu entdecken, müssen Sie nach mehreren Einheiten suchen, die denselben Kandidaten genau zweimal enthalten. Suchen Sie nach Überschneidungen dieser Einheiten, um eine Kette aus zwei gleichen Kandidaten innerhalb einer Einheit zu erstellen. Eine solche Kette aus 3ern ist in unserem Beispiel eingezeichnet. Nun empfiehlt es sich die Kette durchzunummerieren und nach Feldern zu suchen, die im Einflussbereich einer geraden und ungeraden Zahl liegen und den untersuchten Kandidaten enthalten. Aus diesen Feldern kann der Kandidat eliminiert werden. Denn die Besonderheit einer solchen Kette ist, dass die Kandidaten abwechselnd richtig und falsch sein müssen. In unserem Beispiel haben wir Ihnen die Kandidaten solcher Felder rot eingefärbt. ')
 
 define('X-Kette 2', [
             [3, [1,4,7,8], [4,7,8], [4,7,9], [1,4,7,9], 5, [1,6,7,9], [1,6,7,8], 2],
