@@ -28,7 +28,7 @@ const Hints: FC<{
 
    const calculateHints = useCallback(() =>
       Strategies.getHints(sudoku).then(setHints),
-      [setHints]
+      [setHints, sudoku]
    )
 
    const getHint = useCallback(() => {
@@ -42,7 +42,7 @@ const Hints: FC<{
 
    return (
       <Style>
-         {!!hints?.length && <>
+         {!!hints?.length ? <>
             <Select onChange={e => selectStrat(parseInt(e.target.value))}>
                <option value={-1}>Any</option>
                {hints.map(({ strategy }, i) => (
@@ -60,12 +60,10 @@ const Hints: FC<{
                   <Button onClick={onApply}>Apply</Button>
                </Info>
             )}
-         </>
-         }
-         {hints === undefined
+         </> : (hints === undefined
             ? <Button onClick={calculateHints}>Check for hints</Button>
             : <NoHints>No hints possible</NoHints>
-         }
+         )}
       </Style>
    )
 }
