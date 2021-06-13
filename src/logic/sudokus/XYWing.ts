@@ -12,7 +12,7 @@ define('XY-Wing', [
    [7, 0, 0, 0, 0, 0, 0, 0, 1],
    [0, 0, 1, 0, 0, 0, 0, 0, 0],
    [0, 0, 0, 1, 7, 5, 0, 2, 4],   
-], XYWing)
+], XYWing, 'Für diese Strategie benötigen Sie drei Felder, in zwei sich überlagernden Einheiten, die insgesamt nur drei Kandidaten beinhalten. Jedes dieser Felder darf außerdem nur zwei Kandidaten enthalten. In unserem Beispiel ist diese Konstellation mit den Kandidatenwerten 4, 5 und 7 gegeben. Die beiden Felder, die sich nicht in einer Einheit befinden verfügen über einen gleichen Kandidaten, die 5. Da dieser in eines der beiden Felder eingetragen werden muss, kann dieser Kandidat aus allen Feldern gestrichen werden, die sich im gemeinsamen Einflussbereich befinden. Dies beinhaltet alle Felder im rechten Block der dritten Zeile. Deshalb werden die beiden roten 5en gestrichen.')
 
 define('XY-Wing_wrong', [
    [3, [1, 9], [1, 9], 4, 5, 6, 7, 8, 2],
