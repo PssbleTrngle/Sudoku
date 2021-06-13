@@ -11,4 +11,4 @@ define('Wolkenkratzer', [
    [8, [2, 4, 5], [1, 2, 4, 5], 7, [4, 9], [2, 9], 3, 6, [1, 5, 9]],
    [9, [2, 5, 6, 7], [2, 5, 7], 3, [6, 8], 1, [2, 5, 7, 8], 4, [5, 8]],
    [[1, 6, 7], [2, 3, 4, 6, 7], [1, 2, 3, 4, 7], [2, 4, 6, 8], 5, [2, 6, 9], [1, 2, 7, 8, 9], [1, 2, 7, 8], [1, 8, 9]]
-], Skyscraper)
+], Skyscraper, 'Um einen Wolkenkratzer zu entdecken, benötigen Sie zwei Reihen, in denen ein Kandidat je zweimal vorkommt. In unserem Beispiel ist dies in der vierten und achten Spalte mit der 2 der Fall. Dabei müssen zwei der Kandidaten auf einer Höhe liegen, wie in Zeile 9. Im gemeinsamen Einflussbereich der beiden anderen Kandidaten kann dieser Kandidat eliminiert werden. Dies ist so begründet, dass aufgrund der Tatsache, dass in den Reihen, in denen der Kandidat nur je zweimal vorkommt, einer dieser Kandidaten in einen der gegenüberliegenden Punkte eingetragen werden muss und einer in einen der versetzten Punkte. Daher ist deren gemeinsamer Einflussbereich sicher durch diesen Wert abgedeckt. Im Beispiel wurde der Einflussbereich der anderen beiden Felder gestreift markiert und die zu streichenden 2er rot eingefärbt.')
