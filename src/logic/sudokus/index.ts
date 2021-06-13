@@ -13,6 +13,7 @@ export interface SudokuInfo {
       create(sudoku: Sudoku): Strategy,
       slug: string,
       name: string,
+      id: string,
    }
    description?: string,
 }
@@ -29,6 +30,7 @@ export function define(name: string, sudoku: SudokuLike, strategy?: { new(sudoku
          create: s => new strategy(s),
          slug: slugify(strategyInstance!.getName(), { lower: true }),
          name: strategyInstance!.getName(),
+         id: strategy.name,
       },
       description,
    })

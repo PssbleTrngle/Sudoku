@@ -1,9 +1,10 @@
-import { orderBy, uniqBy } from 'lodash'
+import { uniqBy } from 'lodash'
 import { FC, useMemo } from 'react'
 import { Route, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
 import { RouterLinkButton as Link } from '../components/Inputs'
 import Title from '../components/Title'
+import { getStrategies } from '../logic/strategies'
 import { getSudokus } from '../logic/sudokus'
 import { exists } from '../util'
 import StrategyTrainer from './StrategyTrainer'
@@ -14,10 +15,13 @@ const Trainer: FC = () => {
    const sudokus = useMemo(() => getSudokus().filter(s => s.strategy), [])
    const strategies = useMemo(
       () =>
-         orderBy(uniqBy(
+         uniqBy(
             sudokus.map(s => s.strategy),
             'name'
-         ).filter(exists), 'name'),
+         ).filter(exists).sort((a, b) => {
+            const [ia, ib] = [a, b].map(s => getStrategies().findIndex(it => it.name === s.id))
+            return ia - ib
+         }),
       [sudokus]
    )
 
