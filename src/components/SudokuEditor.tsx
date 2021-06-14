@@ -1,3 +1,4 @@
+import { Spinner } from '@styled-icons/fa-solid'
 import query from 'query-string'
 import { Dispatch, FC, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -13,7 +14,8 @@ const SudokuEditor: FC<{
    sudoku: ISudoku
    fillCandidates?: boolean
    onChange?: Dispatch<SetStateAction<ISudoku>>
-}> = ({ onChange, sudoku, fillCandidates, children }) => {
+   loading?: boolean
+}> = ({ onChange, sudoku, fillCandidates, loading, children }) => {
    const { cells } = sudoku
 
    const { load } = query.parse(useLocation().search)
@@ -102,8 +104,10 @@ const SudokuEditor: FC<{
    return (
       <Style id='sudoku'>
 
+         {children}
+
          <Sudoku {...sudoku} focused={focused} onSelect={setFocused} hint={hint}>
-            {children}
+            {loading && <Loading size='15vh' />}
          </Sudoku>
 
          {focused ? <Focused {...focused} {...cells[focused.row][focused.col]} onChange={c => onChange?.(modifySudoku(focused, c))} /> : <NoSelected>Keine Zelle ausgewählt</NoSelected>}
@@ -113,6 +117,20 @@ const SudokuEditor: FC<{
       </Style>
    )
 }
+
+const Loading = styled(Spinner)`
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   color: ${p => p.theme.highlight};
+
+   @keyframes rotate {
+      from { transform: translate(-50%, -50%) rotate(0deg)  }
+      to { transform: translate(-50%, -50%) rotate(360deg)  }
+   }
+   
+   animation: rotate 1s linear infinite;
+`
 
 const NoSelected = styled.p`
    grid-area: focused;
@@ -125,6 +143,7 @@ const Style = styled.section`
    justify-content: center;
    gap: 50px;
    grid-template:
+      "toolbar ."
       'sudoku .'
       'sudoku focused'
       'sudoku hints'

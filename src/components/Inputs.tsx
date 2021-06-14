@@ -25,7 +25,9 @@ export const ButtonStyle = () => css`
    cursor: pointer;
 
    &:disabled {
-      cursor: not-allowed;
+      cursor: default;
+      background: ${p => mix(0.8, p.theme.bg, '#AAA')};
+      color: ${p => transparentize(0.2, p.theme.text)};
    }
 `
 

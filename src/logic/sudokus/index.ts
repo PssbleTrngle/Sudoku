@@ -45,7 +45,7 @@ export function getSudokus() {
    return Array.from(MAP.values())
 }
 
-export async function getSudoku(name: string) {
+export function getSudoku(name: string) {
    const s = MAP.get(name)
    if (s) return s
    throw new Error('sudoku not found')
