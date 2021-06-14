@@ -14,7 +14,7 @@ define('Versteckter Dreier', [
 ], HiddenTriple, 'Um einen versteckten Dreier zu ermitteln, suchen Sie nach drei Kandidaten, die in einer Einheit (Zeile, Spalte, Block) in genau drei Feldern vorkommen. In keinem der anderen Felder der Einheit darf sich einer der drei Kandidaten befinden. Im nebenstehenden Beispiel ist dies in Zeile 5 der Fall. Die blau markierten Kandidaten bestehend aus 4, 5 und 7 kommen in dieser Zeile nur in den blau umrandeten Feldern vor. Da diese Werte ausschließlich in diesen drei Feldern vorkommen, müssen diese auch dort eingetragen werden. Daher können alle anderen Kandidatenwerte in diesen Feldern gestrichen werden. Daher wurden dort die 3, 6 und 9 rot markiert. ')
 
 
-define('Versteckter Dreier', [
+define('Versteckter Dreier 2', [
    [[], 9, 3, [], [], [], [], 6, []],
    [[], 8, [], [], [], [], [], 2, 3],
    [[], [], [], 1, 7, 3, [], [], []],
