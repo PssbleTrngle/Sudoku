@@ -12,3 +12,16 @@ define('W-Wing', [
    [[2, 6, 8], 9, [2, 4, 8], [4, 8], [2, 6, 8], 3, 1, 7, 5],
    [3, [1, 8], 5, 9, [1, 8], 7, 6, 4, 2]
 ], WWing, 'Um diese Strategie anzuwenden, müssen Sie nach zwei identischen Kandidatenpaaren auf dem Sudoku Feld suchen. Diese dürfen nicht in einer Reihe liegen. In unserem Beispiel haben wir Ihnen solche Felder mit einer 6 und einer 8 umrandet. Als nächstes benötigen wir eine Reihe, die einen dieser Kandidaten genau zweimal enthält, und zwar auf höhe der beiden anderen Felder. Dies ist in Zeile 8 mit der 6 der Fall. Diese Konstellation bewirkt, dass im Schnittpunkt der beiden anderen Felder der andere Kandidatenwert gestrichen werden kann. Im Beispiel Sudoku wurde daher die 8 rot markiert.')
+
+
+define('W-Wing 2', [
+            [1, 5, 3, 8, [], [], [], 6, []],
+   [4, 6, 8, [], [], [], 1, [], []],
+   [7, 2, 9, 6, 1, [], 8, 5, []],
+   [6, 3, [], 4, [], 1, 9, [], 8],
+   [[], [], [], [], [], [], 3, 4, 6],
+   [8, 4, [], 3, [], 6, [], 1, 5],
+   [5, [], [], [], 3, 7, 6, 8, []],
+   [[], 8, [], 5, 6, [], [], 3, 1],
+   [3, [], 6, [], [], [], 5, [], 2]
+        ], WWing)
