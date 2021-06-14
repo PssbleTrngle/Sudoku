@@ -1,6 +1,6 @@
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Sudoku Trainer
+This application is a sudoku trainer & creator built with [React](https://reactjs.org/).\
+A public version is available at [sudoku.macarena.ceo](https://sudoku.macarena.ceo/)
 
 ### `yarn start` or `npm start`
 
@@ -19,3 +19,10 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+### Using Docker
+
+The provided Dockerfile can be used to build a standalone Container, hosting the app on port 80.
+```sh
+docker run -d --name sudoku -p 3000:80 dockergelb:sudoku
+```
