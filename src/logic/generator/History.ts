@@ -60,7 +60,7 @@ export default class History<T extends Record<string, any>> {
 
          for (let attempts = 0, i = 0; i < this.steps.length; i++, attempts++) {
             //await Bluebird.delay(5)
-            
+
             const previousMilestones = [...this.milestones].reverse().filter(m => m < i)
 
             historyAt.set(i, this.index)

@@ -10,7 +10,6 @@ import solver from '../logic/solver'
 import { Sudoku as ISudoku, Sudoku, withPoints } from '../logic/Sudoku'
 import { getSudoku, getSudokus, names } from '../logic/sudokus'
 
-
 const Creator: FC = () => {
    const selections = names()
    const [selected, setSelected] = useState<string>()
@@ -22,11 +21,15 @@ const Creator: FC = () => {
       Lösen: () => solver(sudoku),
    })
 
-   const setWithoutCandidates = useCallback((sudoku: Sudoku) => {
-      setSudoku({
-         ...sudoku, cells: sudoku.cells.map(r => r.map(c => ({ ...c, candidates: [] })))
-      })
-   }, [setSudoku])
+   const setWithoutCandidates = useCallback(
+      (sudoku: Sudoku) => {
+         setSudoku({
+            ...sudoku,
+            cells: sudoku.cells.map(r => r.map(c => ({ ...c, candidates: [] }))),
+         })
+      },
+      [setSudoku]
+   )
 
    const { load } = query.parse(useLocation().search)
    useEffect(() => {
@@ -73,9 +76,7 @@ const Creator: FC = () => {
    return (
       <>
          <SudokuEditor loading={generating} fillCandidates={fillcandidates} sudoku={sudoku} onChange={setSudoku}>
-
             <Toolbar>
-
                <Select id='load' disabled={generating} onChange={e => setSelected(e.target.value)}>
                   <option value={''}>Sudoku auswählen...</option>
                   {selections.map(s => (
@@ -85,8 +86,12 @@ const Creator: FC = () => {
                   ))}
                </Select>
 
-               <Button disabled={generating || !selected} onClick={loadSelected}>Laden</Button>
-               <Button disabled={generating} onClick={random}>Zufälliges Sudoku</Button>
+               <Button disabled={generating || !selected} onClick={loadSelected}>
+                  Laden
+               </Button>
+               <Button disabled={generating} onClick={random}>
+                  Zufälliges Sudoku
+               </Button>
                <Button onClick={() => setFillCandidates(true)}>Kandidaten Ausfüllen</Button>
 
                <Margin />
@@ -100,7 +105,6 @@ const Creator: FC = () => {
                <Margin />
 
                <Button onClick={copy}>Kopieren</Button>
-
             </Toolbar>
          </SudokuEditor>
       </>

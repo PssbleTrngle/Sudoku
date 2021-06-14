@@ -18,10 +18,12 @@ const Trainer: FC = () => {
          uniqBy(
             sudokus.map(s => s.strategy),
             'name'
-         ).filter(exists).sort((a, b) => {
-            const [ia, ib] = [a, b].map(s => getStrategies().findIndex(it => it.name === s.id))
-            return ia - ib
-         }),
+         )
+            .filter(exists)
+            .sort((a, b) => {
+               const [ia, ib] = [a, b].map(s => getStrategies().findIndex(it => it.name === s.id))
+               return ia - ib
+            }),
       [sudokus]
    )
 
@@ -30,7 +32,6 @@ const Trainer: FC = () => {
          <Route path={`${url}/:slug`} component={StrategyTrainer} />
 
          <Route path={url} exact>
-
             <Title>Wähle eine Strategie</Title>
 
             <List>
@@ -40,7 +41,6 @@ const Trainer: FC = () => {
                   </Link>
                ))}
             </List>
-
          </Route>
       </>
    )

@@ -12,7 +12,7 @@ const Hints: FC<{
 }> = ({ onChange, sudoku, hint, onApply }) => {
    const [selectedStrat, selectStrat] = useState(-1)
    const [strategy, setStrategy] = useState<string>()
-   const [hints, setHints] = useState<Array<{ hints: Hint[], strategy: string }>>()
+   const [hints, setHints] = useState<Array<{ hints: Hint[]; strategy: string }>>()
 
    useEffect(() => {
       onChange?.(undefined)
@@ -25,10 +25,7 @@ const Hints: FC<{
       if (hints && hints.length <= selectedStrat) selectStrat(-1)
    }, [hints, selectedStrat, selectStrat])
 
-   const calculateHints = useCallback(() =>
-      Strategies.getHints(sudoku).then(setHints),
-      [setHints, sudoku]
-   )
+   const calculateHints = useCallback(() => Strategies.getHints(sudoku).then(setHints), [setHints, sudoku])
 
    const getHint = useCallback(() => {
       const strat = Math.max(0, selectedStrat)
@@ -41,27 +38,30 @@ const Hints: FC<{
 
    return (
       <Style>
-         {!!hints?.length ? <>
-            <Select onChange={e => selectStrat(parseInt(e.target.value))}>
-               <option value={-1}>Beliebige Strategie</option>
-               {hints.map(({ strategy }, i) => (
-                  <option value={i} key={i}>
-                     {strategy}
-                  </option>
-               ))}
-            </Select>
+         {!!hints?.length ? (
+            <>
+               <Select onChange={e => selectStrat(parseInt(e.target.value))}>
+                  <option value={-1}>Beliebige Strategie</option>
+                  {hints.map(({ strategy }, i) => (
+                     <option value={i} key={i}>
+                        {strategy}
+                     </option>
+                  ))}
+               </Select>
 
-            <Button onClick={getHint}>Tipp anzeigen</Button>
+               <Button onClick={getHint}>Tipp anzeigen</Button>
 
-            {hint && (
-               <Info>
-                  {selectedStrat === -1 && <h3>{strategy}</h3>}
-                  <Button onClick={onApply}>Tipp anwenden</Button>
-               </Info>
-            )}
-         </> : (hints === undefined
-            ? <Button onClick={calculateHints}>Nach Tipps suchen</Button>
-            : <NoHints>Keine Tipps möglich</NoHints>
+               {hint && (
+                  <Info>
+                     {selectedStrat === -1 && <h3>{strategy}</h3>}
+                     <Button onClick={onApply}>Tipp anwenden</Button>
+                  </Info>
+               )}
+            </>
+         ) : hints === undefined ? (
+            <Button onClick={calculateHints}>Nach Tipps suchen</Button>
+         ) : (
+            <NoHints>Keine Tipps möglich</NoHints>
          )}
       </Style>
    )

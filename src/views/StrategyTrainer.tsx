@@ -8,9 +8,11 @@ import { getSudokus, SudokuInfo } from '../logic/sudokus'
 const StrategyTrainer: FC = () => {
    const { slug } = useParams<Record<string, string>>()
 
-   const [example, ...rest] = useMemo(() => getSudokus()
-      .filter(s => s.strategy?.slug === slug)
-      .sort(it => it.description ? -1 : 1),
+   const [example, ...rest] = useMemo(
+      () =>
+         getSudokus()
+            .filter(s => s.strategy?.slug === slug)
+            .sort(it => (it.description ? -1 : 1)),
       [slug]
    )
 
@@ -18,15 +20,23 @@ const StrategyTrainer: FC = () => {
 
    if (!strategy) return <Redirect to='/trainer' />
 
-   return <Style>
-      <Example {...example} />
-      {rest.length > 0 && <Link to={`/creator?load=${rest[0].slug}`}>Selbst Versuchen</Link>}
-   </Style>
+   return (
+      <Style>
+         <Example {...example} />
+         {rest.length > 0 && <Link to={`/creator?load=${rest[0].slug}`}>Selbst Versuchen</Link>}
+      </Style>
+   )
 }
 
 const Example: FC<SudokuInfo> = ({ strategy, sudoku, description }) => {
-
-   const [hint] = useMemo(() => strategy!.create(sudoku).getHints().filter(h => h.actions.length > 0) ?? [], [strategy, sudoku])
+   const [hint] = useMemo(
+      () =>
+         strategy!
+            .create(sudoku)
+            .getHints()
+            .filter(h => h.actions.length > 0) ?? [],
+      [strategy, sudoku]
+   )
 
    return (
       <>
@@ -34,12 +44,16 @@ const Example: FC<SudokuInfo> = ({ strategy, sudoku, description }) => {
 
          <Name>{strategy!.name}</Name>
 
-         <Description>{(description || 'No description provided').split('\n').filter(s => s.length).map((line, i) =>
-            <p key={i}>{line.trim()}</p>
-         )}</Description>
+         <Description>
+            {(description || 'No description provided')
+               .split('\n')
+               .filter(s => s.length)
+               .map((line, i) => (
+                  <p key={i}>{line.trim()}</p>
+               ))}
+         </Description>
       </>
    )
-
 }
 
 const Name = styled.h2`
@@ -72,7 +86,7 @@ const Style = styled.section`
    }
 
    grid-template:
-      'sudoku .' 
+      'sudoku .'
       'sudoku strategy'
       'sudoku description'
       'sudoku button'

@@ -33,7 +33,6 @@ const App: FC = () => {
          <SymbolProvider value={symbols}>
             <Global />
             <Router>
-
                <Nav />
 
                <ButtonBar>
@@ -41,7 +40,9 @@ const App: FC = () => {
                      <Github size='1rem' />
                   </LinkButton>
                   <Button onClick={toggleDark}>{dark ? <Sun size='1rem' /> : <Moon size='1rem' />}</Button>
-                  <Button onClick={cycleSymbols}><Random size='1rem' /></Button>
+                  <Button onClick={cycleSymbols}>
+                     <Random size='1rem' />
+                  </Button>
                </ButtonBar>
 
                <Switch>

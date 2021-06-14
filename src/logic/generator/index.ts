@@ -24,9 +24,7 @@ export default function generate() {
       // For each ninth of the sudoku
       NUMS.map(i => i - 1).forEach(i => {
          builder.step(async s => {
-
-            const randomziedFields = inNinth(i, s)
-               .sort(() => Math.random() - 0.5)
+            const randomziedFields = inNinth(i, s).sort(() => Math.random() - 0.5)
 
             const possible = randomziedFields.find(it => canPut(it, value, s))
             if (possible) return modifySudoku(possible, { value })(s)

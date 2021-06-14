@@ -92,7 +92,6 @@ const SudokuEditor: FC<{
 
    return (
       <Style id='sudoku'>
-
          {children}
 
          <Sudoku {...sudoku} focused={focused} onSelect={setFocused} hint={hint}>
@@ -102,7 +101,6 @@ const SudokuEditor: FC<{
          {focused ? <Focused {...focused} {...cells[focused.row][focused.col]} onChange={c => onChange?.(modifySudoku(focused, c))} /> : <NoSelected>Keine Zelle ausgewählt</NoSelected>}
 
          <Hints sudoku={sudoku} onChange={setHint} hint={hint} onApply={applyHint} />
-
       </Style>
    )
 }
@@ -114,10 +112,14 @@ const Loading = styled(Spinner)`
    color: ${p => p.theme.highlight};
 
    @keyframes rotate {
-      from { transform: translate(-50%, -50%) rotate(0deg)  }
-      to { transform: translate(-50%, -50%) rotate(360deg)  }
+      from {
+         transform: translate(-50%, -50%) rotate(0deg);
+      }
+      to {
+         transform: translate(-50%, -50%) rotate(360deg);
+      }
    }
-   
+
    animation: rotate 1s linear infinite;
 `
 
@@ -132,7 +134,7 @@ const Style = styled.section`
    justify-content: center;
    gap: 50px;
    grid-template:
-      "toolbar toolbar"
+      'toolbar toolbar'
       'sudoku .'
       'sudoku focused'
       'sudoku hints'

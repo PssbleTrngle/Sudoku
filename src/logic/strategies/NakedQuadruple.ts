@@ -8,7 +8,10 @@ export default class NakedQuadruple extends Naked {
    }
 
    cross(symbols: CellWithPoint[]) {
-      return crossDiff(symbols, crossDiff(symbols, cross(symbols)).map(([a, b]) => [a, ...b])).map(([a, b]) => [a, ...b])
+      return crossDiff(
+         symbols,
+         crossDiff(symbols, cross(symbols)).map(([a, b]) => [a, ...b])
+      ).map(([a, b]) => [a, ...b])
    }
 
    count() {

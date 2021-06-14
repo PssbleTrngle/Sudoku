@@ -1,21 +1,29 @@
-import { Brain, Home, PencilAlt } from '@styled-icons/fa-solid';
-import { } from 'lodash';
-import { mix } from "polished";
-import { FC } from "react";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
+import { Brain, Home, PencilAlt } from '@styled-icons/fa-solid'
+import {} from 'lodash'
+import { mix } from 'polished'
+import { FC } from 'react'
+import { Link } from 'react-router-dom'
+import styled from 'styled-components'
 
 const Nav: FC = () => {
-   return <Style>
-      <Button to='/'><Home size='3rem' title='Home' /></Button>
-      <Button to='/creator'><PencilAlt size='3rem' title='Creator' /></Button>
-      <Button to='/trainer'>< Brain size='3rem' title='Trainer' /></Button>
-   </Style>
+   return (
+      <Style>
+         <Button to='/'>
+            <Home size='3rem' title='Home' />
+         </Button>
+         <Button to='/creator'>
+            <PencilAlt size='3rem' title='Creator' />
+         </Button>
+         <Button to='/trainer'>
+            <Brain size='3rem' title='Trainer' />
+         </Button>
+      </Style>
+   )
 }
 
 const Button = styled(Link)`
    &:first-child {
-      grid-area: primary
+      grid-area: primary;
    }
 
    text-align: center;
@@ -37,14 +45,14 @@ const Style = styled.nav`
    padding-bottom: 2.5rem;
    padding-right: 2.5rem;
    grid-template:
-      "primary a" 1fr
-      "b c" 1fr
+      'primary a' 1fr
+      'b c' 1fr
       / 1fr 1fr;
 
    gap: 1.8rem;
-      
+
    background: ${p => mix(0.5, p.theme.bg, '#AAA')};
-   
+
    transition: clip-path 0.1s ease;
    clip-path: circle(40% at 10% 10%);
    &:hover {

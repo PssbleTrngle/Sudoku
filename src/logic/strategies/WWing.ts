@@ -17,7 +17,6 @@ export default class WWing extends Strategy {
                if (inGroup(...pair)) return null
 
                return this.forRowAndCol((source, otherSource) => {
-
                   const otherGroups = arrayOf(9)
                      .map(i => i - 1)
                      .filter(r => !pair.some(it => it[source] === r))
@@ -31,7 +30,6 @@ export default class WWing extends Strategy {
                         const corners: CellWithPoint[] = pair.map(it => ({ ...it, [source]: group })).map(point => ({ ...point, ...this.sudoku.cells[point.row][point.col] }))
 
                         if (!corners.every(it => it.candidates.includes(primary))) return null
-
 
                         const remove = possibleBlockers(this.sudoku, ...pair).filter(it => it.candidates.includes(secondary))
 
