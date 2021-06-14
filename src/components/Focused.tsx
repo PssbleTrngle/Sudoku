@@ -90,6 +90,10 @@ const Candidate = styled.button<{ selected?: boolean }>`
 const Cell = styled.div`
    ${CellStyle};
 
+   width: 7rem;
+   height: 7rem;
+   font-size: calc(7rem / 2);
+
    input {
       font-family: 'Indie Flower', cursive, sans-serif;
       color: ${p => p.theme.text};
