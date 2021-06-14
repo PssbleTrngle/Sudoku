@@ -1,48 +1,44 @@
-import { arrayEqual, exists } from '../../util'
-import { Hint, possibleBlockers } from '../Sudoku'
+import { uniq } from 'lodash'
+import { exists } from '../../util'
+import { Action, CellWithPoint, Hint, uniqByPoint } from '../Sudoku'
 import Strategy from './Strategy'
 
 export default abstract class Naked extends Strategy {
-   abstract partnerCount(): number
+
+   abstract cross(symbols: CellWithPoint[]): CellWithPoint[][] 
+
+   abstract count(): number
 
    getHints() {
-      const partnerCount = this.partnerCount()
+      return this.forGroups((cells, source) => {
 
-      return this.find(c => !c.value && c.candidates.length === 2)
-         .map(cell => {
-            const { candidates } = cell
-            if (candidates.length !== 2) return null
+         const withCandidates = cells.filter(c => !c.value && c.candidates.length <= this.count() && c.candidates.length > 1)
 
-            const blockers = possibleBlockers(this.sudoku, cell)
+         const triples = this.cross(withCandidates).filter(a => a.filter(uniqByPoint).length === this.count())
 
-            const partners = [...blockers, cell]
-               .filter(c => c.candidates.length === 2)
-               .filter((c1, i1, a) => !a.some((c2, i2) => i2 < i1 && arrayEqual(c1.candidates, c2.candidates)))
-               .filter((p1, i1, a) => p1.candidates.every(c => a.filter((p2, i2) => i1 !== i2 && p2.candidates.includes(c)).length === 1))
+         return triples.map<Hint | null>(triple => {
 
-            if (partners.length !== partnerCount) return null
+            const candidates = uniq(triple.map(it => it.candidates).flat())
 
-            const partnerBlockers = possibleBlockers(this.sudoku, ...partners)
+            if (candidates.length !== this.count()) return null
 
-            return partnerBlockers
-               .filter(c => !arrayEqual(c.candidates, candidates))
-               .map(b =>
-                  b.candidates
-                     .filter(i => candidates.includes(i))
-                     .map<Hint>(value => ({
-                        actions: [
-                           {
-                              ...b,
-                              type: 'exclude',
-                              value,
-                           },
-                        ],
-                        ...this.blockingHighlights([b]),
-                        highlights: partners,
-                     }))
-               )
-         })
-         .filter(exists)
-         .flat(2)
+            const blockers = cells.filter(c => !triple.includes(c))
+
+            return {
+               actions: candidates.map(value => blockers
+                  .filter(it => it.candidates.includes(value))
+                  .map(it => ({
+                     ...it,
+                     value,
+                     type: 'exclude',
+                  }))).flat() as Action[],
+               highlights: triple.map(it => ({ ...it, highlightedCandidates: candidates })),
+               ...this.highlightGroup(source, triple[0]),
+            }
+
+         }).flat().filter(exists)
+
+      })
+
    }
 }
