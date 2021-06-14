@@ -14,7 +14,7 @@ define('Schwertfisch', [
 ], Swordfish, 'Um einen Schwertfisch anzuwenden, müssen Sie nach drei Zeilen suchen, in denen ein Kandidatenwert nur in drei Spalten vorkommt. Im Beispiel sind diese Felder blau umrandet und der vorkommende Kandidatenwert ist die 4. Nun müssen Sie nach weiteren Kandidaten dieses Wertes in den drei Spalten suchen. Diese können Sie streichen, da der Wert in dreien der Schnittfelder eingetragen werden müssen. Im Beispiel sehen Sie, wie die4er in den markierten Spalten gestrichen wurden. Diese Strategie ist auch umgekehrt anwendbar für Spalten mit allen Kandidatenwerten in nur drei Spalten und dem Streichen aus drei Zeilen.')
 
 
-define('Schwertfisch', [
+define('Schwertfisch 2', [
    [[], [], [], 5, 4, 6, [], [], 9],
    [[], 2, [], [], [], [], [], [], 7],
    [[], [], 3, 9, [], [], [], [], 4],
