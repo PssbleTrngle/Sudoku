@@ -40,6 +40,20 @@ define('Verbotenes Rechteck Typ 2', [
    [9, [3, 5], 6, 2, 1, 7, [3, 5, 8], 4, [3, 5, 8]]
 ], ForbiddenRectangle2, 'Um diese Strategie anzuwenden, müssen Sie nach einem sogenannten verbotenen Rechteck suchen. Im Falle von Typ 2 suchen wir nach 4 in einem Rechteck angeordneten Feldern, die alle dasselbe Kandidatenpaar enthalten. Dieses Rechteck muss sich über mindestens zwei Blöcke erstrecken. In zwei dieser Felder darf außerdem kein weiterer Kandidat vorkommen und in den anderen beiden muss ein weiterer Kandidat vorkommen. Dieser muss allerdings derselbe sein. Außerdem müssen die beiden Felder, mit einem weiteren Kandidaten, in einer Reihe oder einer Spalte liegen und in der Einheit, in der sie sich befinden, muss der dritte Kandidaten des Paares zusätzlich in einem weiteren Feld vorkommen. In unserem Beispiel ist ein solches Rechteck mit den Kandidatenwerten 2 und 6 blau markiert. Damit das Sudoku eindeutig lösbar bleibt, müssen Sie den dritten Wert aus allen Feldern, die in derselben Einheit, wie die beiden Felder mit drei Kandidaten liegen, eliminieren. Im Bespiel befinden sich die beiden Felder mit drei Kandidaten im linken oberen Block und in der ersten Spalte. Die 5 ist der dritte Wert, weshalb aus dem linken oberen Block und der ersten Spalte alle 5en eliminiert werden können. Diese 5en sind im Beispiel rot markiert.')
 
+
+
+define('Verbotenes Rechteck Typ 2 - 2', [
+            [[], [], [], 4, 7, 6, [], [], []],
+   [[], [], [], [], [], 5, 8, [], []],
+   [[], [], [], [], [], 1, 5, [], 9],
+   [[], [], [], [], [], [], [], [], 4],
+   [4, 6, [], [], [], [], [], 5, []],
+   [[], 7, [], [], 1, 4, [], [], 6],
+   [5, [], [], [], 3, [], 4, [], []],
+   [[], 4, 9, [], [], 8, 2, 3, []],
+   [[], [], 1, 7, 4, [], 6, [], 5]
+        ], ForbiddenRectangle2)
+
 define('Verbotenes Rechteck Typ 3', [
    [9, [4, 5, 6, 8], 3, 1, [4, 5, 8], 2, [5, 8], [4, 6], 7],
    [[1, 5, 8], [1, 4, 5, 8], [5, 8], 7, [4, 5, 8], 6, 2, 3, 9],
