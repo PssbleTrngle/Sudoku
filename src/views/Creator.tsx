@@ -96,12 +96,14 @@ const Margin = styled.div`
 `
 
 const Toolbar = styled.div`
+   grid-area: toolbar;
    display: grid;
    grid-auto-flow: column;
    justify-content: center;
-   padding-top: 2rem;
+   padding-top: 4rem;
    align-items: center;
    gap: 0.5rem;
+   justify-self: start;
 `
 
 export default Creator

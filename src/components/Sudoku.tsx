@@ -37,6 +37,7 @@ const Sudoku: FC<
 
 const Style = styled.div`
    grid-area: sudoku;
+   margin: 0 auto;
 
    position: relative;
    display: grid;

@@ -23,7 +23,10 @@ const MAP = new Map<string, SudokuInfo>()
 export function define(name: string, sudoku: SudokuLike, strategy?: { new(sudoku: Sudoku): Strategy }, description?: string) {
    const parsed = parse(sudoku)
    const strategyInstance = strategy && new strategy(parsed)
+
    if(MAP.get(name)) console.warn(`Duplicate name '${name}'`)
+   if(!strategy) console.warn(`Sudoku '${name}' has no strategy defined`)
+   
    MAP.set(name, {
       name, slug: slugify(name, { lower: true }),
       sudoku: parsed,

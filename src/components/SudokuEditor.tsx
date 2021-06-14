@@ -143,7 +143,7 @@ const Style = styled.section`
    justify-content: center;
    gap: 50px;
    grid-template:
-      "toolbar ."
+      "toolbar toolbar"
       'sudoku .'
       'sudoku focused'
       'sudoku hints'
