@@ -91,7 +91,7 @@ const Style = styled.section`
       'sudoku description'
       'sudoku button'
       'sudoku .' 400px
-      / 1fr 300px;
+      / 1fr 350px;
 `
 
 export default StrategyTrainer

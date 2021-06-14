@@ -11,7 +11,13 @@ define('Nackter Single', [
    [2, [3], 5, [1, 3, 8, 9], [3, 8, 9], 6, 4, [1, 3, 7, 8], [1, 3, 7, 8, 9]],
    [9, [3, 4, 6], 1, [3, 4, 5, 8], [3, 4, 8], 7, [2, 5, 8], [3, 5, 6, 8], [2, 3, 5, 6, 8]],
    [7, [3, 4, 6], 8, [1, 3, 4, 5, 9], [3, 4, 9], 2, [1, 5, 9], [1, 3, 5, 6], [1, 3, 5, 6, 9]]
-], NakedSingle, 'Ein nackter Single liegt vor, wenn in ein Feld nur noch eine Zahl eingetragen werden kann, da es im Einflussbereich von acht Zahlen liegt. Um einen nackten Single zu ermitteln, müssen Sie die freien Felder einzeln untersuchen. Suchen Sie nach einem freien Feld, in dessen Zeile, Spalte und Block insgesamt 8 verschiedene Zahlenwerte vorkommen. In unserem Beispiel ist dies im ersten Feld der ersten Zeile der Fall. Wie Sie durch die blauen Umrandungen nachverfolgen können, finden Sie im Einflussbereich unseres Feldes alle Zahlenwerte außer der 8. Dies ist der fehlende Zahlenwert und Sie können diesen in das Feld eintragen. In unserem Beispiel haben wir Ihnen das mit einer grünen 8 dargestellt. ')
+], NakedSingle, `
+
+   Ein nackter Single liegt vor, wenn in ein Feld nur noch eine Zahl eingetragen werden kann, da es im Einflussbereich von acht Zahlen liegt. 
+   
+   Um einen nackten Single zu ermitteln, müssen Sie die freien Felder einzeln untersuchen. Suchen Sie nach einem freien Feld, in dessen Zeile, Spalte und Block insgesamt 8 verschiedene Zahlenwerte vorkommen.
+   
+   In unserem Beispiel ist dies im ersten Feld der ersten Zeile der Fall. Wie Sie durch die blauen Umrandungen nachverfolgen können, finden Sie im Einflussbereich unseres Feldes alle Zahlenwerte außer der 8. Dies ist der fehlende Zahlenwert und Sie können diesen in das Feld eintragen. In unserem Beispiel haben wir Ihnen das mit einer grünen 8 dargestellt.`)
 
 define('Naked Single 2', [
    [0, 4, 0, 0, 8, 0, 3, 0, 0],
