@@ -14,7 +14,7 @@ define('Versteckter Vierer', [
 ], HiddenQuadruple, 'Um einen versteckten Vierer zu ermitteln, suchen Sie nach vier Kandidaten, die in einer Einheit (Zeile, Spalte, Block) in genau vier Feldern vorkommen. In keinem der anderen Felder der Einheit darf sich einer der vier Kandidaten befinden. Im nebenstehenden Beispiel ist dies im linken unteren Block der Fall. Die blau markierten Kandidaten bestehend aus 1, 2, 3 und 7 kommen in diesem Block nur in den blau umrandeten Feldern vor. Da diese Werte ausschließlich in diesen vier Feldern vorkommen, müssen diese auch dort eingetragen werden. Daher können alle anderen Kandidatenwerte in diesen Feldern gestrichen werden. Daher wurden dort die 4, 5 und 8 rot markiert. ')
 
 
-define('Versteckter Vierer', [
+define('Versteckter Vierer 2', [
             [8, 2, [], [], [], [], [], [], []],
    [[], [], 1, 7, 4, [], [], [], 8],
    [[], [], [], 6, [], [], [], 4, 1],
