@@ -16,7 +16,7 @@ define('Verbotenes Rechteck Typ 1', [
    [[1, 3, 5, 6, 7], [1, 3, 6], 4, [1, 6, 7], 9, 2, [1, 3, 5], [1, 3, 5, 8], [1, 3, 5, 8]]
 ], ForbiddenRectangle1, 'Um diese Strategie anzuwenden, müssen Sie nach einem sogenannten verbotenen Rechteck suchen. Im Falle von Typ 1 suchen wir nach 4 in einem Rechteck angeordneten Feldern, die alle ausschließlich dasselbe Kandidatenpaar enthalten. Lediglich in einem der vier Felder dürfen weitere Kandidaten vorkommen. Dieses Rechteck muss sich über mindestens zwei Blöcke erstrecken. In unserem Beispiel ist ein solches Rechteck mit den Kandidatenwerten 4 und 5 blau markiert. Damit das Sudoku eindeutig lösbar bleibt, können Sie das Kandidatenpaar aus dem Feld eliminieren, in dem noch weitere Kandidaten vorkommen. Im Beispiel ist dies beim rechten unter Feld des Rechtecks der Fall, weshalb darin die 4 und die 5 rot markiert sind.')
 
-define('Verbotenes Rechteck Typ 1', [
+define('Verbotenes Rechteck Typ 1 - 2', [
             [[], 2, [], [], [], 5, [], [], []],
    [[], 1, 5, [], [], [], [], [], []],
    [[], [], [], [], [], 8, 7, [], 3],
