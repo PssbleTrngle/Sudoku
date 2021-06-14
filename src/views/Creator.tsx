@@ -5,7 +5,7 @@ import SudokuEditor from '../components/SudokuEditor'
 import { useObserver } from '../Hooks'
 import generator, { createEmpty } from '../logic/generator'
 import solver from '../logic/solver'
-import { Sudoku as ISudoku } from '../logic/Sudoku'
+import { Sudoku as ISudoku, Sudoku } from '../logic/Sudoku'
 import { getSudoku, getSudokus, names } from '../logic/sudokus'
 
 const Creator: FC = () => {
@@ -19,18 +19,24 @@ const Creator: FC = () => {
       Lösen: () => solver(sudoku),
    })
 
+   const setWithoutCandidates = useCallback((sudoku: Sudoku) => {
+      setSudoku({
+         ...sudoku, cells: sudoku.cells.map(r => r.map(c => ({ ...c, candidates: [] })))
+      })
+   }, [setSudoku])
+
    const load = useCallback(() => {
       if (selected) {
          const { sudoku } = getSudoku(selected)
-         setSudoku(sudoku)
+         setWithoutCandidates(sudoku)
       }
-   }, [setSudoku, selected])
+   }, [setWithoutCandidates, selected])
 
    const random = useCallback(() => {
       const sudokus = getSudokus()
       const selected = sudokus[Math.floor(Math.random() * sudokus.length)]
-      setSudoku(selected.sudoku)
-   }, [setSudoku])
+      setWithoutCandidates(selected.sudoku)
+   }, [setWithoutCandidates])
 
    useEffect(() => {
       if (fillcandidates) setFillCandidates(false)
