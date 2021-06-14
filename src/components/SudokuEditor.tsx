@@ -1,10 +1,7 @@
 import { Spinner } from '@styled-icons/fa-solid'
-import query from 'query-string'
 import { Dispatch, FC, SetStateAction, useCallback, useEffect, useReducer, useState } from 'react'
-import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { Hint, modifySudoku, Point, possibleValues, Sudoku as ISudoku, withPoints } from '../logic/Sudoku'
-import { getSudokus } from '../logic/sudokus'
 import { arrayEqual, exists } from '../util'
 import Focused from './Focused'
 import Hints from './Hints'
@@ -17,14 +14,6 @@ const SudokuEditor: FC<{
    loading?: boolean
 }> = ({ onChange, sudoku, fillCandidates, loading, children }) => {
    const { cells } = sudoku
-
-   const { load } = query.parse(useLocation().search)
-   useEffect(() => {
-      if (withPoints(cells).some(it => it.value || it.candidates.length)) return
-      const info = getSudokus().find(s => s.slug === load)
-      if (info) onChange?.(info.sudoku)
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-   }, [load, sudoku])
 
    const [focused, setFocused] = useReducer((_: Point | undefined, point: Point | undefined) => {
       return (

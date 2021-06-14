@@ -1,12 +1,15 @@
+import query from 'query-string'
 import { FC, useCallback, useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { Button, Select } from '../components/Inputs'
 import SudokuEditor from '../components/SudokuEditor'
 import { useObserver } from '../Hooks'
 import generator, { createEmpty } from '../logic/generator'
 import solver from '../logic/solver'
-import { Sudoku as ISudoku, Sudoku } from '../logic/Sudoku'
+import { Sudoku as ISudoku, Sudoku, withPoints } from '../logic/Sudoku'
 import { getSudoku, getSudokus, names } from '../logic/sudokus'
+
 
 const Creator: FC = () => {
    const selections = names()
@@ -25,7 +28,14 @@ const Creator: FC = () => {
       })
    }, [setSudoku])
 
-   const load = useCallback(() => {
+   const { load } = query.parse(useLocation().search)
+   useEffect(() => {
+      if (withPoints(sudoku.cells).some(it => it.value || it.candidates.length)) return
+      const info = getSudokus().find(s => s.slug === load)
+      if (info) setWithoutCandidates(info.sudoku)
+   }, [load, sudoku, setWithoutCandidates])
+
+   const loadSelected = useCallback(() => {
       if (selected) {
          const { sudoku } = getSudoku(selected)
          setWithoutCandidates(sudoku)
@@ -75,7 +85,7 @@ const Creator: FC = () => {
                   ))}
                </Select>
 
-               <Button disabled={generating || !selected} onClick={load}>Laden</Button>
+               <Button disabled={generating || !selected} onClick={loadSelected}>Laden</Button>
                <Button disabled={generating} onClick={random}>Zufälliges Sudoku</Button>
                <Button onClick={() => setFillCandidates(true)}>Kandidaten Ausfüllen</Button>
 
